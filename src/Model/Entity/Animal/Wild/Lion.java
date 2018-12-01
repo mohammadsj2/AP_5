@@ -7,4 +7,14 @@ public class Lion extends Wild{
     Item toItem() {
         return null;
     }
+
+    @Override
+    public void upgrade() {
+        super.upgrade();
+    }
+
+    @Override
+    public int upgradeCost() {
+        return 0;
+    }
 }
