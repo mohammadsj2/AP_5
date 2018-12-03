@@ -10,9 +10,12 @@ public class Map {
     public static final int MAX_DISTANCE_2 = 100 * 100 * 100;
     ArrayList<Cell> cells = new ArrayList<>();
 
-    void nextTurn() {
-
+    public void nextTurn() {
+        for(Cell cell:cells){
+            cell.nextTurn();
+        }
     }
+
 
     private Cell getCell(int x, int y) {
         for (Cell cell : cells) {
