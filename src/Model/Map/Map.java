@@ -1,5 +1,6 @@
 package Model.Map;
 
+import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
 
@@ -62,8 +63,16 @@ public class Map {
         Cell cell=getCell(x,y);
         cell.destroyEntity(entity);
     }
+    private ArrayList<Item> wildsToItems(ArrayList<Wild> wilds){
+        ArrayList<Item> items=new ArrayList<>();
+        for(Wild wild:wilds){
+            items.add(wild.toItem());
+        }
+        return items;
+    }
     public ArrayList<Item> cage(int x,int y){
-        return null;
+        Cell cell=getCell(x,y);
+        return wildsToItems(cell.getWilds());
     }
     public Cell nearestCellWithWild(Cell cell){
         int distance2= MAX_DISTANCE_2;
