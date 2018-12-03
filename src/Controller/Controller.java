@@ -10,15 +10,16 @@ import Model.WorkShop;
 import java.util.ArrayList;
 
 public class Controller {
-    int money,time;
-    ArrayList<WorkShop> workShops=new ArrayList<>();
-    ArrayList<WareHouse> wareHouses=new ArrayList<>();
-    Map map;
-    Well well;
-    Level level;
-    Helicopter helicopter;
-    Truck truck;
+    static int money,turn;
+    static ArrayList<WorkShop> workShops=new ArrayList<>();
+    static ArrayList<WareHouse> wareHouses=new ArrayList<>();
+    static Map map;
+    static Well well;
+    static Level level;
+    static Helicopter helicopter;
+    static Truck truck;
 
-
-
+    public static int getTurn() {
+        return turn;
+    }
 }

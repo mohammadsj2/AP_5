@@ -1,5 +1,6 @@
 package Model.Map;
 
+import Model.Entity.Animal.Animal;
 import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
@@ -21,6 +22,22 @@ public class Cell {
     public boolean haveGrass() {
         return grass;
     }
+    void nextTurn(){
+        ArrayList<Entity> copyOfEntities=new ArrayList<>();
+        for(Entity entity:entities){
+            copyOfEntities.add(entity);
+        }
+        for(Entity entity:copyOfEntities){
+            if(entity instanceof Animal) {
+                ((Animal) entity).nextTurn();
+            }else if(entity instanceof Item){
+                Item item=(Item)entity;
+                if(item.isExpired()){
+                    destroyEntity(entity);
+                }
+            }
+        }
+    }
 
     public int getPositionX() {
         return positionX;
@@ -31,10 +48,10 @@ public class Cell {
     }
 
     public void destroyEntity(Entity entity){
-
+        entities.remove(entity);
     }
     public void addEntity(Entity entity){
-
+        entities.add(entity);
     }
 
     public ArrayList<Entity> getEntities() {
