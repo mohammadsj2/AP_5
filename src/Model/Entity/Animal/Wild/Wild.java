@@ -8,6 +8,6 @@ public abstract class Wild extends Animal {
     public void destroy(Cell cell){
 
     }
-    abstract Item toItem();
+    abstract public Item toItem();
 
 }
