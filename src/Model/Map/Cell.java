@@ -18,6 +18,10 @@ public class Cell {
         grass=false;
     }
 
+    public boolean haveGrass() {
+        return grass;
+    }
+
     public int getPositionX() {
         return positionX;
     }
