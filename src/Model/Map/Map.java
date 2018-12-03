@@ -1,5 +1,6 @@
 package Model.Map;
 
+import Constant.Constant;
 import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
@@ -11,6 +12,13 @@ public class Map {
     public static final int MAX_DISTANCE_2 = 100 * 100 * 100;
     ArrayList<Cell> cells = new ArrayList<>();
 
+    Map(){
+        for(int i = 0; i< Constant.MAP_ROWS; i++){
+            for(int j = 0; j< Constant.MAP_COLUMNS; j++){
+                cells.add(new Cell(i,j));
+            }
+        }
+    }
     public void nextTurn() {
         for(Cell cell:cells){
             cell.nextTurn();
