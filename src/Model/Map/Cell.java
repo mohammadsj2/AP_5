@@ -12,6 +12,11 @@ public class Cell {
     boolean grass=false;
     int positionX,positionY;
 
+    Cell(int x,int y){
+        positionX=x;
+        positionY=y;
+    }
+
     void plantGrass(){
         grass=true;
     }
