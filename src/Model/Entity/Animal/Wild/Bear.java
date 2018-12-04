@@ -4,7 +4,7 @@ import Model.Entity.Item;
 
 public class Bear extends Wild{
     @Override
-    Item toItem() {
+    public Item toItem() {
         return null;
     }
 
