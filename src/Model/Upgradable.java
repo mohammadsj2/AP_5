@@ -1,6 +1,9 @@
 package Model;
 
+import Exception.CantUpgrade;
+
 public interface Upgradable {
-    void upgrade();
-    int upgradeCost();
+    void upgrade()throws CantUpgrade;
+    int upgradeCost()throws CantUpgrade;
+    boolean canUpgrade();
 }
