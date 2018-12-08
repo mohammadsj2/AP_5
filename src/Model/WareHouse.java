@@ -3,6 +3,7 @@ package Model;
 import Model.Entity.Item;
 
 import java.util.ArrayList;
+import Exception.CantUpgrade;
 
 public class WareHouse implements Upgradable{
     ArrayList<Item> items=new ArrayList<>();
@@ -16,12 +17,17 @@ public class WareHouse implements Upgradable{
     }
 
     @Override
-    public int upgradeCost() {
+    public void upgrade() throws CantUpgrade {
+
+    }
+
+    @Override
+    public int upgradeCost() throws CantUpgrade {
         return 0;
     }
 
     @Override
-    public void upgrade() {
-
+    public boolean canUpgrade() {
+        return false;
     }
 }
