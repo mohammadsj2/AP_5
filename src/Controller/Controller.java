@@ -22,4 +22,8 @@ public class Controller {
     public static int getTurn() {
         return turn;
     }
+
+    public static int getMoney() {
+        return money;
+    }
 }

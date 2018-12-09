@@ -35,9 +35,9 @@ public class Map {
         throw new CellDoesNotExist();
     }
 
-    public void plant(int x, int y) throws CellDoesNotExist{
+    public boolean plant(int x, int y) throws CellDoesNotExist{
         Cell cell = getCell(x, y);
-        cell.plantGrass();
+        return cell.plantGrass();
     }
 
     public int distance2(Cell cell1, Cell cell2) {
