@@ -19,4 +19,7 @@ public class Well implements Upgradable,Loadable{
 
     }
 
+    public int getWaterRemaining() {
+        return waterRemaining;
+    }
 }
