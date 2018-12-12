@@ -5,9 +5,11 @@ import Controller.Controller;
 import Model.Map.Cell;
 
 public class Item extends Entity {
-    String name;
-    int volume,cost,creatingTurn;
-    boolean isInWareHouse=false;
+    private String name;
+    private int volume,cost,creatingTurn;
+    private boolean isInWareHouse=false;
+
+
 
     public Item(String name,int volume,int cost,int creatingTurn){
         super(null);
