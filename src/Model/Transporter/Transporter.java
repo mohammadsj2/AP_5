@@ -35,7 +35,7 @@ public abstract class Transporter {
         int value=0;
         for(Item item:items)
         {
-            value+=item.getCost();
+            value += item.getCost();
         }
         return value;
     }
