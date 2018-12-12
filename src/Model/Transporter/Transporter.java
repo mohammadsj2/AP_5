@@ -30,6 +30,7 @@ public abstract class Transporter {
         return items;
     }
 
+
     public int getMoney() {
         int value=0;
         for(Item item:items)

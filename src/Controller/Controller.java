@@ -9,6 +9,7 @@ import Model.Entity.Animal.Pet.Cow;
 import Model.Entity.Animal.Pet.Pet;
 import Model.Entity.Animal.Pet.Sheep;
 import Model.Entity.Item;
+import Model.Map.Cell;
 import Model.Map.Map;
 import Model.Transporter.Helicopter;
 import Model.Transporter.Truck;
@@ -24,19 +25,18 @@ import Exception.CantUpgrade;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public enum Controller {
-    C;
-    private int money,turn;
-    private ArrayList<WorkShop> workShops=new ArrayList<>();
-    private Map map;
-    private Well well;
-    private WareHouse wareHouse;
-    private Level level;
-    private Helicopter helicopter;
-    private Truck truck;
-    private ArrayList<Dog> dogs=new ArrayList<>();
-    private ArrayList<Cat> cats=new ArrayList<>();
-    private ArrayList<Pet> pets=new ArrayList<>();
+public class Controller {
+    private static int money,turn;
+    private static ArrayList<WorkShop> workShops=new ArrayList<>();
+    private static Map map;
+    private static Well well;
+    private static WareHouse wareHouse;
+    private static Level level;
+    private static Helicopter helicopter;
+    private static Truck truck;
+    private static ArrayList<Dog> dogs=new ArrayList<>();
+    private static ArrayList<Cat> cats=new ArrayList<>();
+    private static ArrayList<Pet> pets=new ArrayList<>();
 
     private Controller()
     {
@@ -53,17 +53,17 @@ public enum Controller {
         return money;
     }
 
-    public int getTurn() {
+    public static int getTurn() {
         return turn;
     }
-    private void subtractMoney(int money) throws NotEnoughMoneyException
+    private static void subtractMoney(int money2) throws NotEnoughMoneyException
     {
-        if(this.money<money)
+        if(money<money2)
             throw new NotEnoughMoneyException();
-        this.money-=money;
+        money-=money2;
     }
-    private void increaseMoney(int money){this.money+=money;}
-    public void plant(int x,int y) throws NoWaterException, CellDoesNotExist
+    private static void increaseMoney(int money2){money+=money2;}
+    public static void plant(int x,int y) throws NoWaterException, CellDoesNotExist
     {
         if(well.getWaterRemaining()==0)
         {
@@ -71,20 +71,18 @@ public enum Controller {
         }
         if(map.plant(x,y))well.liftWater();
     }
-    public void createWorkshops()
+    public static void createWorkshops()
     {
 
     }
-    public void nextTurn()
+    public static void nextTurn()
     {
+        turn++;
         map.nextTurn();
         if(helicopter.isTransportationEnds())
         {
             ArrayList<Item> items=helicopter.getItems();
-            for(Item item:items)
-            {
-                wareHouse.addItem(item);
-            }
+            distributeItems(helicopter.getItems());
             helicopter.endTransportation();
             helicopter.clear();
         }
@@ -97,7 +95,16 @@ public enum Controller {
         // nextTurn WorkShop
     }
 
-    public Object getObject(String type) throws IOException
+    private static void distributeItems(ArrayList<Item> items)
+    {
+        for(Item item:items)
+        {
+            Cell randomCell=map.getRandomCell();
+            randomCell.addEntity(item);
+        }
+    }
+
+    public static Object getObject(String type) throws IOException
     {
     //  if(type.equals("cat"))return cat;
     //  if(type.equals("dog"))return dog;
@@ -113,7 +120,7 @@ public enum Controller {
         throw new IOException();
     }
 
-    public void upgrade(Object object) throws IOException, CantUpgrade, NotEnoughMoneyException {
+    public static void upgrade(Object object) throws IOException, CantUpgrade, NotEnoughMoneyException {
         if(!(object instanceof Upgradable))
         {
             throw new IOException();
@@ -121,7 +128,7 @@ public enum Controller {
         subtractMoney(((Upgradable) object).upgradeCost());
         ((Upgradable) object).upgrade();
     }
-    public void addAnimal(Object object) throws IOException, NotEnoughMoneyException {
+    public static void addAnimal(Object object) throws IOException, NotEnoughMoneyException {
         if(!(object instanceof Animal))
         {
             throw new IOException();
@@ -153,7 +160,7 @@ public enum Controller {
         }
 
     }
-    public void pickup(int x,int y) throws CellDoesNotExist
+    public static void pickup(int x,int y) throws CellDoesNotExist
     {
         ArrayList<Item> items=map.getItems(x,y);
         for(Item item:items)
@@ -164,37 +171,50 @@ public enum Controller {
             }
         }
     }
-    public void startAWorkShop(String name)
+    public static void startAWorkShop(String name)
     {
 
     }
-    public void fillWell() throws NotEnoughMoneyException
+    public static void fillWell() throws NotEnoughMoneyException
     {
         subtractMoney(Constant.WELL_FILL_COST+well.getLevel()*Constant.WELL_FILL_COST_PER_LEVEL);
         well.fill();
     }
-    public void printInfo(String type)
+    public static void printInfo(Object object)
     {
 
     }
-    public void cage(int x,int y)
+    public static void cage(int x,int y)
     {
 
     }
-    public void clearTruck()
+    public static void clearTruck()
     {
-
+        truck.clear();
     }
-    public void clearHelicopter()
+    public static void clearHelicopter()
     {
-
+        helicopter.clear();
     }
-    public void addItemToHelicopter(String type,int count)
+    public static void addItemToHelicopter(Item item)
     {
-
+        helicopter.addItem(item);
     }
-    public void addItemToTruck(String type,int count)
+    public static void addItemToTruck(Item item)
     {
+        if(truck.addItem(item))
+        {
+            wareHouse.eraseItem(item);
+        }
+    }
 
+    public static void startTruck()
+    {
+        truck.startTransportation();
+    }
+    
+    public static void startHelicopter() throws NotEnoughMoneyException {
+        subtractMoney(helicopter.getMoney());
+        helicopter.startTransportation();
     }
 }
