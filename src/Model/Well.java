@@ -21,6 +21,8 @@ public class Well implements Upgradable,Loadable{
 
     }
 
+    public int getWaterRemaining() {
+        return waterRemaining;
     @Override
     public boolean canUpgrade() {
         return false;
