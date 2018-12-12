@@ -1,7 +1,13 @@
 package Controller;
 
+import Constant.Constant;
+import Model.Entity.Animal.Animal;
 import Model.Entity.Animal.Cat;
 import Model.Entity.Animal.Dog;
+import Model.Entity.Animal.Pet.Chiken;
+import Model.Entity.Animal.Pet.Cow;
+import Model.Entity.Animal.Pet.Pet;
+import Model.Entity.Animal.Pet.Sheep;
 import Model.Entity.Item;
 import Model.Map.Map;
 import Model.Transporter.Helicopter;
@@ -18,7 +24,8 @@ import Exception.CantUpgrade;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Controller {
+public enum Controller {
+    C;
     private int money,turn;
     private ArrayList<WorkShop> workShops=new ArrayList<>();
     private Map map;
@@ -27,11 +34,11 @@ public class Controller {
     private Level level;
     private Helicopter helicopter;
     private Truck truck;
-    private boolean hasDog,hasCat;
-    private Dog dog;
-    private Cat cat;
+    private ArrayList<Dog> dogs=new ArrayList<>();
+    private ArrayList<Cat> cats=new ArrayList<>();
+    private ArrayList<Pet> pets=new ArrayList<>();
 
-    public Controller()
+    private Controller()
     {
         money=turn=0;
         map=new Map();
@@ -39,19 +46,23 @@ public class Controller {
         level=new Level();
         helicopter=new Helicopter();
         truck=new Truck();
-        hasDog=hasCat=false;
+    }
+
+    public int getMoney()
+    {
+        return money;
     }
 
     public int getTurn() {
         return turn;
     }
-    public void subtractMoney(int money) throws NotEnoughMoneyException
+    private void subtractMoney(int money) throws NotEnoughMoneyException
     {
         if(this.money<money)
             throw new NotEnoughMoneyException();
         this.money-=money;
     }
-    public void increaseMoney(int money){this.money+=money;}
+    private void increaseMoney(int money){this.money+=money;}
     public void plant(int x,int y) throws NoWaterException, CellDoesNotExist
     {
         if(well.getWaterRemaining()==0)
@@ -86,6 +97,22 @@ public class Controller {
         // nextTurn WorkShop
     }
 
+    public Object getObject(String type) throws IOException
+    {
+    //  if(type.equals("cat"))return cat;
+    //  if(type.equals("dog"))return dog;
+        if(type.equals("well"))return well;
+        if(type.equals("helicopter"))return helicopter;
+        if(type.equals("truck"))return truck;
+        if(type.equals("warehouse"))return wareHouse;
+        if(type.startsWith("workshop"))
+        {
+            int workshopNumber=type.charAt(type.length() - 1)-'0';
+            return workShops.get(workshopNumber);
+        }
+        throw new IOException();
+    }
+
     public void upgrade(Object object) throws IOException, CantUpgrade, NotEnoughMoneyException {
         if(!(object instanceof Upgradable))
         {
@@ -94,21 +121,57 @@ public class Controller {
         subtractMoney(((Upgradable) object).upgradeCost());
         ((Upgradable) object).upgrade();
     }
-    public void addAnimal(String type)
-    {
+    public void addAnimal(Object object) throws IOException, NotEnoughMoneyException {
+        if(!(object instanceof Animal))
+        {
+            throw new IOException();
+        }
+        if(object instanceof Dog)
+        {
+            subtractMoney(Constant.DOG_ADD_COST);
+            dogs.add(new Dog(map.getRandomCell()));
+        }
+        if(object instanceof Cat)
+        {
+            subtractMoney(Constant.CAT_ADD_COST);
+            cats.add(new Cat(map.getRandomCell()));
+        }
+        if(object instanceof Cow)
+        {
+            subtractMoney(Constant.COW_ADD_COST);
+            pets.add(new Cow(map.getRandomCell()));
+        }
+        if(object instanceof Sheep)
+        {
+            subtractMoney(Constant.SHEEP_ADD_COST);
+            pets.add(new Sheep(map.getRandomCell()));
+        }
+        if(object instanceof Chiken)
+        {
+            subtractMoney(Constant.CHICKEN_ADD_COST);
+            pets.add(new Chiken(map.getRandomCell()));
+        }
 
     }
-    public void pickup(int x,int y)
+    public void pickup(int x,int y) throws CellDoesNotExist
     {
-
+        ArrayList<Item> items=map.getItems(x,y);
+        for(Item item:items)
+        {
+            if(wareHouse.addItem(item))
+            {
+                map.destroyEntity(x,y,item);
+            }
+        }
     }
     public void startAWorkShop(String name)
     {
 
     }
-    public void fillWell()
+    public void fillWell() throws NotEnoughMoneyException
     {
-
+        subtractMoney(Constant.WELL_FILL_COST+well.getLevel()*Constant.WELL_FILL_COST_PER_LEVEL);
+        well.fill();
     }
     public void printInfo(String type)
     {

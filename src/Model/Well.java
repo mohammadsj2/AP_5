@@ -17,14 +17,20 @@ public class Well implements Upgradable,Loadable{
     }
 
     @Override
+    public boolean canUpgrade() {
+        return false;
+    }
+
+    @Override
     public void upgrade() throws CantUpgrade {
 
     }
 
     public int getWaterRemaining() {
         return waterRemaining;
-    @Override
-    public boolean canUpgrade() {
-        return false;
     }
-}
+
+    public int getLevel() {
+        return level;
+    }
+    }
