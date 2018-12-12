@@ -1,3 +1,4 @@
+
 package Controller;
 
 import Constant.Constant;
@@ -43,9 +44,13 @@ public class Controller {
         money=turn=0;
         map=new Map();
         well=new Well();
-        level=new Level();
+        //TODO level=new Level();
         helicopter=new Helicopter();
         truck=new Truck();
+    }
+
+    public static WareHouse getWareHouse() {
+        return wareHouse;
     }
 
     public int getMoney()
@@ -206,6 +211,10 @@ public class Controller {
         {
             wareHouse.eraseItem(item);
         }
+    }
+
+    public static Map getMap() {
+        return map;
     }
 
     public static void startTruck()
