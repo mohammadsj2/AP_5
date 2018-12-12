@@ -6,6 +6,7 @@ import Model.Entity.Item;
 import Model.Map.Cell;
 import Model.Producer;
 import Exception.StartBusyProducer;
+import Exception.CellDoesNotExist;
 
 import java.util.ArrayList;
 
@@ -59,12 +60,12 @@ public abstract class Pet extends Animal implements Producer {
         return this.getHealth() <= getHungerLimit();
     }
     @Override
-    public void nextTurn() {
+    public void nextTurn() throws CellDoesNotExist {
         super.nextTurn();
         this.updateHealth(-1);
     }
     @Override
-    public void walk() {
+    public void walk() throws CellDoesNotExist {
         if (isHungry() && Controller.getMap().nearestCellWithGrass(this.getCell()) != null) {
             if (!this.getCell().haveGrass()) {
                 changeCell(Controller.getMap().nearestCellWithGrass(this.getCell()));
@@ -79,7 +80,7 @@ public abstract class Pet extends Animal implements Producer {
     public void eatGrass() {
         this.getCell().destroyGrass();
     }
-    public void updateHealth(int x) {
+    public void updateHealth(int x) throws CellDoesNotExist {
         this.setHealth(this.getHealth() + x);
         if (this.getHealth() <= 0) {
             this.destroy();

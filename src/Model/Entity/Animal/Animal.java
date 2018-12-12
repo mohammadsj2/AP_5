@@ -7,6 +7,7 @@ import Model.Map.Cell;
 import Constant.Constant;
 import Controller.Controller;
 import Exception.CantUpgrade;
+import Exception.CellDoesNotExist;
 
 public abstract class Animal extends Entity implements Upgradable, Loadable {
     private int level;
@@ -39,7 +40,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
         return level;
     }
 
-    public void walk(){
+    public void walk() throws CellDoesNotExist {
         Cell cur = Controller.getMap().getRandomCell();
         this.changeCell(cur);
     }
@@ -48,7 +49,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
         this.setCell(cur);
         cur.addEntity(this);
     }
-    public void nextTurn(){
+    public void nextTurn() throws CellDoesNotExist {
         this.walk();
     }
 
