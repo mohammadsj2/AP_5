@@ -3,6 +3,7 @@ package Model.Entity.Animal;
 import Controller.Controller;
 import Model.Map.Cell;
 import Model.Entity.Animal.Wild.Wild;
+import Exception.CellDoesNotExist;
 
 import java.util.ArrayList;
 
@@ -14,7 +15,7 @@ public class Dog extends Animal {
         super(cell, level);
     }
     @Override
-    public void walk() {
+    public void walk() throws CellDoesNotExist {
         Cell cur = Controller.getMap().getNearestCellWithWild();
         if (cur.equals(this.getCell())) {
             this.kill();
@@ -22,7 +23,7 @@ public class Dog extends Animal {
             this.changeCell(cur);
         }
     }
-    public void kill() {
+    public void kill() throws CellDoesNotExist {
         ArrayList<Wild> wilds = this.getCell().getWilds();
         for (Wild wild : wilds) {
             wild.destroy();

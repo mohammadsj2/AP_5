@@ -4,6 +4,7 @@ import Model.Entity.Animal.Animal;
 import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
+import Exception.CellDoesNotExist;
 
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ public class Cell {
     public boolean haveGrass() {
         return grass;
     }
-    void nextTurn(){
+    void nextTurn() throws CellDoesNotExist {
         ArrayList<Entity> copyOfEntities=new ArrayList<>();
         for(Entity entity:entities){
             copyOfEntities.add(entity);

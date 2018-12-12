@@ -19,7 +19,7 @@ public class Map {
             }
         }
     }
-    public void nextTurn() {
+    public void nextTurn() throws CellDoesNotExist {
         //TODO
         for(Cell cell:cells){
             cell.nextTurn();
@@ -130,4 +130,7 @@ public class Map {
         return answer;
     }
 
+    public Cell getNearestCellWithWild() {
+        return new Cell(0,0);
+    }
 }
