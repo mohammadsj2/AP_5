@@ -20,7 +20,7 @@ public class Cell {
     void plantGrass(){
         grass=true;
     }
-    void destroyGrass(){
+    public void destroyGrass(){
         grass=false;
     }
 
