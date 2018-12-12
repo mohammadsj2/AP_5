@@ -17,8 +17,10 @@ public class Cell {
         positionY=y;
     }
 
-    void plantGrass(){
+    boolean plantGrass(){
+        if(grass)return false;
         grass=true;
+        return true;
     }
     public void destroyGrass(){
         grass=false;

@@ -12,7 +12,7 @@ public class Map {
     public static final int MAX_DISTANCE_2 = 100 * 100 * 100;
     ArrayList<Cell> cells = new ArrayList<>();
 
-    Map(){
+    public Map(){
         for(int i = 0; i< Constant.MAP_ROWS; i++){
             for(int j = 0; j< Constant.MAP_COLUMNS; j++){
                 cells.add(new Cell(i,j));
@@ -20,6 +20,7 @@ public class Map {
         }
     }
     public void nextTurn() {
+        //TODO
         for(Cell cell:cells){
             cell.nextTurn();
         }
@@ -35,9 +36,12 @@ public class Map {
         throw new CellDoesNotExist();
     }
 
-    public void plant(int x, int y) throws CellDoesNotExist{
+    public boolean plant(int x, int y) throws CellDoesNotExist{
         Cell cell = getCell(x, y);
+        if(cell.haveGrass())return false;
         cell.plantGrass();
+        return true;
+
     }
 
     public int distance2(Cell cell1, Cell cell2) {
@@ -95,17 +99,35 @@ public class Map {
         cell.destroyEntity(entity);
     }
 
-    private ArrayList<Item> wildsToItems(ArrayList<Wild> wilds) {
-        ArrayList<Item> items = new ArrayList<>();
+    private void wildsToItems(ArrayList<Wild> wilds) {
         for (Wild wild : wilds) {
-            items.add(wild.toItem());
+            wild.toItem();
         }
-        return items;
     }
 
-    public ArrayList<Item> cage(int x, int y) throws CellDoesNotExist{
+    public void cage(int x, int y) throws CellDoesNotExist{
         Cell cell = getCell(x, y);
-        return wildsToItems(cell.getWilds());
+        wildsToItems(cell.getWilds());
+    }
+    public Cell getRandomeCell(){
+        int t=(int)(Math.random()*2.0*cells.size());
+        return cells.get(t%cells.size());
+    }
+    public Cell getBestCellBySpeed(Cell first,Cell last,int speed){
+        speed*=speed;
+        if(distance2(first,last)<=speed)
+            return last;
+        int mini=distance2(first,last);
+        Cell answer=first;
+        for(Cell cell:cells){
+            if(distance2(first,cell)>speed)continue;
+            int tmp=distance2(first,cell)+distance2(cell,last);
+            if(tmp<mini){
+                mini=tmp;
+                answer=cell;
+            }
+        }
+        return answer;
     }
 
 }
