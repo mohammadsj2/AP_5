@@ -25,4 +25,17 @@ public abstract class Transporter {
 
     }
 
+    public ArrayList<Item> getItems()
+    {
+        return items;
+    }
+
+    public int getMoney() {
+        int value=0;
+        for(Item item:items)
+        {
+            value+=item.getCost();
+        }
+        return value;
+    }
 }

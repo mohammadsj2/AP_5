@@ -12,7 +12,7 @@ public class Map {
     public static final int MAX_DISTANCE_2 = 100 * 100 * 100;
     ArrayList<Cell> cells = new ArrayList<>();
 
-    Map(){
+    public Map(){
         for(int i = 0; i< Constant.MAP_ROWS; i++){
             for(int j = 0; j< Constant.MAP_COLUMNS; j++){
                 cells.add(new Cell(i,j));
@@ -35,9 +35,11 @@ public class Map {
         throw new CellDoesNotExist();
     }
 
-    public void plant(int x, int y) throws CellDoesNotExist{
+    public boolean plant(int x, int y) throws CellDoesNotExist{
         Cell cell = getCell(x, y);
+        if(cell.haveGrass())return false;
         cell.plantGrass();
+        return true;
     }
 
     public int distance2(Cell cell1, Cell cell2) {
