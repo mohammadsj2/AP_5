@@ -2,13 +2,24 @@ package Model.Entity;
 
 import Constant.Constant;
 import Controller.Controller;
+import Model.Map.Cell;
 
 public class Item extends Entity {
-    String name;
-    int volume,cost,creatingTurn;
-    boolean isInWareHouse=false;
+    private String name;
+    private int volume,cost,creatingTurn;
+    private boolean isInWareHouse=false;
 
-    Item(String name,int volume,int cost,int creatingTurn){
+
+
+    public Item(String name,int volume,int cost,int creatingTurn){
+        super(null);
+        this.name=name;
+        this.volume=volume;
+        this.cost=cost;
+        this.creatingTurn=creatingTurn;
+    }
+    public Item(String name,int volume,int cost,int creatingTurn, Cell cell){
+        super(cell);
         this.name=name;
         this.volume=volume;
         this.cost=cost;
