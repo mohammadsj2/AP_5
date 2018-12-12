@@ -17,18 +17,18 @@ public class Cat extends Animal{
     @Override
     public void walk() {
         if (this.getLevel() > 1) {
-            Cell cur = Controller.getMap().getNearestCellWithItem();
+            Cell cur = Controller.getMap().nearestCellWithItem(this.getCell());
             cur = Controller.getMap().getBestCellBySpeed(this.getCell(), cur, this.getSpeed());
             this.changeCell(cur);
         } else {
-            Cell cur = Controller.getMap().getNearestCellWithRandom();
+            Cell cur = Controller.getMap().getRandomCell();
             this.changeCell(cur);
         }
     }
     public void catchItem() {
         ArrayList<Item> items = this.getCell().getItems();
         for (Item item : items) {
-            Controller.Warehouse.addItem(item);
+            Controller.getWareHouse().addItem(item);
             item.setInWareHouse(true);
             item.destroyFromMap();
         }

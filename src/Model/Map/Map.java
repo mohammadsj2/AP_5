@@ -109,7 +109,7 @@ public class Map {
         Cell cell = getCell(x, y);
         wildsToItems(cell.getWilds());
     }
-    public Cell getRandomeCell(){
+    public Cell getRandomCell(){
         int t=(int)(Math.random()*2.0*cells.size());
         return cells.get(t%cells.size());
     }

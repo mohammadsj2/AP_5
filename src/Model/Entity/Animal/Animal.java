@@ -40,7 +40,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
     }
 
     public void walk(){
-        Cell cur = Controller.getMap().getNearestCellWithRandom();
+        Cell cur = Controller.getMap().getRandomCell();
         this.changeCell(cur);
     }
     public void changeCell(Cell cur) {
