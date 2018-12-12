@@ -2,12 +2,42 @@ package Model.Entity.Animal.Pet;
 
 import Controller.Controller;
 import Model.Entity.Animal.Animal;
+import Model.Entity.Item;
 import Model.Map.Cell;
 import Model.Producer;
+import Exception.StartBusyProducer;
 
-public abstract class Pet extends Animal {
+import java.util.ArrayList;
+
+public abstract class Pet extends Animal implements Producer {
     private int health;
     final public int HEALTH_CAP = 100;
+
+    @Override
+    public boolean haveProduct() {
+        return false;
+    }
+
+    @Override
+    public void startProduction() throws StartBusyProducer {
+
+    }
+
+    @Override
+    public ArrayList<Item> getInPutItems() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Item> getOutPutItems() {
+        return null;
+    }
+
+    @Override
+    public void endProduction() {
+
+    }
+
     public Pet(Cell cell) {
         super(cell);
     }
@@ -35,15 +65,15 @@ public abstract class Pet extends Animal {
     }
     @Override
     public void walk() {
-        if (isHungry() && Controller.getMap().getNearestCellWithGrass() != null) {
+        if (isHungry() && Controller.getMap().nearestCellWithGrass(this.getCell()) != null) {
             if (!this.getCell().haveGrass()) {
-                changeCell(Controller.getMap().getNearestCellWithGrass());
+                changeCell(Controller.getMap().nearestCellWithGrass(this.getCell()));
             } else {
                 this.eatGrass();
                 this.updateHealth(1);
             }
         } else {
-            changeCell(Controller.getMap().getNearestCellWithRandom());
+            changeCell(Controller.getMap().getRandomCell());
         }
     }
     public void eatGrass() {
