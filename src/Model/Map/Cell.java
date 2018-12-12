@@ -22,7 +22,7 @@ public class Cell {
         grass=true;
         return true;
     }
-    void destroyGrass(){
+    public void destroyGrass(){
         grass=false;
     }
 

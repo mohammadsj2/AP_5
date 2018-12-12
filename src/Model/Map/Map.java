@@ -20,6 +20,7 @@ public class Map {
         }
     }
     public void nextTurn() {
+        //TODO
         for(Cell cell:cells){
             cell.nextTurn();
         }
@@ -95,17 +96,35 @@ public class Map {
         cell.destroyEntity(entity);
     }
 
-    private ArrayList<Item> wildsToItems(ArrayList<Wild> wilds) {
-        ArrayList<Item> items = new ArrayList<>();
+    private void wildsToItems(ArrayList<Wild> wilds) {
         for (Wild wild : wilds) {
-            items.add(wild.toItem());
+            wild.toItem();
         }
-        return items;
     }
 
-    public ArrayList<Item> cage(int x, int y) throws CellDoesNotExist{
+    public void cage(int x, int y) throws CellDoesNotExist{
         Cell cell = getCell(x, y);
-        return wildsToItems(cell.getWilds());
+        wildsToItems(cell.getWilds());
+    }
+    public Cell getRandomeCell(){
+        int t=(int)(Math.random()*2.0*cells.size());
+        return cells.get(t%cells.size());
+    }
+    public Cell getBestCellBySpeed(Cell first,Cell last,int speed){
+        speed*=speed;
+        if(distance2(first,last)<=speed)
+            return last;
+        int mini=distance2(first,last);
+        Cell answer=first;
+        for(Cell cell:cells){
+            if(distance2(first,cell)>speed)continue;
+            int tmp=distance2(first,cell)+distance2(cell,last);
+            if(tmp<mini){
+                mini=tmp;
+                answer=cell;
+            }
+        }
+        return answer;
     }
 
 }
