@@ -10,6 +10,7 @@ public class Cat extends Animal{
     public Cat(Cell cell) {
         super(cell);
     }
+
     public Cat(Cell cell, int level) {
         super(cell, level);
     }
@@ -17,6 +18,7 @@ public class Cat extends Animal{
     public void walk() {
         if (this.getLevel() > 1) {
             Cell cur = Controller.getMap().getNearestCellWithItem();
+            cur = Controller.getMap().getBestCellBySpeed(this.getCell(), cur, this.getSpeed());
             this.changeCell(cur);
         } else {
             Cell cur = Controller.getMap().getNearestCellWithRandom();

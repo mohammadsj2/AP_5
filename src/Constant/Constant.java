@@ -6,6 +6,7 @@ public class Constant {
     public static final int MAP_COLUMNS = 101;
     public static final int MAX_WORKSHOP_LEVEL = 5;
     public static final int WORKSHOP_UPGRADE_COST_PER_LEVEL = 500;
+    public static final int ANIMAL_SPEED = 2;
     public static final String BEAR_NAME = "Bear";
     public static final int BEAR_VOLUME = 5;
     public static final int BEAR_COST = 50;
