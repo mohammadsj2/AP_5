@@ -30,7 +30,8 @@ public class Well implements Upgradable,Loadable{
         return waterRemaining;
     }
 
+
     public int getLevel() {
         return level;
     }
-    }
+}
