@@ -212,7 +212,7 @@ public class Controller {
     {
         truck.startTransportation();
     }
-    
+
     public static void startHelicopter() throws NotEnoughMoneyException {
         subtractMoney(helicopter.getMoney());
         helicopter.startTransportation();
