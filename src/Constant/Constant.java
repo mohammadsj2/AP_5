@@ -6,4 +6,11 @@ public class Constant {
     public static final int MAP_COLUMNS = 101;
     public static final int MAX_WORKSHOP_LEVEL = 5;
     public static final int WORKSHOP_UPGRADE_COST_PER_LEVEL = 500;
+    public static final int WELL_FILL_COST=20;
+    public static final int WELL_FILL_COST_PER_LEVEL=20;
+    public static final int DOG_ADD_COST=5000;
+    public static final int CAT_ADD_COST=2000;
+    public static final int COW_ADD_COST=5000;
+    public static final int SHEEP_ADD_COST=500;
+    public static final int CHICKEN_ADD_COST=100;
 }
