@@ -72,6 +72,17 @@ public class Controller {
         }
         if(map.plant(x,y))well.liftWater();
     }
+
+    public static void printInfo(Object object)
+    {
+
+    }
+
+    public static void startAWorkShop(int index)
+    {
+        WorkShop workShop=workShops.get(index);
+        
+    }
     public static void createWorkshops()
     {
 
@@ -93,6 +104,7 @@ public class Controller {
             truck.clear();
         }
         // nextTurn WorkShop
+
     }
 
     private static void distributeItems(ArrayList<Item> items)
@@ -171,18 +183,10 @@ public class Controller {
             }
         }
     }
-    public static void startAWorkShop(String name)
-    {
-
-    }
     public static void fillWell() throws NotEnoughMoneyException
     {
         subtractMoney(Constant.WELL_FILL_COST+well.getLevel()*Constant.WELL_FILL_COST_PER_LEVEL);
         well.fill();
-    }
-    public static void printInfo(Object object)
-    {
-
     }
     public static void cage(int x,int y) throws CellDoesNotExist {
         map.cage(x,y);
