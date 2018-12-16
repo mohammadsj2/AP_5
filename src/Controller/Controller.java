@@ -57,7 +57,7 @@ public class Controller {
     public static int getTurn() {
         return turn;
     }
-    private static void subtractMoney(int money2) throws NotEnoughMoneyException
+    public static void subtractMoney(int money2) throws NotEnoughMoneyException
     {
         if(money<money2)
             throw new NotEnoughMoneyException();
@@ -184,9 +184,8 @@ public class Controller {
     {
 
     }
-    public static void cage(int x,int y)
-    {
-
+    public static void cage(int x,int y) throws CellDoesNotExist {
+        map.cage(x,y);
     }
     public static void clearTruck()
     {

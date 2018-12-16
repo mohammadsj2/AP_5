@@ -32,4 +32,5 @@ public abstract class Entity {
         this.destroyFromMap();
         setAlive(false);
     }
+
 }

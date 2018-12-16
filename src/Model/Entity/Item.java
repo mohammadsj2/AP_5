@@ -48,4 +48,11 @@ public class Item extends Entity {
     public String getName() {
         return name;
     }
+
+
+    public boolean equals(Item x)
+    {
+        if(this.name.equals(x.getName()))return true;
+        return false;
+    }
 }
