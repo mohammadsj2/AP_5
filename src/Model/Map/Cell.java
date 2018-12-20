@@ -30,7 +30,7 @@ public class Cell {
     public boolean haveGrass() {
         return grass;
     }
-    void nextTurn() throws CellDoesNotExist {
+    void nextTurn(){
         ArrayList<Entity> copyOfEntities=new ArrayList<>();
         for(Entity entity:entities){
             copyOfEntities.add(entity);
@@ -91,5 +91,15 @@ public class Cell {
         }
         return wilds;
     }
+    public ArrayList<Animal> getAnimals(){
+        ArrayList<Animal> animals=new ArrayList<>();
+        for(Entity entity:entities){
+            if(entity instanceof Animal){
+                animals.add((Wild)entity);
+            }
+        }
+        return animals;
+    }
+
 
 }

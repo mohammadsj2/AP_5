@@ -76,9 +76,30 @@ public class WorkShop implements Producer,Upgradable{
         return multipleItems(outputs,level+1);
     }
 
+    public ArrayList<Item> getOutPutItemsByLevel(int level) {
+        return multipleItems(outputs,level+1);
+    }
+
     @Override
     public ArrayList<Item> getInPutItems() {
         return multipleItems(inputs,level+1);
+    }
+    public ArrayList<Item> getInPutItemsByLevel(int level) {
+        return multipleItems(inputs,level+1);
+    }
+    public int maxLevelCanDoWithItems(ArrayList<Item> items){
+        ArrayList<Item> copyOfItems=new ArrayList<>();
+        copyOfItems.addAll(items);
+        int level=-1;
+        while(level<this.level){
+            boolean flag=true;
+            for(Item item:inputs){
+                flag&=copyOfItems.remove(item);
+            }
+            if(!flag)break;
+            level++;
+        }
+        return level;
     }
 
     @Override
