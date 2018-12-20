@@ -5,28 +5,31 @@ import Model.Entity.Item;
 import Model.Map.Cell;
 import Model.WareHouse;
 import java.util.ArrayList;
+import Exception.CellDoesNotExist;
 
 public class Cat extends Animal{
     public Cat(Cell cell) {
         super(cell);
     }
+
     public Cat(Cell cell, int level) {
         super(cell, level);
     }
     @Override
     public void walk() {
         if (this.getLevel() > 1) {
-            Cell cur = Controller.getMap().getNearestCellWithItem();
+            Cell cur = Controller.getMap().nearestCellWithItem(this.getCell());
+            cur = Controller.getMap().getBestCellBySpeed(this.getCell(), cur, this.getSpeed());
             this.changeCell(cur);
         } else {
-            Cell cur = Controller.getMap().getNearestCellWithRandom();
+            Cell cur = Controller.getMap().getRandomCell();
             this.changeCell(cur);
         }
     }
-    public void catchItem() {
+    public void catchItem() throws CellDoesNotExist {
         ArrayList<Item> items = this.getCell().getItems();
         for (Item item : items) {
-            Controller.Warehouse.addItem(item);
+            Controller.getWareHouse().addItem(item);
             item.setInWareHouse(true);
             item.destroyFromMap();
         }

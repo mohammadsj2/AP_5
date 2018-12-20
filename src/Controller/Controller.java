@@ -1,4 +1,3 @@
-
 package Controller;
 
 import Constant.Constant;
@@ -9,6 +8,7 @@ import Model.Entity.Animal.Pet.Chiken;
 import Model.Entity.Animal.Pet.Cow;
 import Model.Entity.Animal.Pet.Pet;
 import Model.Entity.Animal.Pet.Sheep;
+import Model.Entity.Entity;
 import Model.Entity.Item;
 import Model.Map.Cell;
 import Model.Map.Map;
@@ -39,17 +39,17 @@ public class Controller {
     private static ArrayList<Cat> cats=new ArrayList<>();
     private static ArrayList<Pet> pets=new ArrayList<>();
 
-    private Controller()
+    private Controller(int goalMoney,ArrayList<Entity> earnedEnitities)
     {
         money=turn=0;
         map=new Map();
         well=new Well();
-        level=new Level();
+        level=new Level(goalMoney,earnedEnitities);
         helicopter=new Helicopter();
         truck=new Truck();
     }
 
-    public int getMoney()
+    public static int getMoney()
     {
         return money;
     }
@@ -57,7 +57,7 @@ public class Controller {
     public static int getTurn() {
         return turn;
     }
-    private static void subtractMoney(int money2) throws NotEnoughMoneyException
+    public static void subtractMoney(int money2) throws NotEnoughMoneyException
     {
         if(money<money2)
             throw new NotEnoughMoneyException();
@@ -72,12 +72,22 @@ public class Controller {
         }
         if(map.plant(x,y))well.liftWater();
     }
+
+    public static void printInfo(Object object)
+    {
+
+    }
+
+    public static void startAWorkShop(int index)
+    {
+        WorkShop workShop=workShops.get(index);
+        
+    }
     public static void createWorkshops()
     {
 
     }
-    public static void nextTurn()
-    {
+    public static void nextTurn() throws CellDoesNotExist {
         turn++;
         map.nextTurn();
         if(helicopter.isTransportationEnds())
@@ -94,6 +104,7 @@ public class Controller {
             truck.clear();
         }
         // nextTurn WorkShop
+
     }
 
     private static void distributeItems(ArrayList<Item> items)
@@ -172,22 +183,13 @@ public class Controller {
             }
         }
     }
-    public static void startAWorkShop(String name)
-    {
-
-    }
     public static void fillWell() throws NotEnoughMoneyException
     {
         subtractMoney(Constant.WELL_FILL_COST+well.getLevel()*Constant.WELL_FILL_COST_PER_LEVEL);
         well.fill();
     }
-    public static void printInfo(Object object)
-    {
-
-    }
-    public static void cage(int x,int y)
-    {
-
+    public static void cage(int x,int y) throws CellDoesNotExist {
+        map.cage(x,y);
     }
     public static void clearTruck()
     {
@@ -213,9 +215,17 @@ public class Controller {
     {
         truck.startTransportation();
     }
-    
+
     public static void startHelicopter() throws NotEnoughMoneyException {
         subtractMoney(helicopter.getMoney());
         helicopter.startTransportation();
+    }
+
+    public static Map getMap() {
+        return map;
+    }
+
+    public static WareHouse getWareHouse() {
+        return wareHouse;
     }
 }
