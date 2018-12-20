@@ -4,7 +4,7 @@ import Model.Entity.Animal.Animal;
 import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
-import javafx.animation.AnimationTimer;
+import Exception.CellDoesNotExist;
 
 import java.util.ArrayList;
 

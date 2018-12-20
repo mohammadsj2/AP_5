@@ -1,33 +1,66 @@
 package Model;
 
+import Constant.Constant;
+import Controller.Controller;
 import Model.Entity.Item;
 
 import java.util.ArrayList;
 import Exception.CantUpgrade;
+import Exception.NotEnoughMoneyException;
 
 public class WareHouse implements Upgradable{
-    ArrayList<Item> items=new ArrayList<>();
-    int level;
+    private ArrayList<Item> items=new ArrayList<>();
+    private int level=0;
+    private int capacity=Constant.WAREHOUSE_CAPACITY;
 
-    public boolean addItem(Item item){
-        return false;
+    private int placeTaken()
+    {
+        int sum=0;
+        for(Item item:items)sum+=item.getVolume();
+        return sum;
     }
-    public boolean eraseItem(Item item){
+
+    public boolean addItem(Item item)
+    {
+        if(placeTaken()+item.getVolume()>capacity)return false;
+        items.add(item);
+        return true;
+    }
+
+    public boolean eraseItem(Item item)
+    {
+        for(Item item2:items)
+        {
+            if(item.equals(item2))
+            {
+                items.remove(item2);
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public void upgrade() throws CantUpgrade {
-
+        try
+        {
+            Controller.subtractMoney(upgradeCost());
+        }
+        catch(NotEnoughMoneyException e)
+        {
+            throw new CantUpgrade();
+        }
+        level++;
+        capacity+=Constant.WAREHOUSE_CAPACITY_PER_LEVEL;
     }
 
     @Override
-    public int upgradeCost() throws CantUpgrade {
-        return 0;
+    public int upgradeCost(){
+        return (level+1)*Constant.WAREHOUSE_UPGRADE_COST_PER_LEVEL;
     }
 
     @Override
     public boolean canUpgrade() {
-        return false;
+        return upgradeCost()<=Controller.getMoney();
     }
 }
