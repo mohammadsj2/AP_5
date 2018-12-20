@@ -47,9 +47,10 @@ public class Controller {
         level=new Level();
         helicopter=new Helicopter();
         truck=new Truck();
+        wareHouse=new WareHouse();
     }
 
-    public int getMoney()
+    public static int getMoney()
     {
         return money;
     }

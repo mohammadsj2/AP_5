@@ -4,6 +4,7 @@ import Model.Entity.Animal.Animal;
 import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
+import javafx.animation.AnimationTimer;
 
 import java.util.ArrayList;
 
@@ -90,5 +91,15 @@ public class Cell {
         }
         return wilds;
     }
+    public ArrayList<Animal> getAnimals(){
+        ArrayList<Animal> animals=new ArrayList<>();
+        for(Entity entity:entities){
+            if(entity instanceof Animal){
+                animals.add((Wild)entity);
+            }
+        }
+        return animals;
+    }
+
 
 }
