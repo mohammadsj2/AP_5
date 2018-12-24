@@ -1,12 +1,14 @@
 package Model.Map;
 
 import Constant.Constant;
+import Model.Entity.Animal.Animal;
 import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
 import Exception.CellDoesNotExist;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Map {
     public static final int MAX_DISTANCE_2 = 100 * 100 * 100;
@@ -19,10 +21,15 @@ public class Map {
             }
         }
     }
-    public void nextTurn() throws CellDoesNotExist {
-        //TODO
+    public void nextTurn() {
+        ArrayList<Animal> animals=new ArrayList<>();
         for(Cell cell:cells){
-            cell.nextTurn();
+            animals.addAll(cell.getAnimals());
+        }
+        Collections.shuffle(animals);
+        //bekhatere in ke ye dog nare donbale wild bad wild nobatesh beshe bere ye ja dg
+        for(Animal animal:animals){
+            animal.nextTurn();
         }
     }
 
@@ -130,7 +137,4 @@ public class Map {
         return answer;
     }
 
-    public Cell getNearestCellWithWild() {
-        return new Cell(0,0);
-    }
 }
