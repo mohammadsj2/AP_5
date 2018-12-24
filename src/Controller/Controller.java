@@ -22,9 +22,12 @@ import Exception.NotEnoughMoneyException;
 import Exception.NoWaterException;
 import Exception.CellDoesNotExist;
 import Exception.CantUpgrade;
+import com.google.gson.Gson;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import Exception.WorkshopDoesntExist;
 
 public class Controller {
     private static int money,turn;
@@ -79,14 +82,20 @@ public class Controller {
 
     }
 
-    public static void startAWorkShop(int index)
+    public static void startAWorkShop(int index) throws WorkshopDoesntExist
     {
+        if(index>=workShops.size())throw new WorkshopDoesntExist();
         WorkShop workShop=workShops.get(index);
-        
-    }
-    public static void createWorkshops()
-    {
 
+    }
+    public static void createWorkshops() throws IOException
+    {
+        for(int workshopNumber=0;workshopNumber<6;workshopNumber++)
+        {
+            Gson gson=new Gson();
+            WorkShop workshop=gson.fromJson(new FileReader("../../workshop"+workshopNumber+".json"),WorkShop.class);
+            workShops.add(workshop);
+        }
     }
     public static void nextTurn() throws CellDoesNotExist {
         turn++;
@@ -119,8 +128,8 @@ public class Controller {
 
     public static Object getObject(String type) throws IOException
     {
-    //  if(type.equals("cat"))return cat;
-    //  if(type.equals("dog"))return dog;
+        //  if(type.equals("cat"))return cat;
+        //  if(type.equals("dog"))return dog;
         if(type.equals("well"))return well;
         if(type.equals("helicopter"))return helicopter;
         if(type.equals("truck"))return truck;
