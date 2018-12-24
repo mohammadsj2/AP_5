@@ -16,7 +16,7 @@ public class Dog extends Animal {
     }
     @Override
     public void walk() throws CellDoesNotExist {
-        Cell cur = Controller.getMap().getNearestCellWithWild();
+        Cell cur = Controller.getMap().nearestCellWithWild(getCell());
         if (cur.equals(this.getCell())) {
             this.kill();
         } else {

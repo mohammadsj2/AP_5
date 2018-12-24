@@ -21,7 +21,7 @@ public class Map {
             }
         }
     }
-    public void nextTurn() {
+    public void nextTurn(){
         ArrayList<Animal> animals=new ArrayList<>();
         for(Cell cell:cells){
             animals.addAll(cell.getAnimals());
@@ -29,7 +29,11 @@ public class Map {
         Collections.shuffle(animals);
         //bekhatere in ke ye dog nare donbale wild bad wild nobatesh beshe bere ye ja dg
         for(Animal animal:animals){
-            animal.nextTurn();
+            try {
+                animal.nextTurn();
+            } catch (CellDoesNotExist cellDoesNotExist) {
+                cellDoesNotExist.printStackTrace();
+            }
         }
     }
 
