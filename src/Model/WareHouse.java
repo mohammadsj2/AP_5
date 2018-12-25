@@ -5,7 +5,7 @@ import Controller.Controller;
 import Model.Entity.Item;
 
 import java.util.ArrayList;
-import Exception.CantUpgrade;
+import Exception.CantUpgradeException;
 import Exception.NotEnoughMoneyException;
 
 public class WareHouse implements Upgradable{
@@ -41,14 +41,14 @@ public class WareHouse implements Upgradable{
     }
 
     @Override
-    public void upgrade() throws CantUpgrade {
+    public void upgrade() throws CantUpgradeException {
         try
         {
             Controller.subtractMoney(upgradeCost());
         }
         catch(NotEnoughMoneyException e)
         {
-            throw new CantUpgrade();
+            throw new CantUpgradeException();
         }
         level++;
         capacity+=Constant.WAREHOUSE_CAPACITY_PER_LEVEL;

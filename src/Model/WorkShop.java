@@ -28,17 +28,17 @@ public class WorkShop implements Producer,Upgradable{
     }
 
     @Override
-    public int upgradeCost() throws CantUpgrade{
+    public int upgradeCost() throws CantUpgradeException {
         if(!canUpgrade()){
-            throw new CantUpgrade();
+            throw new CantUpgradeException();
         }
         return Constant.WORKSHOP_UPGRADE_COST_PER_LEVEL *(level+1);
     }
 
     @Override
-    public void upgrade() throws CantUpgrade{
+    public void upgrade() throws CantUpgradeException {
         if(!canUpgrade()){
-            throw new CantUpgrade();
+            throw new CantUpgradeException();
         }
         level++;
     }
@@ -53,9 +53,9 @@ public class WorkShop implements Producer,Upgradable{
     }
 
     @Override
-    public void startProduction() throws StartBusyProducer {
+    public void startProduction() throws StartBusyProducerException {
         if(busy){
-            throw new StartBusyProducer();
+            throw new StartBusyProducerException();
         }
         busy=true;
         startTime=Controller.getTurn();

@@ -2,7 +2,7 @@ package Model;
 
 import Constant.Constant;
 import Controller.Controller;
-import Exception.CantUpgrade;
+import Exception.CantUpgradeException;
 import Exception.NotEnoughMoneyException;
 import Exception.NoWaterException;
 
@@ -37,14 +37,14 @@ public class Well implements Upgradable,Loadable{
     }
 
     @Override
-    public void upgrade() throws CantUpgrade {
+    public void upgrade() throws CantUpgradeException {
         try
         {
             Controller.subtractMoney(upgradeCost());
         }
         catch(NotEnoughMoneyException e)
         {
-            throw new CantUpgrade();
+            throw new CantUpgradeException();
         }
         level++;
         maxWater+=Constant.WELL_WATER_PER_LEVEL;
