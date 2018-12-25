@@ -63,4 +63,8 @@ public class WareHouse implements Upgradable{
     public boolean canUpgrade() {
         return upgradeCost()<=Controller.getMoney();
     }
+
+    public ArrayList<Item> getItems() {
+        return items;
+    }
 }

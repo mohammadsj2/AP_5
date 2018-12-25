@@ -22,6 +22,8 @@ import Exception.NotEnoughMoneyException;
 import Exception.NoWaterException;
 import Exception.CellDoesNotExistException;
 import Exception.CantUpgradeException;
+import Exception.StartBusyProducerException;
+import Exception.WorkShopNotUsedException;
 import com.google.gson.Gson;
 
 import java.io.FileReader;
@@ -82,11 +84,16 @@ public class Controller {
 
     }
 
-    public static void startAWorkShop(int index) throws WorkshopDoesntExistException
-    {
+    public static void startAWorkShop(int index) throws WorkshopDoesntExistException, StartBusyProducerException, WorkShopNotUsedException {
         if(index>=workShops.size())throw new WorkshopDoesntExistException();
         WorkShop workShop=workShops.get(index);
-
+        int usedLevel=workShop.maxLevelCanDoWithItems(wareHouse.getItems());
+        workShop.startByLevel(usedLevel);
+        ArrayList<Item> neededItems=workShop.getInputItemsByUsedLevel();
+        for(Item item:neededItems)
+        {
+            wareHouse.eraseItem(item);
+        }
     }
     public static void createWorkshops() throws IOException
     {
@@ -97,12 +104,11 @@ public class Controller {
             workShops.add(workshop);
         }
     }
-    public static void nextTurn() throws CellDoesNotExistException {
+    public static void nextTurn() throws CellDoesNotExistException, WorkShopNotUsedException {
         turn++;
         map.nextTurn();
         if(helicopter.isTransportationEnds())
         {
-            ArrayList<Item> items=helicopter.getItems();
             distributeItems(helicopter.getItems());
             helicopter.endTransportation();
             helicopter.clear();
@@ -114,6 +120,14 @@ public class Controller {
             truck.clear();
         }
         // nextTurn WorkShop
+        for(WorkShop workShop:workShops)
+        {
+            if(workShop.haveProduct())
+            {
+                distributeItems(workShop.getOutputItemsByUsedLevel());
+                workShop.endProduction();
+            }
+        }
 
     }
 
