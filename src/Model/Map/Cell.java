@@ -37,7 +37,11 @@ public class Cell {
         }
         for(Entity entity:copyOfEntities){
             if(entity instanceof Animal) {
-                ((Animal) entity).nextTurn();
+                try {
+                    ((Animal) entity).nextTurn();
+                } catch (CellDoesNotExist cellDoesNotExist) {
+                    cellDoesNotExist.printStackTrace();
+                }
             }else if(entity instanceof Item){
                 Item item=(Item)entity;
                 if(item.isExpired()){
