@@ -4,7 +4,7 @@ import Model.Entity.Animal.Animal;
 import Model.Entity.Entity;
 import Model.Entity.Item;
 import Model.Map.Cell;
-import Exception.CellDoesNotExist;
+import Exception.CellDoesNotExistException;
 
 import java.util.ArrayList;
 
@@ -15,7 +15,7 @@ public abstract class Wild extends Animal {
     public Wild(Cell cell, int level) {
         super(cell, level);
     }
-    public void kill(Cell cell) throws CellDoesNotExist {
+    public void kill(Cell cell) throws CellDoesNotExistException {
         ArrayList<Entity> entities = cell.getEntities();
         for (Entity e : entities) {
             if (!(e instanceof Wild)) {
@@ -23,7 +23,7 @@ public abstract class Wild extends Animal {
             }
         }
     }
-    public void cage() throws CellDoesNotExist {
+    public void cage() throws CellDoesNotExistException {
         Cell cur = this.getCell();
         this.destroyFromMap();
         cur.addEntity(this.toItem());

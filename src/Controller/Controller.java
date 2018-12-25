@@ -20,14 +20,14 @@ import Model.Well;
 import Model.WorkShop;
 import Exception.NotEnoughMoneyException;
 import Exception.NoWaterException;
-import Exception.CellDoesNotExist;
-import Exception.CantUpgrade;
+import Exception.CellDoesNotExistException;
+import Exception.CantUpgradeException;
 import com.google.gson.Gson;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import Exception.WorkshopDoesntExist;
+import Exception.WorkshopDoesntExistException;
 
 public class Controller {
     private static int money,turn;
@@ -68,7 +68,7 @@ public class Controller {
         money-=money2;
     }
     private static void increaseMoney(int money2){money+=money2;}
-    public static void plant(int x,int y) throws NoWaterException, CellDoesNotExist
+    public static void plant(int x,int y) throws NoWaterException, CellDoesNotExistException
     {
         if(well.getWaterRemaining()==0)
         {
@@ -82,9 +82,9 @@ public class Controller {
 
     }
 
-    public static void startAWorkShop(int index) throws WorkshopDoesntExist
+    public static void startAWorkShop(int index) throws WorkshopDoesntExistException
     {
-        if(index>=workShops.size())throw new WorkshopDoesntExist();
+        if(index>=workShops.size())throw new WorkshopDoesntExistException();
         WorkShop workShop=workShops.get(index);
 
     }
@@ -97,7 +97,7 @@ public class Controller {
             workShops.add(workshop);
         }
     }
-    public static void nextTurn() throws CellDoesNotExist {
+    public static void nextTurn() throws CellDoesNotExistException {
         turn++;
         map.nextTurn();
         if(helicopter.isTransportationEnds())
@@ -142,7 +142,7 @@ public class Controller {
         throw new IOException();
     }
 
-    public static void upgrade(Object object) throws IOException, CantUpgrade, NotEnoughMoneyException {
+    public static void upgrade(Object object) throws IOException, CantUpgradeException, NotEnoughMoneyException {
         if(!(object instanceof Upgradable))
         {
             throw new IOException();
@@ -182,7 +182,7 @@ public class Controller {
         }
 
     }
-    public static void pickup(int x,int y) throws CellDoesNotExist
+    public static void pickup(int x,int y) throws CellDoesNotExistException
     {
         ArrayList<Item> items=map.getItems(x,y);
         for(Item item:items)
@@ -198,7 +198,7 @@ public class Controller {
         subtractMoney(Constant.WELL_FILL_COST+well.getLevel()*Constant.WELL_FILL_COST_PER_LEVEL);
         well.fill();
     }
-    public static void cage(int x,int y) throws CellDoesNotExist {
+    public static void cage(int x,int y) throws CellDoesNotExistException {
         map.cage(x,y);
     }
     public static void clearTruck()
