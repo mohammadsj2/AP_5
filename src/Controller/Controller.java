@@ -20,11 +20,16 @@ import Model.Well;
 import Model.WorkShop;
 import Exception.NotEnoughMoneyException;
 import Exception.NoWaterException;
-import Exception.CellDoesNotExist;
-import Exception.CantUpgrade;
+import Exception.CellDoesNotExistException;
+import Exception.CantUpgradeException;
+import Exception.StartBusyProducerException;
+import Exception.WorkShopNotUsedException;
+import com.google.gson.Gson;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import Exception.WorkshopDoesntExistException;
 
 public class Controller {
     private static int money,turn;
@@ -65,7 +70,7 @@ public class Controller {
         money-=money2;
     }
     private static void increaseMoney(int money2){money+=money2;}
-    public static void plant(int x,int y) throws NoWaterException, CellDoesNotExist
+    public static void plant(int x,int y) throws NoWaterException, CellDoesNotExistException
     {
         if(well.getWaterRemaining()==0)
         {
@@ -79,21 +84,31 @@ public class Controller {
 
     }
 
-    public static void startAWorkShop(int index)
-    {
+    public static void startAWorkShop(int index) throws WorkshopDoesntExistException, StartBusyProducerException, WorkShopNotUsedException {
+        if(index>=workShops.size())throw new WorkshopDoesntExistException();
         WorkShop workShop=workShops.get(index);
-        
+        int usedLevel=workShop.maxLevelCanDoWithItems(wareHouse.getItems());
+        workShop.startByLevel(usedLevel);
+        ArrayList<Item> neededItems=workShop.getInputItemsByUsedLevel();
+        for(Item item:neededItems)
+        {
+            wareHouse.eraseItem(item);
+        }
     }
-    public static void createWorkshops()
+    public static void createWorkshops() throws IOException
     {
-
+        for(int workshopNumber=0;workshopNumber<6;workshopNumber++)
+        {
+            Gson gson=new Gson();
+            WorkShop workshop=gson.fromJson(new FileReader("../../workshop"+workshopNumber+".json"),WorkShop.class);
+            workShops.add(workshop);
+        }
     }
-    public static void nextTurn() throws CellDoesNotExist {
+    public static void nextTurn() throws CellDoesNotExistException, WorkShopNotUsedException {
         turn++;
         map.nextTurn();
         if(helicopter.isTransportationEnds())
         {
-            ArrayList<Item> items=helicopter.getItems();
             distributeItems(helicopter.getItems());
             helicopter.endTransportation();
             helicopter.clear();
@@ -105,6 +120,14 @@ public class Controller {
             truck.clear();
         }
         // nextTurn WorkShop
+        for(WorkShop workShop:workShops)
+        {
+            if(workShop.haveProduct())
+            {
+                distributeItems(workShop.getOutputItemsByUsedLevel());
+                workShop.endProduction();
+            }
+        }
 
     }
 
@@ -119,8 +142,8 @@ public class Controller {
 
     public static Object getObject(String type) throws IOException
     {
-    //  if(type.equals("cat"))return cat;
-    //  if(type.equals("dog"))return dog;
+        //  if(type.equals("cat"))return cat;
+        //  if(type.equals("dog"))return dog;
         if(type.equals("well"))return well;
         if(type.equals("helicopter"))return helicopter;
         if(type.equals("truck"))return truck;
@@ -133,7 +156,7 @@ public class Controller {
         throw new IOException();
     }
 
-    public static void upgrade(Object object) throws IOException, CantUpgrade, NotEnoughMoneyException {
+    public static void upgrade(Object object) throws IOException, CantUpgradeException, NotEnoughMoneyException {
         if(!(object instanceof Upgradable))
         {
             throw new IOException();
@@ -173,7 +196,7 @@ public class Controller {
         }
 
     }
-    public static void pickup(int x,int y) throws CellDoesNotExist
+    public static void pickup(int x,int y) throws CellDoesNotExistException
     {
         ArrayList<Item> items=map.getItems(x,y);
         for(Item item:items)
@@ -189,7 +212,7 @@ public class Controller {
         subtractMoney(Constant.WELL_FILL_COST+well.getLevel()*Constant.WELL_FILL_COST_PER_LEVEL);
         well.fill();
     }
-    public static void cage(int x,int y) throws CellDoesNotExist {
+    public static void cage(int x,int y) throws CellDoesNotExistException {
         map.cage(x,y);
     }
     public static void clearTruck()

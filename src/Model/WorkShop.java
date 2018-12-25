@@ -7,10 +7,11 @@ import Exception.*;
 import Constant.Constant;
 
 public class WorkShop implements Producer,Upgradable{
-    ArrayList<Item> inputs,outputs;
-    int location,level,startTime,produceDuration;
-    String name;
-    boolean busy,isCustom;
+    private ArrayList<Item> inputs,outputs;
+    private int location,level,startTime,produceDuration;
+    private String name;
+    private boolean busy,isCustom;
+    private int usedLevel=-10;
 
     WorkShop(String name,int location,boolean isCustom,ArrayList<Item> inputs
             ,ArrayList<Item> outputs,int produceDuration){
@@ -28,17 +29,17 @@ public class WorkShop implements Producer,Upgradable{
     }
 
     @Override
-    public int upgradeCost() throws CantUpgrade{
+    public int upgradeCost() throws CantUpgradeException {
         if(!canUpgrade()){
-            throw new CantUpgrade();
+            throw new CantUpgradeException();
         }
         return Constant.WORKSHOP_UPGRADE_COST_PER_LEVEL *(level+1);
     }
 
     @Override
-    public void upgrade() throws CantUpgrade{
+    public void upgrade() throws CantUpgradeException {
         if(!canUpgrade()){
-            throw new CantUpgrade();
+            throw new CantUpgradeException();
         }
         level++;
     }
@@ -53,9 +54,9 @@ public class WorkShop implements Producer,Upgradable{
     }
 
     @Override
-    public void startProduction() throws StartBusyProducer {
+    public void startProduction() throws StartBusyProducerException {
         if(busy){
-            throw new StartBusyProducer();
+            throw new StartBusyProducerException();
         }
         busy=true;
         startTime=Controller.getTurn();
@@ -72,20 +73,22 @@ public class WorkShop implements Producer,Upgradable{
     }
 
     @Override
-    public ArrayList<Item> getOutPutItems() {
+    public ArrayList<Item> getOutputItems() {
         return multipleItems(outputs,level+1);
     }
 
-    public ArrayList<Item> getOutPutItemsByLevel(int level) {
-        return multipleItems(outputs,level+1);
+    public ArrayList<Item> getOutputItemsByUsedLevel() throws WorkShopNotUsedException {
+        if(usedLevel==-10)throw new WorkShopNotUsedException();
+        return multipleItems(outputs,usedLevel+1);
     }
 
     @Override
-    public ArrayList<Item> getInPutItems() {
+    public ArrayList<Item> getInputItems() {
         return multipleItems(inputs,level+1);
     }
-    public ArrayList<Item> getInPutItemsByLevel(int level) {
-        return multipleItems(inputs,level+1);
+    public ArrayList<Item> getInputItemsByUsedLevel() throws WorkShopNotUsedException {
+        if(usedLevel==-10)throw new WorkShopNotUsedException();
+        return multipleItems(inputs,usedLevel+1);
     }
     public int maxLevelCanDoWithItems(ArrayList<Item> items){
         ArrayList<Item> copyOfItems=new ArrayList<>();
@@ -105,5 +108,15 @@ public class WorkShop implements Producer,Upgradable{
     @Override
     public void endProduction() {
         busy=false;
+        usedLevel=-10;
+    }
+
+    public void startByLevel(int usedLevel) throws StartBusyProducerException {
+        if(busy){
+            throw new StartBusyProducerException();
+        }
+        busy=true;
+        startTime=Controller.getTurn();
+        this.usedLevel=usedLevel;
     }
 }

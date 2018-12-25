@@ -3,9 +3,9 @@ package Model.Entity.Animal;
 import Controller.Controller;
 import Model.Entity.Item;
 import Model.Map.Cell;
-import Model.WareHouse;
+
 import java.util.ArrayList;
-import Exception.CellDoesNotExist;
+import Exception.CellDoesNotExistException;
 
 public class Cat extends Animal{
     public Cat(Cell cell) {
@@ -26,7 +26,7 @@ public class Cat extends Animal{
             this.changeCell(cur);
         }
     }
-    public void catchItem() throws CellDoesNotExist {
+    public void catchItem() throws CellDoesNotExistException {
         ArrayList<Item> items = this.getCell().getItems();
         for (Item item : items) {
             Controller.getWareHouse().addItem(item);

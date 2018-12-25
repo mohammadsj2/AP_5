@@ -6,8 +6,8 @@ import Model.Upgradable;
 import Model.Map.Cell;
 import Constant.Constant;
 import Controller.Controller;
-import Exception.CantUpgrade;
-import Exception.CellDoesNotExist;
+import Exception.CantUpgradeException;
+import Exception.CellDoesNotExistException;
 
 public abstract class Animal extends Entity implements Upgradable, Loadable {
     private int level;
@@ -40,7 +40,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
         return level;
     }
 
-    public void walk() throws CellDoesNotExist {
+    public void walk() throws CellDoesNotExistException {
         Cell cur = Controller.getMap().getRandomCell();
         this.changeCell(cur);
     }
@@ -49,17 +49,17 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
         this.setCell(cur);
         cur.addEntity(this);
     }
-    public void nextTurn() throws CellDoesNotExist {
+    public void nextTurn() throws CellDoesNotExistException {
         this.walk();
     }
 
     @Override
-    public int upgradeCost() throws CantUpgrade {
+    public int upgradeCost() throws CantUpgradeException {
         return 0;
     }
 
     @Override
-    public void upgrade() throws CantUpgrade {
+    public void upgrade() throws CantUpgradeException {
 
     }
 
