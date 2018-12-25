@@ -25,12 +25,12 @@ public abstract class Pet extends Animal implements Producer {
     }
 
     @Override
-    public ArrayList<Item> getInPutItems() {
+    public ArrayList<Item> getInputItems() {
         return null;
     }
 
     @Override
-    public ArrayList<Item> getOutPutItems() {
+    public ArrayList<Item> getOutputItems() {
         return null;
     }
 
