@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import Exception.WorkshopDoesntExistException;
 
 public class Controller {
-
     private static int money, turn;
     private static ArrayList<WorkShop> workShops = new ArrayList<>();
     private static Map map;
@@ -80,9 +79,18 @@ public class Controller {
         if (map.plant(x, y)) well.liftWater();
     }
 
-    public static void printInfo(Object object) {
-
+    public static String getInfoOfObject(Object object) {
+        YaGson yaGson=new YaGson();
+        return yaGson.toJson(object);
     }
+
+    public static String getInfo(String string)throws IOException{
+        if(string.equals(workShops)){
+            return getInfoOfObject(workShops);
+        }
+        return getInfoOfObject(getObject(string));
+    }
+
 
     public static void startAWorkShop(int index) throws WorkshopDoesntExistException, StartBusyProducerException, WorkShopNotUsedException {
         if (index >= workShops.size()) throw new WorkshopDoesntExistException();
@@ -116,14 +124,12 @@ public class Controller {
             truck.endTransportation();
             truck.clear();
         }
-        // nextTurn WorkShop
         for (WorkShop workShop : workShops) {
             if (workShop.haveProduct()) {
                 distributeItems(workShop.getOutputItemsByUsedLevel());
                 workShop.endProduction();
             }
         }
-
     }
 
     private static void distributeItems(ArrayList<Item> items) {
@@ -140,10 +146,15 @@ public class Controller {
         if (type.equals("helicopter")) return helicopter;
         if (type.equals("truck")) return truck;
         if (type.equals("warehouse")) return wareHouse;
+        if(type.equals("map"))return map;
+        if(type.equals("level"))return level;
+
         if (type.startsWith("workshop")) {
             int workshopNumber = type.charAt(type.length() - 1) - '0';
             return workShops.get(workshopNumber);
         }
+
+
         throw new IOException();
     }
 
