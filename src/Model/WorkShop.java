@@ -13,7 +13,7 @@ public class WorkShop implements Producer,Upgradable{
     private boolean busy,isCustom;
     private int usedLevel=-10;
 
-    WorkShop(String name,int location,boolean isCustom,ArrayList<Item> inputs
+    public WorkShop(String name,int location,boolean isCustom,ArrayList<Item> inputs
             ,ArrayList<Item> outputs,int produceDuration){
         this.name=name;
         this.location=location;
