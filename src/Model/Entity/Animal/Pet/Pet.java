@@ -1,6 +1,6 @@
 package Model.Entity.Animal.Pet;
 
-import Controller.Controller;
+import Controller.*;
 import Model.Entity.Animal.Animal;
 import Model.Entity.Item;
 import Model.Map.Cell;
@@ -66,15 +66,15 @@ public abstract class Pet extends Animal implements Producer {
     }
     @Override
     public void walk() throws CellDoesNotExistException {
-        if (isHungry() && Controller.getMap().nearestCellWithGrass(this.getCell()) != null) {
+        if (isHungry() && InputReader.getCurrentController().getMap().nearestCellWithGrass(this.getCell()) != null) {
             if (!this.getCell().haveGrass()) {
-                changeCell(Controller.getMap().nearestCellWithGrass(this.getCell()));
+                changeCell(InputReader.getCurrentController().getMap().nearestCellWithGrass(this.getCell()));
             } else {
                 this.eatGrass();
                 this.updateHealth(1);
             }
         } else {
-            changeCell(Controller.getMap().getRandomCell());
+            changeCell(InputReader.getCurrentController().getMap().getRandomCell());
         }
     }
     public void eatGrass() {

@@ -1,6 +1,6 @@
 package Model;
 
-import Controller.Controller;
+import Controller.*;
 import Model.Entity.Item;
 import java.util.ArrayList;
 import Exception.*;
@@ -25,7 +25,7 @@ public class WorkShop implements Producer,Upgradable{
 
     @Override
     public boolean canUpgrade() {
-        return (level== Constant.MAX_WORKSHOP_LEVEL || isCustom);
+        return (level== Constant.MAX_WORKSHOP_LEVEL || isCustom );
     }
 
     @Override
@@ -50,7 +50,7 @@ public class WorkShop implements Producer,Upgradable{
 
     @Override
     public boolean haveProduct() {
-        return (busy && Controller.getTurn()>=startTime+getProduceDuration());
+        return (busy && InputReader.getCurrentController().getTurn()>=startTime+getProduceDuration());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class WorkShop implements Producer,Upgradable{
             throw new StartBusyProducerException();
         }
         busy=true;
-        startTime=Controller.getTurn();
+        startTime=InputReader.getCurrentController().getTurn();
     }
 
     private ArrayList<Item> multipleItems(ArrayList<Item> items,int cnt){
@@ -116,7 +116,7 @@ public class WorkShop implements Producer,Upgradable{
             throw new StartBusyProducerException();
         }
         busy=true;
-        startTime=Controller.getTurn();
+        startTime=InputReader.getCurrentController().getTurn();
         this.usedLevel=usedLevel;
     }
 }

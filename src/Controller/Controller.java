@@ -32,17 +32,19 @@ import java.util.ArrayList;
 import Exception.WorkshopDoesntExistException;
 
 public class Controller {
-    private static int money, turn;
-    private static ArrayList<WorkShop> workShops = new ArrayList<>();
-    private static Map map;
-    private static Well well;
-    private static WareHouse wareHouse;
-    private static Level level;
-    private static Helicopter helicopter;
-    private static Truck truck;
-    private static ArrayList<Dog> dogs = new ArrayList<>();
-    private static ArrayList<Cat> cats = new ArrayList<>();
-    private static ArrayList<Pet> pets = new ArrayList<>();
+    private int money, turn;
+    private ArrayList<WorkShop> workShops = new ArrayList<>();
+    private Map map;
+    private Well well;
+    private WareHouse wareHouse;
+    private Level level;
+    private Helicopter helicopter;
+    private Truck truck;
+
+    //TODO in array Listaro bara chi lazem dari ?!!! va inke vaghti mimiran update mishan ?!!?!?!?!?
+    private ArrayList<Dog> dogs = new ArrayList<>();
+    private ArrayList<Cat> cats = new ArrayList<>();
+    private ArrayList<Pet> pets = new ArrayList<>();
 
     private Controller(int goalMoney, ArrayList<Entity> earnedEnitities) {
         money = turn = 0;
@@ -54,45 +56,59 @@ public class Controller {
         wareHouse = new WareHouse();
     }
 
-    public static int getMoney() {
+    public int getMoney() {
         return money;
     }
 
-    public static int getTurn() {
+    public int getTurn() {
         return turn;
     }
 
-    public static void subtractMoney(int money2) throws NotEnoughMoneyException {
+    void subtractMoney(int money2) throws NotEnoughMoneyException {
         if (money < money2)
             throw new NotEnoughMoneyException();
         money -= money2;
     }
 
-    private static void increaseMoney(int money2) {
+    private void increaseMoney(int money2) {
         money += money2;
     }
 
-    public static void plant(int x, int y) throws NoWaterException, CellDoesNotExistException {
+    public void plant(int x, int y) throws NoWaterException, CellDoesNotExistException {
         if (well.getWaterRemaining() == 0) {
             throw new NoWaterException();
         }
         if (map.plant(x, y)) well.liftWater();
     }
 
-    public static String getInfoOfObject(Object object) {
+    private String getInfoOfObject(Object object) {
         YaGson yaGson=new YaGson();
         return yaGson.toJson(object);
     }
 
-    public static String getInfo(String string)throws IOException{
-        if(string.equals(workShops)){
+    public String getInfo(String string)throws IOException{
+        if(string.equals("info")){
+            StringBuilder stringBuilder=new StringBuilder("");
+
+            stringBuilder.append("Money:");
+            stringBuilder.append(getMoney());
+            stringBuilder.append("\n");
+
+            stringBuilder.append("Turn:");
+            stringBuilder.append(getTurn());
+            stringBuilder.append("\n");
+
+            stringBuilder.append(getInfoOfObject(level));
+            return stringBuilder.toString();
+        }
+        if(string.equals("workShops")){
             return getInfoOfObject(workShops);
         }
         return getInfoOfObject(getObject(string));
     }
 
 
-    public static void startAWorkShop(int index) throws WorkshopDoesntExistException, StartBusyProducerException, WorkShopNotUsedException {
+    public void startAWorkShop(int index) throws WorkshopDoesntExistException, StartBusyProducerException, WorkShopNotUsedException {
         if (index >= workShops.size()) throw new WorkshopDoesntExistException();
         WorkShop workShop = workShops.get(index);
         int usedLevel = workShop.maxLevelCanDoWithItems(wareHouse.getItems());
@@ -103,7 +119,7 @@ public class Controller {
         }
     }
 
-    public static void createWorkshops() throws IOException {
+    public void createWorkshops() throws IOException {
         for (int workshopNumber = 0; workshopNumber < 6; workshopNumber++) {
             YaGson yaGson = new YaGson();
             WorkShop workshop = yaGson.fromJson(new FileReader("../../workshop" + workshopNumber + ".json"), WorkShop.class);
@@ -111,7 +127,7 @@ public class Controller {
         }
     }
 
-    public static void nextTurn() throws CellDoesNotExistException, WorkShopNotUsedException {
+    public void nextTurn() throws CellDoesNotExistException, WorkShopNotUsedException {
         turn++;
         map.nextTurn();
         if (helicopter.isTransportationEnds()) {
@@ -132,14 +148,14 @@ public class Controller {
         }
     }
 
-    private static void distributeItems(ArrayList<Item> items) {
+    private void distributeItems(ArrayList<Item> items) {
         for (Item item : items) {
             Cell randomCell = map.getRandomCell();
             randomCell.addEntity(item);
         }
     }
 
-    public static Object getObject(String type) throws IOException {
+    public Object getObject(String type) throws IOException {
         //  if(type.equals("cat"))return cat;
         //  if(type.equals("dog"))return dog;
         if (type.equals("well")) return well;
@@ -158,15 +174,19 @@ public class Controller {
         throw new IOException();
     }
 
-    public static void upgrade(Object object) throws IOException, CantUpgradeException, NotEnoughMoneyException {
+    public void upgrade(Object object) throws IOException, CantUpgradeException, NotEnoughMoneyException {
         if (!(object instanceof Upgradable)) {
             throw new IOException();
         }
-        subtractMoney(((Upgradable) object).upgradeCost());
-        ((Upgradable) object).upgrade();
+        Upgradable upgradable=(Upgradable)object;
+        if(!upgradable.canUpgrade()){
+            throw new CantUpgradeException();
+        }
+        subtractMoney(upgradable.upgradeCost());
+        upgradable.upgrade();
     }
 
-    public static void addAnimal(String type) throws IOException, NotEnoughMoneyException {
+    public void addAnimal(String type) throws IOException, NotEnoughMoneyException {
         switch (type) {
             case Constant.DOG_NAME:
                 subtractMoney(Constant.DOG_ADD_COST);
@@ -194,7 +214,7 @@ public class Controller {
 
     }
 
-    public static void pickup(int x, int y) throws CellDoesNotExistException {
+    public void pickup(int x, int y) throws CellDoesNotExistException {
         ArrayList<Item> items = map.getItems(x, y);
         for (Item item : items) {
             if (wareHouse.addItem(item)) {
@@ -203,47 +223,47 @@ public class Controller {
         }
     }
 
-    public static void fillWell() throws NotEnoughMoneyException {
+    public void fillWell() throws NotEnoughMoneyException {
         subtractMoney(Constant.WELL_FILL_COST + well.getLevel() * Constant.WELL_FILL_COST_PER_LEVEL);
         well.fill();
     }
 
-    public static void cage(int x, int y) throws CellDoesNotExistException {
+    public void cage(int x, int y) throws CellDoesNotExistException {
         map.cage(x, y);
     }
 
-    public static void clearTruck() {
+    public void clearTruck() {
         truck.clear();
     }
 
-    public static void clearHelicopter() {
+    public void clearHelicopter() {
         helicopter.clear();
     }
 
-    public static void addItemToHelicopter(Item item) {
+    public void addItemToHelicopter(Item item) {
         helicopter.addItem(item);
     }
 
-    public static void addItemToTruck(Item item) {
+    public void addItemToTruck(Item item) {
         if (truck.addItem(item)) {
             wareHouse.eraseItem(item);
         }
     }
 
-    public static void startTruck() {
+    public void startTruck() {
         truck.startTransportation();
     }
 
-    public static void startHelicopter() throws NotEnoughMoneyException {
+    public void startHelicopter() throws NotEnoughMoneyException {
         subtractMoney(helicopter.getMoney());
         helicopter.startTransportation();
     }
 
-    public static Map getMap() {
+    public Map getMap() {
         return map;
     }
 
-    public static WareHouse getWareHouse() {
+    public WareHouse getWareHouse() {
         return wareHouse;
     }
 }

@@ -5,7 +5,7 @@ import Model.Loadable;
 import Model.Upgradable;
 import Model.Map.Cell;
 import Constant.Constant;
-import Controller.Controller;
+import Controller.*;
 import Exception.CantUpgradeException;
 import Exception.CellDoesNotExistException;
 
@@ -30,7 +30,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
         this.speed = speed;
     }
     public Cell walkTowards(Cell cur) {
-        return Controller.getMap().getBestCellBySpeed(this.getCell(), cur, this.getSpeed());
+        return InputReader.getCurrentController().getMap().getBestCellBySpeed(this.getCell(), cur, this.getSpeed());
     }
     public void setLevel(int level) {
         this.level = level;
@@ -41,7 +41,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
     }
 
     public void walk() throws CellDoesNotExistException {
-        Cell cur = Controller.getMap().getRandomCell();
+        Cell cur = InputReader.getCurrentController().getMap().getRandomCell();
         this.changeCell(cur);
     }
     public void changeCell(Cell cur) {
