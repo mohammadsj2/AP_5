@@ -1,0 +1,1 @@
+{"@type":"Model.WorkShop","@val":{"inputs":[{"name":"Wool","volume":5,"cost":150,"creatingTurn":0,"isInWareHouse":false,"alive":false}],"outputs":[{"name":"Sewing","volume":3,"cost":225,"creatingTurn":0,"isInWareHouse":false,"alive":false}],"location":-1,"level":0,"startTime":0,"produceDuration":15,"name":"Spinnery","busy":false,"isCustom":false,"usedLevel":-10}}

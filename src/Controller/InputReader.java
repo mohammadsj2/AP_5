@@ -1,8 +1,13 @@
 package Controller;
 
+import Constant.Constant;
+import Model.Entity.Entity;
+import Model.Entity.Item;
+import Model.WorkShop;
 import com.gilecode.yagson.YaGson;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Scanner;
 import Exception.*;
@@ -55,9 +60,12 @@ public class InputReader {
     public static void save(String saveName) {
         YaGson yaGson = new YaGson();
         try {
-            OutputStream outputStream = new FileOutputStream(("./ResourcesRoot/Save/" + saveName + ".txt"));
+            OutputStream outputStream = new FileOutputStream(("./ResourcesRoot/Save/" + saveName + ".json"));
             Formatter formatter = new Formatter(outputStream);
             formatter.format(yaGson.toJson(currentController));
+
+            formatter.flush();
+            formatter.close();
             outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -67,7 +75,7 @@ public class InputReader {
     public static void load(String saveName) {
         YaGson yaGson = new YaGson();
         try {
-            currentController=yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/" + saveName + ".txt")),Controller.class);
+            currentController=yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/" + saveName + ".json")),Controller.class);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
