@@ -1,7 +1,7 @@
 package Model.Entity;
 
 import Constant.Constant;
-import Controller.Controller;
+import Controller.*;
 import Model.Map.Cell;
 
 public class Item extends Entity {
@@ -35,7 +35,7 @@ public class Item extends Entity {
     }
     public boolean isExpired(){
         if(isInWareHouse)return false;
-        return (creatingTurn+ Constant.TERM_OF_DESTROY_ITEM_IN_MAP >= Controller.getTurn());
+        return (creatingTurn+ Constant.TERM_OF_DESTROY_ITEM_IN_MAP >= InputReader.getCurrentController().getTurn());
     }
     public int getCost() {
         return cost;

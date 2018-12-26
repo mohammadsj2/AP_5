@@ -1,7 +1,7 @@
 package Model.Entity.Animal.Wild;
 
 import Constant.Constant;
-import Controller.Controller;
+import Controller.*;
 import Model.Entity.Item;
 import Model.Map.Cell;
 
@@ -14,7 +14,7 @@ public class Bear extends Wild{
     }
     @Override
     public Item toItem() {
-        return new Item(Constant.BEAR_NAME, Constant.BEAR_VOLUME, Constant.BEAR_COST, Controller.getTurn(), this.getCell());
+        return new Item(Constant.BEAR_NAME, Constant.BEAR_VOLUME, Constant.BEAR_COST, InputReader.getCurrentController().getTurn(), this.getCell());
     }
 
 }

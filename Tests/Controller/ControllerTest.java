@@ -8,7 +8,7 @@ public class ControllerTest {
     @Test
     public void moneyHandlingTest(){
         try {
-            Controller.subtractMoney(50);
+            InputReader.getCurrentController().subtractMoney(50);
         } catch (NotEnoughMoneyException e) {
             Assert.assertTrue(true);
             return;
