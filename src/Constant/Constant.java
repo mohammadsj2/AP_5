@@ -14,6 +14,12 @@ public class Constant {
     public static final int LION_VOLUME = 4;
     public static final int LION_COST = 100;
 
+    public static final String DOG_NAME = "Dog";
+    public static final String CAT_NAME = "Cat";
+    public static final String COW_NAME = "Cow";
+    public static final String SHEEP_NAME = "Sheep";
+    public static final String CHICKEN_NAME = "Chicken";
+
     public static final int DOG_ADD_COST=2600;
     public static final int CAT_ADD_COST=2500;
     public static final int COW_ADD_COST=10000;

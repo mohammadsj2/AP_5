@@ -1,10 +1,9 @@
 package Controller;
 
 import Constant.Constant;
-import Model.Entity.Animal.Animal;
 import Model.Entity.Animal.Cat;
 import Model.Entity.Animal.Dog;
-import Model.Entity.Animal.Pet.Chiken;
+import Model.Entity.Animal.Pet.Chicken;
 import Model.Entity.Animal.Pet.Cow;
 import Model.Entity.Animal.Pet.Pet;
 import Model.Entity.Animal.Pet.Sheep;
@@ -25,7 +24,6 @@ import Exception.CantUpgradeException;
 import Exception.StartBusyProducerException;
 import Exception.WorkShopNotUsedException;
 import com.gilecode.yagson.YaGson;
-import com.google.gson.Gson;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -33,11 +31,7 @@ import java.util.ArrayList;
 import Exception.WorkshopDoesntExistException;
 
 public class Controller {
-    public static final String DOG_NAME = "Dog";
-    public static final String CAT_NAME = "Cat";
-    public static final String COW_NAME = "Cow";
-    public static final String SHEEP_NAME = "Sheep";
-    public static final String CHIKEN_NAME = "Chiken";
+
     private static int money,turn;
     private static ArrayList<WorkShop> workShops=new ArrayList<>();
     private static Map map;
@@ -172,25 +166,25 @@ public class Controller {
     }
     public static void addAnimal(String type) throws IOException, NotEnoughMoneyException {
         switch (type) {
-            case DOG_NAME:
+            case Constant.DOG_NAME:
                 subtractMoney(Constant.DOG_ADD_COST);
                 dogs.add(new Dog(map.getRandomCell()));
                 break;
-            case CAT_NAME:
+            case Constant.CAT_NAME:
                 subtractMoney(Constant.CAT_ADD_COST);
                 cats.add(new Cat(map.getRandomCell()));
                 break;
-            case COW_NAME:
+            case Constant.COW_NAME:
                 subtractMoney(Constant.COW_ADD_COST);
                 pets.add(new Cow(map.getRandomCell()));
                 break;
-            case SHEEP_NAME:
+            case Constant.SHEEP_NAME:
                 subtractMoney(Constant.SHEEP_ADD_COST);
                 pets.add(new Sheep(map.getRandomCell()));
                 break;
-            case CHIKEN_NAME:
+            case Constant.CHICKEN_NAME:
                 subtractMoney(Constant.CHICKEN_ADD_COST);
-                pets.add(new Chiken(map.getRandomCell()));
+                pets.add(new Chicken(map.getRandomCell()));
                 break;
             default:
                 throw new IOException();
