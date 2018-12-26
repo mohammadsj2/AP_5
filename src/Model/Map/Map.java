@@ -113,7 +113,8 @@ public class Map {
 
     private void wildsToItems(ArrayList<Wild> wilds) {
         for (Wild wild : wilds) {
-            wild.toItem();
+            Item item=wild.toItem();
+            item.getCell().addEntity(item);
         }
     }
 
