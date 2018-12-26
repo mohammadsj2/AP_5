@@ -15,9 +15,8 @@ public class Well implements Upgradable,Loadable{
         return Constant.WELL_FILL_COST+level*Constant.WELL_FILL_COST_PER_LEVEL;
     }
 
-    public void fill() throws NotEnoughMoneyException
+    public void fill()
     {
-        Controller.subtractMoney(fillCost());
         waterRemaining=maxWater;
     }
     public void liftWater() throws NoWaterException
