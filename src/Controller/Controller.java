@@ -46,7 +46,7 @@ public class Controller {
     private ArrayList<Cat> cats = new ArrayList<>();
     private ArrayList<Pet> pets = new ArrayList<>();
 
-    private Controller(int goalMoney, ArrayList<Entity> earnedEnitities) {
+    Controller(int goalMoney, ArrayList<Entity> earnedEnitities) {
         money = turn = 0;
         map = new Map();
         well = new Well();
@@ -68,6 +68,10 @@ public class Controller {
         if (money < money2)
             throw new NotEnoughMoneyException();
         money -= money2;
+    }
+
+    void setMoney(int money) {
+        this.money = money;
     }
 
     private void increaseMoney(int money2) {
