@@ -32,8 +32,8 @@ public class Map {
         for(Animal animal:animals){
             try {
                 animal.nextTurn();
-            } catch (CellDoesNotExist cellDoesNotExist) {
-                cellDoesNotExist.printStackTrace();
+            } catch (CellDoesNotExistException cellDoesNotExistException) {
+                cellDoesNotExistException.printStackTrace();
             }
         }
     }
