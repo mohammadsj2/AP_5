@@ -24,6 +24,7 @@ import Exception.CellDoesNotExistException;
 import Exception.CantUpgradeException;
 import Exception.StartBusyProducerException;
 import Exception.WorkShopNotUsedException;
+import com.gilecode.yagson.YaGson;
 import com.google.gson.Gson;
 
 import java.io.FileReader;
@@ -32,6 +33,11 @@ import java.util.ArrayList;
 import Exception.WorkshopDoesntExistException;
 
 public class Controller {
+    public static final String DOG_NAME = "Dog";
+    public static final String CAT_NAME = "Cat";
+    public static final String COW_NAME = "Cow";
+    public static final String SHEEP_NAME = "Sheep";
+    public static final String CHIKEN_NAME = "Chiken";
     private static int money,turn;
     private static ArrayList<WorkShop> workShops=new ArrayList<>();
     private static Map map;
@@ -99,8 +105,8 @@ public class Controller {
     {
         for(int workshopNumber=0;workshopNumber<6;workshopNumber++)
         {
-            Gson gson=new Gson();
-            WorkShop workshop=gson.fromJson(new FileReader("../../workshop"+workshopNumber+".json"),WorkShop.class);
+            YaGson yaGson=new YaGson();
+            WorkShop workshop=yaGson.fromJson(new FileReader("../../workshop"+workshopNumber+".json"),WorkShop.class);
             workShops.add(workshop);
         }
     }
@@ -164,35 +170,30 @@ public class Controller {
         subtractMoney(((Upgradable) object).upgradeCost());
         ((Upgradable) object).upgrade();
     }
-    public static void addAnimal(Object object) throws IOException, NotEnoughMoneyException {
-        if(!(object instanceof Animal))
-        {
-            throw new IOException();
-        }
-        if(object instanceof Dog)
-        {
-            subtractMoney(Constant.DOG_ADD_COST);
-            dogs.add(new Dog(map.getRandomCell()));
-        }
-        if(object instanceof Cat)
-        {
-            subtractMoney(Constant.CAT_ADD_COST);
-            cats.add(new Cat(map.getRandomCell()));
-        }
-        if(object instanceof Cow)
-        {
-            subtractMoney(Constant.COW_ADD_COST);
-            pets.add(new Cow(map.getRandomCell()));
-        }
-        if(object instanceof Sheep)
-        {
-            subtractMoney(Constant.SHEEP_ADD_COST);
-            pets.add(new Sheep(map.getRandomCell()));
-        }
-        if(object instanceof Chiken)
-        {
-            subtractMoney(Constant.CHICKEN_ADD_COST);
-            pets.add(new Chiken(map.getRandomCell()));
+    public static void addAnimal(String type) throws IOException, NotEnoughMoneyException {
+        switch (type) {
+            case DOG_NAME:
+                subtractMoney(Constant.DOG_ADD_COST);
+                dogs.add(new Dog(map.getRandomCell()));
+                break;
+            case CAT_NAME:
+                subtractMoney(Constant.CAT_ADD_COST);
+                cats.add(new Cat(map.getRandomCell()));
+                break;
+            case COW_NAME:
+                subtractMoney(Constant.COW_ADD_COST);
+                pets.add(new Cow(map.getRandomCell()));
+                break;
+            case SHEEP_NAME:
+                subtractMoney(Constant.SHEEP_ADD_COST);
+                pets.add(new Sheep(map.getRandomCell()));
+                break;
+            case CHIKEN_NAME:
+                subtractMoney(Constant.CHICKEN_ADD_COST);
+                pets.add(new Chiken(map.getRandomCell()));
+                break;
+            default:
+                throw new IOException();
         }
 
     }

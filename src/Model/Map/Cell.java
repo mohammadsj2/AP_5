@@ -39,7 +39,7 @@ public class Cell {
             if(entity instanceof Animal) {
                 try {
                     ((Animal) entity).nextTurn();
-                } catch (CellDoesNotExist cellDoesNotExist) {
+                } catch (CellDoesNotExistException cellDoesNotExist) {
                     cellDoesNotExist.printStackTrace();
                 }
             }else if(entity instanceof Item){
