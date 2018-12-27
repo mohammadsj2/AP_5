@@ -1,5 +1,12 @@
 package Constant;
 
+import Model.Entity.Item;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.Scanner;
+
 public class Constant {
     public static final int TERM_OF_DESTROY_ITEM_IN_MAP = 30;
     public static final int MAP_ROWS = 100;
@@ -37,4 +44,26 @@ public class Constant {
     public static final int WELL_FILL_COST = 19;
     public static final int WELL_FILL_COST_PER_LEVEL = -3;
     public static final int WELL_UPGRADE_COST_PER_LEVEL = 700;
+
+    public static Item getItemByType(String type){
+        Item item=null;
+        type=type.toLowerCase();
+        try {
+            InputStream inputStream=new FileInputStream("Items.txt");
+            Scanner scanner=new Scanner(inputStream);
+            scanner.nextLine();
+            String[] input;
+            while(scanner.hasNextLine()){
+                input=scanner.nextLine().toLowerCase().trim().split(" ");
+                if(!input[0].equals(type)){
+                    continue;
+                }
+                item=new Item(input[0],new Integer(input[1]),new Integer(input[2]),0);
+                return item;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
