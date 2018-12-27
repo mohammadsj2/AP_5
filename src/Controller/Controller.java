@@ -131,6 +131,7 @@ public class Controller {
         }
     }
 
+    //TODO chera bayad nextTurn exception bede ??!!!
     public void nextTurn() throws CellDoesNotExistException, WorkShopNotUsedException {
         turn++;
         map.nextTurn();
@@ -150,6 +151,14 @@ public class Controller {
                 workShop.endProduction();
             }
         }
+    }
+
+    public Truck getTruck() {
+        return truck;
+    }
+
+    public Helicopter getHelicopter() {
+        return helicopter;
     }
 
     private void distributeItems(ArrayList<Item> items) {
