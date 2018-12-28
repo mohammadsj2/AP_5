@@ -1,7 +1,8 @@
 package Model.Entity;
 
-import Controller.Controller;
+import Controller.*;
 import Model.Map.Cell;
+import Exception.CellDoesNotExistException;
 
 public abstract class Entity {
     private Cell cell;
@@ -24,11 +25,12 @@ public abstract class Entity {
     public void setCell(Cell x) {
         cell = x;
     }
-    public void destroyFromMap() {
-        Controller.getMap().destroyEntity(this.getCell().getPositionX(), this.getCell().getPositionY(), this);
+    public void destroyFromMap() throws CellDoesNotExistException {
+        InputReader.getCurrentController().getMap().destroyEntity(this.getCell().getPositionX(), this.getCell().getPositionY(), this);
     }
-    public void destroy() {
+    public void destroy() throws CellDoesNotExistException {
         this.destroyFromMap();
         setAlive(false);
     }
+
 }

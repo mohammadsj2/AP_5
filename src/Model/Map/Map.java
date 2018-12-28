@@ -1,12 +1,14 @@
 package Model.Map;
 
 import Constant.Constant;
+import Model.Entity.Animal.Animal;
 import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
-import Exception.CellDoesNotExist;
+import Exception.CellDoesNotExistException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Map {
     public static final int MAX_DISTANCE_2 = 100 * 100 * 100;
@@ -19,24 +21,34 @@ public class Map {
             }
         }
     }
-    public void nextTurn() {
-        //TODO
+
+    public void nextTurn() throws CellDoesNotExistException {
+        ArrayList<Animal> animals=new ArrayList<>();
         for(Cell cell:cells){
-            cell.nextTurn();
+            animals.addAll(cell.getAnimals());
+        }
+        Collections.shuffle(animals);
+        //bekhatere in ke ye dog nare donbale wild bad wild nobatesh beshe bere ye ja dg
+        for(Animal animal:animals){
+            try {
+                animal.nextTurn();
+            } catch (CellDoesNotExistException cellDoesNotExistException) {
+                cellDoesNotExistException.printStackTrace();
+            }
         }
     }
 
 
-    private Cell getCell(int x, int y) throws CellDoesNotExist {
+    private Cell getCell(int x, int y) throws CellDoesNotExistException {
         for (Cell cell : cells) {
             if (cell.getPositionX() == x && cell.getPositionY() == y) {
                 return cell;
             }
         }
-        throw new CellDoesNotExist();
+        throw new CellDoesNotExistException();
     }
 
-    public boolean plant(int x, int y) throws CellDoesNotExist{
+    public boolean plant(int x, int y) throws CellDoesNotExistException {
         Cell cell = getCell(x, y);
         if(cell.haveGrass())return false;
         cell.plantGrass();
@@ -89,23 +101,24 @@ public class Map {
         return nearestCell(cell, cellsWithWild);
     }
 
-    public ArrayList<Item> getItems(int x, int y) throws CellDoesNotExist{
+    public ArrayList<Item> getItems(int x, int y) throws CellDoesNotExistException {
         Cell cell = getCell(x, y);
         return cell.getItems();
     }
 
-    public void destroyEntity(int x, int y, Entity entity) throws CellDoesNotExist{
+    public void destroyEntity(int x, int y, Entity entity) throws CellDoesNotExistException {
         Cell cell = getCell(x, y);
         cell.destroyEntity(entity);
     }
 
     private void wildsToItems(ArrayList<Wild> wilds) {
         for (Wild wild : wilds) {
-            wild.toItem();
+            Item item=wild.toItem();
+            item.getCell().addEntity(item);
         }
     }
 
-    public void cage(int x, int y) throws CellDoesNotExist{
+    public void cage(int x, int y) throws CellDoesNotExistException {
         Cell cell = getCell(x, y);
         wildsToItems(cell.getWilds());
     }

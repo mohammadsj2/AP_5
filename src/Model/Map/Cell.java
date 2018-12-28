@@ -4,6 +4,7 @@ import Model.Entity.Animal.Animal;
 import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
+import Exception.CellDoesNotExistException;
 
 import java.util.ArrayList;
 
@@ -29,14 +30,18 @@ public class Cell {
     public boolean haveGrass() {
         return grass;
     }
-    void nextTurn(){
+    void nextTurn() throws CellDoesNotExistException {
         ArrayList<Entity> copyOfEntities=new ArrayList<>();
         for(Entity entity:entities){
             copyOfEntities.add(entity);
         }
         for(Entity entity:copyOfEntities){
             if(entity instanceof Animal) {
-                ((Animal) entity).nextTurn();
+                try {
+                    ((Animal) entity).nextTurn();
+                } catch (CellDoesNotExistException cellDoesNotExist) {
+                    cellDoesNotExist.printStackTrace();
+                }
             }else if(entity instanceof Item){
                 Item item=(Item)entity;
                 if(item.isExpired()){
@@ -90,5 +95,15 @@ public class Cell {
         }
         return wilds;
     }
+    public ArrayList<Animal> getAnimals(){
+        ArrayList<Animal> animals=new ArrayList<>();
+        for(Entity entity:entities){
+            if(entity instanceof Animal){
+                animals.add((Wild)entity);
+            }
+        }
+        return animals;
+    }
+
 
 }

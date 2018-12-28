@@ -1,11 +1,12 @@
 package Model.Entity.Animal.Pet;
 
-import Controller.Controller;
+import Controller.*;
 import Model.Entity.Animal.Animal;
 import Model.Entity.Item;
 import Model.Map.Cell;
 import Model.Producer;
-import Exception.StartBusyProducer;
+import Exception.StartBusyProducerException;
+import Exception.CellDoesNotExistException;
 
 import java.util.ArrayList;
 
@@ -19,17 +20,17 @@ public abstract class Pet extends Animal implements Producer {
     }
 
     @Override
-    public void startProduction() throws StartBusyProducer {
+    public void startProduction() throws StartBusyProducerException {
 
     }
 
     @Override
-    public ArrayList<Item> getInPutItems() {
+    public ArrayList<Item> getInputItems() {
         return null;
     }
 
     @Override
-    public ArrayList<Item> getOutPutItems() {
+    public ArrayList<Item> getOutputItems() {
         return null;
     }
 
@@ -59,27 +60,27 @@ public abstract class Pet extends Animal implements Producer {
         return this.getHealth() <= getHungerLimit();
     }
     @Override
-    public void nextTurn() {
+    public void nextTurn() throws CellDoesNotExistException {
         super.nextTurn();
         this.updateHealth(-1);
     }
     @Override
-    public void walk() {
-        if (isHungry() && Controller.getMap().nearestCellWithGrass(this.getCell()) != null) {
+    public void walk() throws CellDoesNotExistException {
+        if (isHungry() && InputReader.getCurrentController().getMap().nearestCellWithGrass(this.getCell()) != null) {
             if (!this.getCell().haveGrass()) {
-                changeCell(Controller.getMap().nearestCellWithGrass(this.getCell()));
+                changeCell(InputReader.getCurrentController().getMap().nearestCellWithGrass(this.getCell()));
             } else {
                 this.eatGrass();
                 this.updateHealth(1);
             }
         } else {
-            changeCell(Controller.getMap().getRandomCell());
+            changeCell(InputReader.getCurrentController().getMap().getRandomCell());
         }
     }
     public void eatGrass() {
         this.getCell().destroyGrass();
     }
-    public void updateHealth(int x) {
+    public void updateHealth(int x) throws CellDoesNotExistException {
         this.setHealth(this.getHealth() + x);
         if (this.getHealth() <= 0) {
             this.destroy();
