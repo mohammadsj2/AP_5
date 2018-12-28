@@ -1,6 +1,6 @@
 package Model.Entity.Animal;
 
-import Controller.Controller;
+import Controller.*;
 import Model.Map.Cell;
 import Model.Entity.Animal.Wild.Wild;
 import Exception.CellDoesNotExistException;
@@ -14,9 +14,11 @@ public class Dog extends Animal {
     public Dog(Cell cell, int level) {
         super(cell, level);
     }
+
     @Override
     public void walk() throws CellDoesNotExistException {
-        Cell cur = Controller.getMap().nearestCellWithWild(this.getCell()); // injaro mn edit krdm check she doros bashe
+        //TODO Cell ro nabayad = cur konim?!?!?!
+        Cell cur = InputReader.getCurrentController().getMap().nearestCellWithWild(this.getCell());
         if (cur.equals(this.getCell())) {
             this.kill();
         } else {

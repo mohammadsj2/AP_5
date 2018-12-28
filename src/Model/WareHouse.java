@@ -2,6 +2,7 @@ package Model;
 
 import Constant.Constant;
 import Controller.Controller;
+import Controller.InputReader;
 import Model.Entity.Item;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import Exception.CantUpgradeException;
 import Exception.NotEnoughMoneyException;
 
 public class WareHouse implements Upgradable{
+    public static final int WAREHOUSE_MAX_LEVEL = 3;
     private ArrayList<Item> items=new ArrayList<>();
     private int level=0;
     private int capacity=Constant.WAREHOUSE_CAPACITY;
@@ -42,12 +44,7 @@ public class WareHouse implements Upgradable{
 
     @Override
     public void upgrade() throws CantUpgradeException {
-        try
-        {
-            Controller.subtractMoney(upgradeCost());
-        }
-        catch(NotEnoughMoneyException e)
-        {
+        if(level>= WAREHOUSE_MAX_LEVEL){
             throw new CantUpgradeException();
         }
         level++;
@@ -61,7 +58,7 @@ public class WareHouse implements Upgradable{
 
     @Override
     public boolean canUpgrade() {
-        return upgradeCost()<=Controller.getMoney();
+        return level<WAREHOUSE_MAX_LEVEL;
     }
 
     public ArrayList<Item> getItems() {

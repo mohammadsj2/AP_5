@@ -1,12 +1,13 @@
 package Model;
 
 import Constant.Constant;
-import Controller.Controller;
+import Controller.*;
 import Exception.CantUpgradeException;
 import Exception.NotEnoughMoneyException;
 import Exception.NoWaterException;
 
 public class Well implements Upgradable,Loadable{
+    public static final int WELL_MAX_LEVEL = 3;
     private int level=0;
     private int waterRemaining=Constant.WELL_BASE_WATER,maxWater=Constant.WELL_BASE_WATER;
 
@@ -15,9 +16,8 @@ public class Well implements Upgradable,Loadable{
         return Constant.WELL_FILL_COST+level*Constant.WELL_FILL_COST_PER_LEVEL;
     }
 
-    public void fill() throws NotEnoughMoneyException
+    public void fill()
     {
-        Controller.subtractMoney(fillCost());
         waterRemaining=maxWater;
     }
     public void liftWater() throws NoWaterException
@@ -33,23 +33,17 @@ public class Well implements Upgradable,Loadable{
 
     @Override
     public boolean canUpgrade() {
-        return upgradeCost()<=Controller.getMoney();
+        return level<WELL_MAX_LEVEL;
     }
 
     @Override
     public void upgrade() throws CantUpgradeException {
-        try
-        {
-            Controller.subtractMoney(upgradeCost());
-        }
-        catch(NotEnoughMoneyException e)
-        {
+        if(level>= WELL_MAX_LEVEL){
             throw new CantUpgradeException();
         }
         level++;
         maxWater+=Constant.WELL_WATER_PER_LEVEL;
         waterRemaining=maxWater;
-
     }
 
     public int getWaterRemaining() {

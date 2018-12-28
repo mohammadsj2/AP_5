@@ -24,7 +24,7 @@ public class Level {
         this.earnedMoney = earnedMoney;
     }
     public boolean checkLevel(){
-        setEarnedMoney(Controller.getMoney());
+        setEarnedMoney(InputReader.getCurrentController().getMoney());
         if(earnedMoney!=goalMoney){
             return false;
         }
