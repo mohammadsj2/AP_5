@@ -9,6 +9,7 @@ public abstract class Entity {
     private boolean alive;
     public Entity(Cell cell) {
         this.setCell(cell);
+        cell.addEntity(this);
     }
     public boolean getAlive() {
         return alive;

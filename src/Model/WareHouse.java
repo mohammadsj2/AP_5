@@ -10,7 +10,6 @@ import Exception.CantUpgradeException;
 import Exception.NotEnoughMoneyException;
 
 public class WareHouse implements Upgradable{
-    public static final int WAREHOUSE_MAX_LEVEL = 3;
     private ArrayList<Item> items=new ArrayList<>();
     private int level=0;
     private int capacity=Constant.WAREHOUSE_CAPACITY;
@@ -44,7 +43,7 @@ public class WareHouse implements Upgradable{
 
     @Override
     public void upgrade() throws CantUpgradeException {
-        if(level>= WAREHOUSE_MAX_LEVEL){
+        if(level>= Constant.WAREHOUSE_MAX_LEVEL){
             throw new CantUpgradeException();
         }
         level++;
@@ -58,7 +57,7 @@ public class WareHouse implements Upgradable{
 
     @Override
     public boolean canUpgrade() {
-        return level<WAREHOUSE_MAX_LEVEL;
+        return level<Constant.WAREHOUSE_MAX_LEVEL;
     }
 
     public ArrayList<Item> getItems() {

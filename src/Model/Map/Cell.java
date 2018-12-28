@@ -99,7 +99,7 @@ public class Cell {
         ArrayList<Animal> animals=new ArrayList<>();
         for(Entity entity:entities){
             if(entity instanceof Animal){
-                animals.add((Wild)entity);
+                animals.add((Animal)entity);
             }
         }
         return animals;

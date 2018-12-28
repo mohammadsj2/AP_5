@@ -1,5 +1,6 @@
 package Model.Entity.Animal.Pet;
 
+import Constant.Constant;
 import Controller.*;
 import Model.Entity.Animal.Animal;
 import Model.Entity.Item;
@@ -39,11 +40,13 @@ public abstract class Pet extends Animal implements Producer {
 
     }
 
-    public Pet(Cell cell) {
+    protected Pet(Cell cell) {
         super(cell);
+        this.health=Constant.INIT_HEALTH;
     }
-    public Pet(Cell cell, int level) {
+    protected Pet(Cell cell, int level) {
         super(cell, level);
+        this.health=Constant.INIT_HEALTH;
     }
     public int getHealth() {
         return health;

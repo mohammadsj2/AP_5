@@ -5,7 +5,6 @@ import Model.Entity.Animal.Cat;
 import Model.Entity.Animal.Dog;
 import Model.Entity.Animal.Pet.Chicken;
 import Model.Entity.Animal.Pet.Cow;
-import Model.Entity.Animal.Pet.Pet;
 import Model.Entity.Animal.Pet.Sheep;
 import Model.Entity.Entity;
 import Model.Entity.Item;
@@ -23,7 +22,9 @@ import Exception.CellDoesNotExistException;
 import Exception.CantUpgradeException;
 import Exception.StartBusyProducerException;
 import Exception.WorkShopNotUsedException;
+import Exception.StartBusyTransporter;
 import com.gilecode.yagson.YaGson;
+import Exception.WinningMessage;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -41,10 +42,6 @@ public class Controller {
     private Helicopter helicopter;
     private Truck truck;
 
-    //TODO in array Listaro bara chi lazem dari ?!!! va inke vaghti mimiran update mishan ?!!?!?!?!?
-    private ArrayList<Dog> dogs = new ArrayList<>();
-    private ArrayList<Cat> cats = new ArrayList<>();
-    private ArrayList<Pet> pets = new ArrayList<>();
 
     Controller(int goalMoney, ArrayList<Entity> earnedEnitities) {
         money = turn = 0;
@@ -74,7 +71,7 @@ public class Controller {
         this.money = money;
     }
 
-    private void increaseMoney(int money2) {
+    public void increaseMoney(int money2) {
         money += money2;
     }
 
@@ -132,7 +129,7 @@ public class Controller {
     }
 
     //TODO chera bayad nextTurn exception bede ??!!!
-    public void nextTurn() throws CellDoesNotExistException, WorkShopNotUsedException {
+    public void nextTurn() throws CellDoesNotExistException, WorkShopNotUsedException, WinningMessage {
         turn++;
         map.nextTurn();
         if (helicopter.isTransportationEnds()) {
@@ -141,7 +138,7 @@ public class Controller {
             helicopter.clear();
         }
         if (truck.isTransportationEnds()) {
-            increaseMoney(truck.getMoney());
+            increaseMoney(truck.getValue());
             truck.endTransportation();
             truck.clear();
         }
@@ -150,6 +147,16 @@ public class Controller {
                 distributeItems(workShop.getOutputItemsByUsedLevel());
                 workShop.endProduction();
             }
+        }
+        ArrayList <Entity> everyThing=new ArrayList<>();
+        everyThing.addAll(wareHouse.getItems());
+        everyThing.addAll(map.getEntities());
+        for(Entity entity:level.getGoalEntities())
+            if(everyThing.contains(entity))
+                level.entityEarned(entity);
+        if(level.checkLevel())
+        {
+            throw new WinningMessage();
         }
     }
 
@@ -203,23 +210,23 @@ public class Controller {
         switch (type) {
             case Constant.DOG_NAME:
                 subtractMoney(Constant.DOG_ADD_COST);
-                dogs.add(new Dog(map.getRandomCell()));
+                new Dog(map.getRandomCell());
                 break;
             case Constant.CAT_NAME:
                 subtractMoney(Constant.CAT_ADD_COST);
-                cats.add(new Cat(map.getRandomCell()));
+                new Cat(map.getRandomCell());
                 break;
             case Constant.COW_NAME:
                 subtractMoney(Constant.COW_ADD_COST);
-                pets.add(new Cow(map.getRandomCell()));
+                new Cow(map.getRandomCell());
                 break;
             case Constant.SHEEP_NAME:
                 subtractMoney(Constant.SHEEP_ADD_COST);
-                pets.add(new Sheep(map.getRandomCell()));
+                new Sheep(map.getRandomCell());
                 break;
             case Constant.CHICKEN_NAME:
                 subtractMoney(Constant.CHICKEN_ADD_COST);
-                pets.add(new Chicken(map.getRandomCell()));
+                new Chicken(map.getRandomCell());
                 break;
             default:
                 throw new IOException();
@@ -263,12 +270,12 @@ public class Controller {
         }
     }
 
-    public void startTruck() {
+    public void startTruck() throws StartBusyTransporter {
         truck.startTransportation();
     }
 
-    public void startHelicopter() throws NotEnoughMoneyException {
-        subtractMoney(helicopter.getMoney());
+    public void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter {
+        subtractMoney(helicopter.getValue());
         helicopter.startTransportation();
     }
 
