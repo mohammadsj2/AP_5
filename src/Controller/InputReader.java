@@ -27,7 +27,7 @@ public class InputReader {
     static ArrayList<Controller> loadedLevelsControllers = new ArrayList<>();
     static ArrayList<Integer> indexOfLevel = new ArrayList<>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws StartBusyTransporter {
         Scanner scanner = new Scanner(System.in);
         String[] input;
         while (true) {

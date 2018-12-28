@@ -1,28 +1,43 @@
 package Model.Transporter;
 
+import Constant.Constant;
+import Controller.InputReader;
+import Exception.StartBusyTransporter;
 import Model.Entity.Item;
+import Model.Upgradable;
 
 import java.util.ArrayList;
 
-public abstract class Transporter {
-    int level,capacity,speed,startTime;
-    ArrayList<Item> items=new ArrayList<>();
-    boolean busy=false;
+public abstract class Transporter implements Upgradable {
+    protected int level,capacity,speed,startTime;
+    protected ArrayList<Item> items=new ArrayList<>();
+    protected boolean busy=false;
+
+    Transporter()
+    {
+
+    }
 
     public boolean addItem(Item item){
+        items.add(item);
         return false;
     }
-    public void startTransportation(){
-
+    public void startTransportation() throws StartBusyTransporter {
+        if(busy)
+        {
+            throw new StartBusyTransporter();
+        }
+        busy=true;
+        startTime=InputReader.getCurrentController().getTurn();
     }
     public boolean isTransportationEnds(){
-        return true;
+        return (startTime+Constant.TOWN_DISTANCE/speed>= InputReader.getCurrentController().getTurn());
     }
     public void endTransportation(){
-
+        busy=false;
     }
     public void clear(){
-
+        items.clear();
     }
 
     public ArrayList<Item> getItems()
@@ -31,7 +46,7 @@ public abstract class Transporter {
     }
 
 
-    public int getMoney() {
+    public int getValue() {
         int value=0;
         for(Item item:items)
         {

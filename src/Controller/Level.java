@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class Level {
-    int goalMoney,earnedMoney=0;
-    ArrayList<Entity> earnedEnitities=new ArrayList<>(),goalEntities;
+    int goalMoney;
+    private ArrayList<Entity> earnedEnitities,goalEntities=new ArrayList<>();
 
     Level(int goalMoney,ArrayList<Entity> earnedEnitities){
         this.goalMoney=goalMoney;
@@ -17,28 +17,18 @@ public class Level {
 
     void entityEarned(Entity entity){
         if(!goalEntities.contains(entity))return;
-        earnedEnitities.add(entity);
-    }
-
-    public void setEarnedMoney(int earnedMoney) {
-        this.earnedMoney = earnedMoney;
+        if(!earnedEnitities.contains(entity))
+            earnedEnitities.add(entity);
     }
     public boolean checkLevel(){
-        setEarnedMoney(InputReader.getCurrentController().getMoney());
-        if(earnedMoney!=goalMoney){
+        int earnedMoney= InputReader.getCurrentController().getMoney();
+        if(earnedMoney<goalMoney){
             return false;
         }
-        if(earnedEnitities.size()!=goalEntities.size()){
-            return false;
-        }
-        Collections.sort((List)earnedEnitities);
-        Collections.sort((List)goalEntities);
-        for(int i=0;i<earnedEnitities.size();i++){
-            if(earnedEnitities.get(i)!=goalEntities.get(i)){
-                return false;
-            }
-        }
-        return true;
+        return (earnedEnitities.size()==goalEntities.size());
     }
 
+    public ArrayList<Entity> getGoalEntities() {
+        return goalEntities;
+    }
 }
