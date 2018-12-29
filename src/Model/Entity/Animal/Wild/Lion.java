@@ -6,6 +6,9 @@ import Model.Entity.Item;
 import Model.Map.Cell;
 
 public class Lion extends Wild{
+
+    public static final String CAGED_LION = "cagedlion";
+
     public Lion(Cell cell) {
         super(cell);
     }
@@ -14,7 +17,10 @@ public class Lion extends Wild{
     }
     @Override
     public Item toItem() {
-        return new Item(Constant.LION_NAME, Constant.LION_VOLUME, Constant.LION_COST, InputReader.getCurrentController().getTurn(), this.getCell());
+        Item item=Constant.getItemByType(CAGED_LION);
+        item.setCreatingTurn(InputReader.getCurrentController().getTurn());
+        item.setCell(getCell());
+        return item;
     }
 
 }

@@ -17,12 +17,8 @@ public class Constant {
     public static final int INIT_HEALTH=50;
 
     public static final String BEAR_NAME = "bear";
-    public static final int BEAR_VOLUME = 20;
-    public static final int BEAR_COST = 80;
 
     public static final String LION_NAME = "lion";
-    public static final int LION_VOLUME = 20;
-    public static final int LION_COST = 150;
 
     public static final String DOG_NAME = "dog";
     public static final String CAT_NAME = "cat";

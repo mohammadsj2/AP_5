@@ -4,10 +4,14 @@ import Controller.*;
 import Model.Map.Cell;
 import Model.Entity.Animal.Wild.Wild;
 import Exception.CellDoesNotExistException;
+import Model.Map.Map;
 
 import java.util.ArrayList;
 
 public class Dog extends Animal {
+
+    public static final int DOG_SPEED = 4;
+
     public Dog(Cell cell) {
         super(cell);
     }
@@ -17,12 +21,12 @@ public class Dog extends Animal {
 
     @Override
     public void walk() throws CellDoesNotExistException {
-        //TODO Cell ro nabayad = cur konim?!?!?!
-        Cell cur = InputReader.getCurrentController().getMap().nearestCellWithWild(this.getCell());
+        Map map=InputReader.getCurrentController().getMap();
+        Cell cur = map.nearestCellWithWild(this.getCell());
         if (cur.equals(this.getCell())) {
-            this.kill();
+            kill();
         } else {
-            this.changeCell(cur);
+            changeCell(map.getBestCellBySpeed(getCell(),cur, DOG_SPEED));
         }
     }
     public void kill() throws CellDoesNotExistException {

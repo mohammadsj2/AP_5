@@ -26,6 +26,7 @@ public class WareHouse implements Upgradable{
     public void addItem(Item item) throws NoWarehouseSpaceException {
         if(placeTaken()+item.getVolume()>capacity)
             throw new NoWarehouseSpaceException();
+        item.setInWareHouse(true);
         items.add(item);
     }
 
