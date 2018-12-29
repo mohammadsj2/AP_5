@@ -14,11 +14,11 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
     private int speed = Constant.ANIMAL_SPEED;
 
 
-    public Animal(Cell cell) {
+    protected Animal(Cell cell) {
         super(cell);
     }
 
-    public Animal(Cell cell, int level) {
+    protected Animal(Cell cell, int level) {
         super(cell);
         setLevel(level);
     }
@@ -39,6 +39,9 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
     public int getLevel() {
         return level;
     }
+
+
+    // TODO walk piade sazi bshe
 
     public void walk() throws CellDoesNotExistException {
         Cell cur = InputReader.getCurrentController().getMap().getRandomCell();

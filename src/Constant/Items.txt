@@ -1,5 +1,5 @@
 Name DepotSize BuyCost SaleCost
-Egg	1	20	10
+Egg	    1	20	10
 Wool	5	200	100
 Plume	2	200	100
 Milk	10	2000	1000

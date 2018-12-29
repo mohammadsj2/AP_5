@@ -65,9 +65,7 @@ public class WorkShop implements Producer,Upgradable{
     private ArrayList<Item> multipleItems(ArrayList<Item> items,int cnt){
         ArrayList<Item> answer=new ArrayList<>();
         for(int i=0;i<cnt;i++){
-            for(Item item:items){
-                answer.add(item);
-            }
+            answer.addAll(items);
         }
         return answer;
     }

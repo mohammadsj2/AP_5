@@ -23,8 +23,8 @@ public class Map {
     }
 
     public void nextTurn() throws CellDoesNotExistException {
-        ArrayList<Animal> animals=new ArrayList<>();
-        for(Cell cell:cells){
+        ArrayList<Animal> animals = new ArrayList<>();
+        for (Cell cell : cells) {
             animals.addAll(cell.getAnimals());
         }
         Collections.shuffle(animals);
@@ -122,9 +122,11 @@ public class Map {
         Cell cell = getCell(x, y);
         wildsToItems(cell.getWilds());
     }
+
+
     public Cell getRandomCell(){
         int t=(int)(Math.random()*2.0*cells.size());
-        return cells.get(t%cells.size());
+        return cells.get(t%(cells.size()));
     }
     public Cell getBestCellBySpeed(Cell first,Cell last,int speed){
         speed*=speed;
@@ -143,4 +145,12 @@ public class Map {
         return answer;
     }
 
+    public ArrayList<Entity> getEntities() {
+        ArrayList<Entity> everything=new ArrayList<>();
+        for(Cell cell:cells) {
+            everything.addAll(cell.getEntities());
+        }
+        return everything;
+
+    }
 }

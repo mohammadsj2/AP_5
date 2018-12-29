@@ -7,8 +7,14 @@ import Exception.CellDoesNotExistException;
 public abstract class Entity {
     private Cell cell;
     private boolean alive;
+
+    public Entity(){
+
+    }
+
     public Entity(Cell cell) {
         this.setCell(cell);
+        cell.addEntity(this);
     }
     public boolean getAlive() {
         return alive;

@@ -8,9 +8,10 @@ import Model.Entity.Item;
 import java.util.ArrayList;
 import Exception.CantUpgradeException;
 import Exception.NotEnoughMoneyException;
+import Exception.NoSuchItemInWarehouseException;
+import Exception.NoWarehouseSpaceException;
 
 public class WareHouse implements Upgradable{
-    public static final int WAREHOUSE_MAX_LEVEL = 3;
     private ArrayList<Item> items=new ArrayList<>();
     private int level=0;
     private int capacity=Constant.WAREHOUSE_CAPACITY;
@@ -22,29 +23,27 @@ public class WareHouse implements Upgradable{
         return sum;
     }
 
-    public boolean addItem(Item item)
-    {
-        if(placeTaken()+item.getVolume()>capacity)return false;
+    public void addItem(Item item) throws NoWarehouseSpaceException {
+        if(placeTaken()+item.getVolume()>capacity)
+            throw new NoWarehouseSpaceException();
         items.add(item);
-        return true;
     }
 
-    public boolean eraseItem(Item item)
-    {
+    public void eraseItem(Item item) throws NoSuchItemInWarehouseException {
         for(Item item2:items)
         {
-            if(item.equals(item2))
+            if(item.getName().equals(item2.getName()))
             {
                 items.remove(item2);
-                return true;
+                return ;
             }
         }
-        return false;
+        throw new NoSuchItemInWarehouseException();
     }
 
     @Override
     public void upgrade() throws CantUpgradeException {
-        if(level>= WAREHOUSE_MAX_LEVEL){
+        if(level>= Constant.WAREHOUSE_MAX_LEVEL){
             throw new CantUpgradeException();
         }
         level++;
@@ -58,7 +57,7 @@ public class WareHouse implements Upgradable{
 
     @Override
     public boolean canUpgrade() {
-        return level<WAREHOUSE_MAX_LEVEL;
+        return level<Constant.WAREHOUSE_MAX_LEVEL;
     }
 
     public ArrayList<Item> getItems() {

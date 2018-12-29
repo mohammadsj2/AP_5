@@ -1,19 +1,50 @@
 package Controller;
 
+import Model.Entity.Entity;
 import org.junit.Assert;
+import Exception.*;
 import org.junit.Test;
 import Exception.NotEnoughMoneyException;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class ControllerTest {
     @Test
     public void moneyHandlingTest(){
         try {
-            InputReader.getCurrentController().subtractMoney(50);
+            InputReader.currentController=new Controller(1000,new ArrayList<>());
+            Controller controller=InputReader.getCurrentController();
+            controller.increaseMoney(100);
+            controller.nextTurn();
+            controller.addAnimal("Chicken");
+            ArrayList <Entity> entities=controller.getMap().getEntities();
+            for(Entity entity:entities)
+            {
+                System.out.println(entity.getCell().getPositionX()+" "+entity.getCell().getPositionY());
+            }
+            controller.nextTurn();
+            entities=controller.getMap().getEntities();
+            for(Entity entity:entities)
+            {
+                System.out.println(entity.getCell().getPositionX()+" "+entity.getCell().getPositionY());
+            }
+
+        }catch (WinningMessage e)
+        {
+            System.out.println("HOOOOORRRRRAAAAAYYYY!!!!");
+            return ;
+        } catch (CellDoesNotExistException e) {
+            e.printStackTrace();
+        } catch (WorkShopNotUsedException e) {
+            e.printStackTrace();
         } catch (NotEnoughMoneyException e) {
-            Assert.assertTrue(true);
-            return;
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        Assert.fail();
+
+        //   Assert.fail();
     }
 
 
