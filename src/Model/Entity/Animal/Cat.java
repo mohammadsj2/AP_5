@@ -6,6 +6,7 @@ import Model.Map.Cell;
 
 import java.util.ArrayList;
 import Exception.CellDoesNotExistException;
+import Exception.NoWarehouseSpaceException;
 
 public class Cat extends Animal{
     public Cat(Cell cell) {
@@ -29,9 +30,14 @@ public class Cat extends Animal{
     public void catchItem() throws CellDoesNotExistException {
         ArrayList<Item> items = this.getCell().getItems();
         for (Item item : items) {
+            try{
             InputReader.getCurrentController().getWareHouse().addItem(item);
             item.setInWareHouse(true);
-            item.destroyFromMap();
+            item.destroyFromMap();}
+            catch(NoWarehouseSpaceException ignored)
+            {
+
+            }
         }
     }
     @Override

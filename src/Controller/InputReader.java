@@ -22,12 +22,13 @@ public class InputReader {
     public static final String WORK_SHOP_NOT_USED_EXCEPTION_MASSEGE = "**** Error: WorkShopNotUsedException! ****";
     public static final String CANT_UPGRADE_MASSEGE = "**** Error: this objec cant upgrade! ****";
     public static final String THIS_LEVEL_NOT_LOADED_MASSEGE = "**** Error: this level not loaded yet! ****";
-
+    public static final String NO_SUCH_ITEM_MESSAGE = "**** Error: You don't have that item! ****";
+    public static final String NOT_ENOUGH_SPACE_MESSAGE = "**** Error: Not enough space! ****";
     static Controller currentController = null;
     static ArrayList<Controller> loadedLevelsControllers = new ArrayList<>();
     static ArrayList<Integer> indexOfLevel = new ArrayList<>();
 
-    public static void main(String[] args) throws StartBusyTransporter {
+    public static void main(String[] args) throws StartBusyTransporter, IOException {
         Scanner scanner = new Scanner(System.in);
         String[] input;
         while (true) {
@@ -79,7 +80,16 @@ public class InputReader {
                         currentController.clearTruck();
                     } else {
                         Item item = Constant.getItemByType(input[2]);
-                        addItemToTransporter(currentController.getTruck(), item, new Integer(input[3]));
+                        for(int i=0;i<new Integer(input[3]);i++) {
+                            try{
+                                currentController.addItemToTruck(item);
+                            }catch (NoTransporterSpaceException e){
+                                System.out.println(NOT_ENOUGH_SPACE_MESSAGE);
+                            }
+                            catch (NoSuchItemInWarehouseException e){
+                                System.out.println(NO_SUCH_ITEM_MESSAGE);
+                            }
+                        }
                     }
                     break;
                 case "helicopter":
@@ -90,11 +100,24 @@ public class InputReader {
                             System.out.println(NOT_ENOUGH_MONEY_MASSEGE);
                         }
                     } else if (input[1].equals("clear")) {
-                        currentController.clearTruck();
+                        currentController.clearHelicopter();
                     } else {
                         Item item = Constant.getItemByType(input[2]);
-                        addItemToTransporter(currentController.getHelicopter(), item, new Integer(input[3]));
+                        for(int i=0;i<new Integer(input[3]);i++)
+                        {
+                            try{
+                                currentController.addItemToHelicopter(item);
+                            }catch (NoTransporterSpaceException e){
+                                System.out.println(NOT_ENOUGH_SPACE_MESSAGE);
+                            }
+                        }
                     }
+                    break;
+                case "print":
+                    System.out.println(currentController.getInfo(input[1]));
+                    break;
+                case "cheat":
+                    currentController.increaseMoney(1000);
                     break;
                 default:
                     System.out.println(BAD_INPUT_FORMAT_MASSEGE);
@@ -225,12 +248,6 @@ public class InputReader {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    public static void addItemToTransporter(Transporter transporter, Item item, int count) {
-        for (int i = 0; i < count; i++) {
-            transporter.addItem(item);
         }
     }
 

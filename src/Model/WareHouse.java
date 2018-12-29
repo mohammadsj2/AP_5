@@ -8,6 +8,8 @@ import Model.Entity.Item;
 import java.util.ArrayList;
 import Exception.CantUpgradeException;
 import Exception.NotEnoughMoneyException;
+import Exception.NoSuchItemInWarehouseException;
+import Exception.NoWarehouseSpaceException;
 
 public class WareHouse implements Upgradable{
     private ArrayList<Item> items=new ArrayList<>();
@@ -21,24 +23,22 @@ public class WareHouse implements Upgradable{
         return sum;
     }
 
-    public boolean addItem(Item item)
-    {
-        if(placeTaken()+item.getVolume()>capacity)return false;
+    public void addItem(Item item) throws NoWarehouseSpaceException {
+        if(placeTaken()+item.getVolume()>capacity)
+            throw new NoWarehouseSpaceException();
         items.add(item);
-        return true;
     }
 
-    public boolean eraseItem(Item item)
-    {
+    public void eraseItem(Item item) throws NoSuchItemInWarehouseException {
         for(Item item2:items)
         {
-            if(item.equals(item2))
+            if(item.getName().equals(item2.getName()))
             {
                 items.remove(item2);
-                return true;
+                return ;
             }
         }
-        return false;
+        throw new NoSuchItemInWarehouseException();
     }
 
     @Override

@@ -3,6 +3,8 @@ package Model.Transporter;
 import Constant.Constant;
 import Controller.InputReader;
 import Exception.StartBusyTransporter;
+import Exception.NoTransporterSpaceException;
+import Model.Entity.Entity;
 import Model.Entity.Item;
 import Model.Upgradable;
 
@@ -18,9 +20,10 @@ public abstract class Transporter implements Upgradable {
 
     }
 
-    public boolean addItem(Item item){
+    public void addItem(Item item) throws NoTransporterSpaceException {
+        if(!canAddItem(item))
+            throw new NoTransporterSpaceException();
         items.add(item);
-        return false;
     }
     public void startTransportation() throws StartBusyTransporter {
         if(busy)
@@ -45,6 +48,15 @@ public abstract class Transporter implements Upgradable {
         return items;
     }
 
+    public int getFilledVolume()
+    {
+        int filledVolume=0;
+        for(Item item:items)
+        {
+            filledVolume+=item.getVolume();
+        }
+        return filledVolume;
+    }
 
     public int getValue() {
         int value=0;
@@ -53,5 +65,9 @@ public abstract class Transporter implements Upgradable {
             value += item.getCost();
         }
         return value;
+    }
+
+    public boolean canAddItem(Item item){
+        return (getFilledVolume()+item.getVolume()<=capacity);
     }
 }
