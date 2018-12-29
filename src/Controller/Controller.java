@@ -25,6 +25,9 @@ import Exception.WorkShopNotUsedException;
 import Exception.StartBusyTransporter;
 import com.gilecode.yagson.YaGson;
 import Exception.WinningMessage;
+import Exception.NoTransporterSpaceException;
+import Exception.NoSuchItemInWarehouseException;
+import Exception.NoWarehouseSpaceException;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -71,11 +74,11 @@ public class Controller {
         this.money = money;
     }
 
-    public void increaseMoney(int money2) {
+    void increaseMoney(int money2) {
         money += money2;
     }
 
-    public void plant(int x, int y) throws NoWaterException, CellDoesNotExistException {
+    void plant(int x, int y) throws NoWaterException, CellDoesNotExistException {
         if (well.getWaterRemaining() == 0) {
             throw new NoWaterException();
         }
@@ -87,7 +90,7 @@ public class Controller {
         return yaGson.toJson(object);
     }
 
-    public String getInfo(String string)throws IOException{
+    String getInfo(String string)throws IOException{
         if(string.equals("info")){
             StringBuilder stringBuilder=new StringBuilder("");
 
@@ -109,14 +112,21 @@ public class Controller {
     }
 
 
-    public void startAWorkShop(int index) throws WorkshopDoesntExistException, StartBusyProducerException, WorkShopNotUsedException {
+    void startAWorkShop(int index) throws WorkshopDoesntExistException, StartBusyProducerException,
+                                                    WorkShopNotUsedException {
         if (index >= workShops.size()) throw new WorkshopDoesntExistException();
         WorkShop workShop = workShops.get(index);
         int usedLevel = workShop.maxLevelCanDoWithItems(wareHouse.getItems());
         workShop.startByLevel(usedLevel);
         ArrayList<Item> neededItems = workShop.getInputItemsByUsedLevel();
         for (Item item : neededItems) {
-            wareHouse.eraseItem(item);
+
+            try {
+                wareHouse.eraseItem(item);
+            } catch (NoSuchItemInWarehouseException e) {
+                System.out.println("This Shouldn't Happen!");
+                e.printStackTrace();
+            }
         }
     }
 
@@ -129,7 +139,7 @@ public class Controller {
     }
 
     //TODO chera bayad nextTurn exception bede ??!!!
-    public void nextTurn() throws CellDoesNotExistException, WorkShopNotUsedException, WinningMessage {
+    void nextTurn() throws CellDoesNotExistException, WorkShopNotUsedException, WinningMessage {
         turn++;
         map.nextTurn();
         if (helicopter.isTransportationEnds()) {
@@ -175,7 +185,7 @@ public class Controller {
         }
     }
 
-    public Object getObject(String type) throws IOException {
+    private Object getObject(String type) throws IOException {
         //  if(type.equals("cat"))return cat;
         //  if(type.equals("dog"))return dog;
         if (type.equals("well")) return well;
@@ -194,7 +204,7 @@ public class Controller {
         throw new IOException();
     }
 
-    public void upgrade(Object object) throws IOException, CantUpgradeException, NotEnoughMoneyException {
+    void upgrade(Object object) throws IOException, CantUpgradeException, NotEnoughMoneyException {
         if (!(object instanceof Upgradable)) {
             throw new IOException();
         }
@@ -206,7 +216,7 @@ public class Controller {
         upgradable.upgrade();
     }
 
-    public void addAnimal(String type) throws IOException, NotEnoughMoneyException {
+    void addAnimal(String type) throws IOException, NotEnoughMoneyException {
         switch (type) {
             case Constant.DOG_NAME:
                 subtractMoney(Constant.DOG_ADD_COST);
@@ -234,47 +244,51 @@ public class Controller {
 
     }
 
-    public void pickup(int x, int y) throws CellDoesNotExistException {
+    void pickup(int x, int y) throws CellDoesNotExistException{
         ArrayList<Item> items = map.getItems(x, y);
         for (Item item : items) {
-            if (wareHouse.addItem(item)) {
+            try{
+                wareHouse.addItem(item);
                 map.destroyEntity(x, y, item);
+            }catch(NoWarehouseSpaceException ignored) {
+
             }
         }
     }
 
-    public void fillWell() throws NotEnoughMoneyException {
+    void fillWell() throws NotEnoughMoneyException {
         subtractMoney(Constant.WELL_FILL_COST + well.getLevel() * Constant.WELL_FILL_COST_PER_LEVEL);
         well.fill();
     }
 
-    public void cage(int x, int y) throws CellDoesNotExistException {
+    void cage(int x, int y) throws CellDoesNotExistException {
         map.cage(x, y);
     }
 
-    public void clearTruck() {
+    void clearTruck() {
         truck.clear();
     }
 
-    public void clearHelicopter() {
+    void clearHelicopter() {
         helicopter.clear();
     }
 
-    public void addItemToHelicopter(Item item) {
+    void addItemToHelicopter(Item item) throws NoTransporterSpaceException {
         helicopter.addItem(item);
     }
 
-    public void addItemToTruck(Item item) {
-        if (truck.addItem(item)) {
-            wareHouse.eraseItem(item);
-        }
+    void addItemToTruck(Item item) throws NoTransporterSpaceException, NoSuchItemInWarehouseException {
+        if(!truck.canAddItem(item))
+            throw new NoTransporterSpaceException();
+        wareHouse.eraseItem(item);
+        truck.addItem(item);
     }
 
-    public void startTruck() throws StartBusyTransporter {
+    void startTruck() throws StartBusyTransporter {
         truck.startTransportation();
     }
 
-    public void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter {
+    void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter {
         subtractMoney(helicopter.getValue());
         helicopter.startTransportation();
     }
