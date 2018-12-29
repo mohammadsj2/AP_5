@@ -13,6 +13,7 @@ public abstract class Entity {
     }
 
     public Entity(Cell cell) {
+        alive=true;
         this.setCell(cell);
         cell.addEntity(this);
     }

@@ -34,10 +34,6 @@ public class ControllerTest {
         {
             System.out.println("HOOOOORRRRRAAAAAYYYY!!!!");
             return ;
-        } catch (CellDoesNotExistException e) {
-            e.printStackTrace();
-        } catch (WorkShopNotUsedException e) {
-            e.printStackTrace();
         } catch (NotEnoughMoneyException e) {
             e.printStackTrace();
         } catch (IOException e) {

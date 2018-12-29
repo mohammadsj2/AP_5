@@ -1,8 +1,10 @@
 package Controller;
 
 import Constant.Constant;
+import Model.Entity.Entity;
 import Model.Entity.Item;
 import Model.Transporter.Transporter;
+import Model.WorkShop;
 import com.gilecode.yagson.YaGson;
 
 import java.io.*;
@@ -24,6 +26,7 @@ public class InputReader {
     public static final String THIS_LEVEL_NOT_LOADED_MASSEGE = "**** Error: this level not loaded yet! ****";
     public static final String NO_SUCH_ITEM_MESSAGE = "**** Error: You don't have that item! ****";
     public static final String NOT_ENOUGH_SPACE_MESSAGE = "**** Error: Not enough space! ****";
+    public static final String CURRENT_CONTROLLER_NOT_EXIST_MASSEGE = "**** Error: Please run a Controller first! ****";
     static Controller currentController = null;
     static ArrayList<Controller> loadedLevelsControllers = new ArrayList<>();
     static ArrayList<Integer> indexOfLevel = new ArrayList<>();
@@ -33,94 +36,96 @@ public class InputReader {
         String[] input;
         while (true) {
             input = scanner.nextLine().split(" ");
-            switch (input[0]) {
-                case "save":
-                    if (input[1].equals("game")) {
-                        save(input[2]);
-                    }
-                    break;
-                case "load":
-                    if (input[1].equals("game")) {
-                        load(input[2]);
-                    } else {
-                        loadLevel(new Integer(input[2]));
-                    }
-                    break;
-                case "buy":
-                    buy(input[1]);
-                    break;
-                case "pickup":
-                    pickup(new Integer(input[1]), new Integer(input[2]));
-                    break;
-                case "cage":
-                    cage(new Integer(input[1]), new Integer(input[2]));
-                    break;
-                case "plant":
-                    plant(new Integer(input[1]), new Integer(input[2]));
-                    break;
-                case "well":
-                    fillWell();
-                    break;
-                case "start":
-                    startWorkshop(new Integer(input[1]));
-                    break;
-                case "upgrade":
-                    upgrade(input[1]);
-                    break;
-                case "run":
-                    runByLevelNumber(new Integer(input[1]));
-                    break;
-                case "turn":
-                    nextTurn(new Integer(input[1]));
-                    break;
-                case "truck":
-                    if (input[1].equals("go")) {
-                        currentController.startTruck();
-                    } else if (input[1].equals("clear")) {
-                        currentController.clearTruck();
-                    } else {
-                        Item item = Constant.getItemByType(input[2]);
-                        for(int i=0;i<new Integer(input[3]);i++) {
-                            try{
-                                currentController.addItemToTruck(item);
-                            }catch (NoTransporterSpaceException e){
-                                System.out.println(NOT_ENOUGH_SPACE_MESSAGE);
-                            }
-                            catch (NoSuchItemInWarehouseException e){
-                                System.out.println(NO_SUCH_ITEM_MESSAGE);
-                            }
+            try {
+                switch (input[0]) {
+                    case "save":
+                        if (input[1].equals("game")) {
+                            save(input[2]);
                         }
-                    }
-                    break;
-                case "helicopter":
-                    if (input[1].equals("go")) {
-                        try {
-                            currentController.startHelicopter();
-                        } catch (NotEnoughMoneyException e) {
-                            System.out.println(NOT_ENOUGH_MONEY_MASSEGE);
+                        break;
+                    case "load":
+                        if (input[1].equals("game")) {
+                            load(input[2]);
+                        } else {
+                            loadLevel(new Integer(input[1]));
                         }
-                    } else if (input[1].equals("clear")) {
-                        currentController.clearHelicopter();
-                    } else {
-                        Item item = Constant.getItemByType(input[2]);
-                        for(int i=0;i<new Integer(input[3]);i++)
-                        {
-                            try{
-                                currentController.addItemToHelicopter(item);
-                            }catch (NoTransporterSpaceException e){
-                                System.out.println(NOT_ENOUGH_SPACE_MESSAGE);
+                        break;
+                    case "buy":
+                        buy(input[1]);
+                        break;
+                    case "pickup":
+                        pickup(new Integer(input[1]), new Integer(input[2]));
+                        break;
+                    case "cage":
+                        cage(new Integer(input[1]), new Integer(input[2]));
+                        break;
+                    case "plant":
+                        plant(new Integer(input[1]), new Integer(input[2]));
+                        break;
+                    case "well":
+                        fillWell();
+                        break;
+                    case "start":
+                        startWorkshop(new Integer(input[1]));
+                        break;
+                    case "upgrade":
+                        upgrade(input[1]);
+                        break;
+                    case "run":
+                        runByLevelNumber(new Integer(input[1]));
+                        break;
+                    case "turn":
+                        nextTurn(new Integer(input[1]));
+                        break;
+                    case "truck":
+                        if (input[1].equals("go")) {
+                            currentController.startTruck();
+                        } else if (input[1].equals("clear")) {
+                            currentController.clearTruck();
+                        } else {
+                            Item item = Constant.getItemByType(input[2]);
+                            for (int i = 0; i < new Integer(input[3]); i++) {
+                                try {
+                                    currentController.addItemToTruck(item);
+                                } catch (NoTransporterSpaceException e) {
+                                    System.out.println(NOT_ENOUGH_SPACE_MESSAGE);
+                                } catch (NoSuchItemInWarehouseException e) {
+                                    System.out.println(NO_SUCH_ITEM_MESSAGE);
+                                }
                             }
                         }
-                    }
-                    break;
-                case "print":
-                    System.out.println(currentController.getInfo(input[1]));
-                    break;
-                case "cheat":
-                    currentController.increaseMoney(1000);
-                    break;
-                default:
-                    System.out.println(BAD_INPUT_FORMAT_MASSEGE);
+                        break;
+                    case "helicopter":
+                        if (input[1].equals("go")) {
+                            try {
+                                currentController.startHelicopter();
+                            } catch (NotEnoughMoneyException e) {
+                                System.out.println(NOT_ENOUGH_MONEY_MASSEGE);
+                            }
+                        } else if (input[1].equals("clear")) {
+                            currentController.clearHelicopter();
+                        } else {
+                            Item item = Constant.getItemByType(input[2]);
+                            for (int i = 0; i < new Integer(input[3]); i++) {
+                                try {
+                                    currentController.addItemToHelicopter(item);
+                                } catch (NoTransporterSpaceException e) {
+                                    System.out.println(NOT_ENOUGH_SPACE_MESSAGE);
+                                }
+                            }
+                        }
+                        break;
+                    case "print":
+                        System.out.println(currentController.getInfo(input[1]));
+                        break;
+                    case "cheat":
+                        currentController.increaseMoney(1000);
+                        break;
+                    default:
+                        System.out.println(BAD_INPUT_FORMAT_MASSEGE);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
         }
     }
@@ -167,6 +172,8 @@ public class InputReader {
             e.printStackTrace();
         } catch (NotEnoughMoneyException e) {
             System.out.println(NOT_ENOUGH_MONEY_MASSEGE);
+        } catch (NullPointerException e){
+            System.out.println(CURRENT_CONTROLLER_NOT_EXIST_MASSEGE);
         }
     }
 
@@ -175,6 +182,8 @@ public class InputReader {
             currentController.pickup(x, y);
         } catch (CellDoesNotExistException e) {
             System.out.println(CELL_DOES_NOT_EXIST_MASSEGE);
+        }catch (NullPointerException e){
+            System.out.println(CURRENT_CONTROLLER_NOT_EXIST_MASSEGE);
         }
     }
 
@@ -183,6 +192,8 @@ public class InputReader {
             currentController.cage(x, y);
         } catch (CellDoesNotExistException e) {
             System.out.println(CELL_DOES_NOT_EXIST_MASSEGE);
+        }catch (NullPointerException e){
+            System.out.println(CURRENT_CONTROLLER_NOT_EXIST_MASSEGE);
         }
     }
 
@@ -193,6 +204,8 @@ public class InputReader {
             System.out.println(NOT_ENOUGH_WATER_MASSEGE);
         } catch (CellDoesNotExistException e) {
             System.out.println(CELL_DOES_NOT_EXIST_MASSEGE);
+        }catch (NullPointerException e){
+            System.out.println(CURRENT_CONTROLLER_NOT_EXIST_MASSEGE);
         }
 
     }
@@ -202,6 +215,8 @@ public class InputReader {
             currentController.fillWell();
         } catch (NotEnoughMoneyException e) {
             System.out.println(NOT_ENOUGH_MONEY_MASSEGE);
+        }catch (NullPointerException e){
+            System.out.println(CURRENT_CONTROLLER_NOT_EXIST_MASSEGE);
         }
     }
 
@@ -214,6 +229,8 @@ public class InputReader {
             System.out.println(START_BUSY_WORKSPACE_EXCEPTION_MASSEGE);
         } catch (WorkShopNotUsedException e) {
             System.out.println(WORK_SHOP_NOT_USED_EXCEPTION_MASSEGE);
+        }catch (NullPointerException e){
+            System.out.println(CURRENT_CONTROLLER_NOT_EXIST_MASSEGE);
         }
     }
 
@@ -226,6 +243,11 @@ public class InputReader {
             System.out.println(CANT_UPGRADE_MASSEGE);
         } catch (NotEnoughMoneyException e) {
             System.out.println(NOT_ENOUGH_MONEY_MASSEGE);
+        }catch (NullPointerException e){
+            if(currentController==null)
+                System.out.println(CURRENT_CONTROLLER_NOT_EXIST_MASSEGE);
+            else
+                e.printStackTrace();
         }
     }
 
@@ -241,12 +263,18 @@ public class InputReader {
         System.out.println(THIS_LEVEL_NOT_LOADED_MASSEGE);
     }
 
-    public static void nextTurn(int id) {
-        for (int i = 0; i < id; i++) {
+    public static void nextTurn(int count) {
+        for (int i = 0; i < count; i++) {
             try {
                 currentController.nextTurn();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (WinningMessage e) {
+                System.out.println("*** Congratulation: bordi !! ***");
+            }catch (NullPointerException e){
+                if(currentController==null) {
+                    System.out.println(CURRENT_CONTROLLER_NOT_EXIST_MASSEGE);
+                }else{
+                    e.printStackTrace();
+                }
             }
         }
     }
