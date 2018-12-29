@@ -6,6 +6,8 @@ import Model.Entity.Animal.Dog;
 import Model.Entity.Animal.Pet.Chicken;
 import Model.Entity.Animal.Pet.Cow;
 import Model.Entity.Animal.Pet.Sheep;
+import Model.Entity.Animal.Wild.Bear;
+import Model.Entity.Animal.Wild.Lion;
 import Model.Entity.Entity;
 import Model.Entity.Item;
 import Model.Map.Cell;
@@ -86,6 +88,9 @@ public class Controller {
     }
 
     private String getInfoOfObject(Object object) {
+        if(object instanceof Map){
+            return ((Map)object).printInfo();
+        }
         YaGson yaGson=new YaGson();
         return yaGson.toJson(object);
     }
@@ -105,7 +110,7 @@ public class Controller {
             stringBuilder.append(getInfoOfObject(level));
             return stringBuilder.toString();
         }
-        if(string.equals("workShops")){
+        if(string.equals("workshops")){
             return getInfoOfObject(workShops);
         }
         return getInfoOfObject(getObject(string));
@@ -120,7 +125,6 @@ public class Controller {
         workShop.startByLevel(usedLevel);
         ArrayList<Item> neededItems = workShop.getInputItemsByUsedLevel();
         for (Item item : neededItems) {
-
             try {
                 wareHouse.eraseItem(item);
             } catch (NoSuchItemInWarehouseException e) {
@@ -137,9 +141,11 @@ public class Controller {
             workShops.add(workshop);
         }
     }
+    public void addWorkshop(WorkShop workShop){
+        workShops.add(workShop);
+    }
 
-    //TODO chera bayad nextTurn exception bede ??!!!
-    void nextTurn() throws CellDoesNotExistException, WorkShopNotUsedException, WinningMessage {
+    void nextTurn() throws WinningMessage {
         turn++;
         map.nextTurn();
         if (helicopter.isTransportationEnds()) {
@@ -152,10 +158,15 @@ public class Controller {
             truck.endTransportation();
             truck.clear();
         }
+
         for (WorkShop workShop : workShops) {
             if (workShop.haveProduct()) {
-                distributeItems(workShop.getOutputItemsByUsedLevel());
-                workShop.endProduction();
+                try {
+                    distributeItems(workShop.getOutputItemsByUsedLevel());
+                    workShop.endProduction();
+                } catch (WorkShopNotUsedException e) {
+                    e.printStackTrace();
+                }
             }
         }
         ArrayList <Entity> everyThing=new ArrayList<>();
@@ -186,8 +197,8 @@ public class Controller {
     }
 
     private Object getObject(String type) throws IOException {
-        //  if(type.equals("cat"))return cat;
-        //  if(type.equals("dog"))return dog;
+         // if(type.equals("cat"))return cat;
+         // if(type.equals("dog"))return dog;
         if (type.equals("well")) return well;
         if (type.equals("helicopter")) return helicopter;
         if (type.equals("truck")) return truck;
@@ -199,12 +210,11 @@ public class Controller {
             int workshopNumber = type.charAt(type.length() - 1) - '0';
             return workShops.get(workshopNumber);
         }
-
-
         throw new IOException();
     }
 
-    void upgrade(Object object) throws IOException, CantUpgradeException, NotEnoughMoneyException {
+    void upgrade(String type) throws IOException, CantUpgradeException, NotEnoughMoneyException {
+        Object object=getObject(type);
         if (!(object instanceof Upgradable)) {
             throw new IOException();
         }
@@ -238,6 +248,10 @@ public class Controller {
                 subtractMoney(Constant.CHICKEN_ADD_COST);
                 new Chicken(map.getRandomCell());
                 break;
+            case Constant.BEAR_NAME:
+                new Bear(map.getRandomCell());
+            case Constant.LION_NAME:
+                new Lion(map.getRandomCell());
             default:
                 throw new IOException();
         }

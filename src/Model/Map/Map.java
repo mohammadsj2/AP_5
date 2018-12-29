@@ -6,13 +6,14 @@ import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
 import Exception.CellDoesNotExistException;
+import com.gilecode.yagson.YaGson;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Map {
     public static final int MAX_DISTANCE_2 = 100 * 100 * 100;
-    ArrayList<Cell> cells = new ArrayList<>();
+    private ArrayList<Cell> cells = new ArrayList<>();
 
     public Map(){
         for(int i = 0; i< Constant.MAP_ROWS; i++){
@@ -21,9 +22,20 @@ public class Map {
             }
         }
     }
+    public String printInfo(){
+        StringBuilder stringBuilder=new StringBuilder("");
+        YaGson yaGson=new YaGson();
+        for(Cell cell:cells){
+            if(cell.getEntities().size()==0 && !cell.haveGrass())continue;
+            stringBuilder.append(yaGson.toJson(cell));
+            stringBuilder.append("\n");
+        }
+        return stringBuilder.toString();
+    }
 
-    public void nextTurn() throws CellDoesNotExistException {
+    public void nextTurn(){
         ArrayList<Animal> animals = new ArrayList<>();
+        ArrayList<Item> items=new ArrayList<>();
         for (Cell cell : cells) {
             animals.addAll(cell.getAnimals());
         }
@@ -34,6 +46,15 @@ public class Map {
                 animal.nextTurn();
             } catch (CellDoesNotExistException cellDoesNotExistException) {
                 cellDoesNotExistException.printStackTrace();
+            }
+        }
+
+        for(Cell cell: cells){
+            items.addAll(cell.getItems());
+        }
+        for(Item item:items){
+            if(item.isExpired()){
+                item.expire();
             }
         }
     }
@@ -56,13 +77,13 @@ public class Map {
 
     }
 
-    public int distance2(Cell cell1, Cell cell2) {
+    private int distance2(Cell cell1, Cell cell2) {
         int x = (cell1.getPositionX() - cell2.getPositionX());
         int y = (cell1.getPositionY() - cell2.getPositionY());
         return x * x + y * y;
     }
 
-    public Cell nearestCell(Cell cell, ArrayList<Cell> cells) {
+    private Cell nearestCell(Cell cell, ArrayList<Cell> cells) {
         int distance2 = MAX_DISTANCE_2;
         Cell nearestCell = null;
         for (Cell cell2 : cells) {
