@@ -21,6 +21,7 @@ public class Truck extends Transporter{
         }
         level++;
         capacity+=Constant.TRUCK_CAPACITY_PER_LEVEL;
+        speed+=Constant.TRUCK_SPEED_PER_LEVEL;
     }
 
     @Override

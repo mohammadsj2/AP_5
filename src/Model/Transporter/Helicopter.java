@@ -18,6 +18,7 @@ public class Helicopter extends Transporter {
         }
         level++;
         capacity+=Constant.HELICOPTER_CAPACITY_PER_LEVEL;
+        speed+=Constant.HELICOPTER_SPEED_PER_LEVEL;
     }
 
     @Override

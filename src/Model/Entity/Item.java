@@ -12,7 +12,6 @@ public class Item extends Entity {
 
 
     public Item(String name,int volume,int cost,int creatingTurn){
-        super(null);
         this.name=name;
         this.volume=volume;
         this.cost=cost;
