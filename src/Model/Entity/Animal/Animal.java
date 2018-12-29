@@ -42,8 +42,6 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
     }
 
 
-    // TODO walk piade sazi bshe
-
     public void walk() throws CellDoesNotExistException {
         Map map=InputReader.getCurrentController().getMap();
         Cell cur = map.getRandomCell();

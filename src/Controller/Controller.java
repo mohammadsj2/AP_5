@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import Exception.WorkshopDoesntExistException;
 
 public class Controller {
+    public static final int CAT_UPGRADE_COST = 2000;
     private int money, turn;
     private ArrayList<WorkShop> workShops = new ArrayList<>();
     private Map map;
@@ -46,6 +47,7 @@ public class Controller {
     private Level level;
     private Helicopter helicopter;
     private Truck truck;
+    private int catLevel=0;
 
 
     Controller(int goalMoney, ArrayList<Entity> earnedEnitities) {
@@ -80,6 +82,17 @@ public class Controller {
         money += money2;
     }
 
+    public void addItemToWareHouse(Item item) throws NoWarehouseSpaceException{
+        wareHouse.addItem(item);
+        item.setInWareHouse(true);
+        try {
+            if(item.getCell()!=null){
+                item.destroyFromMap();
+            }
+        } catch (CellDoesNotExistException e) {
+            e.printStackTrace();
+        }
+    }
     void plant(int x, int y) throws NoWaterException, CellDoesNotExistException {
         if (well.getWaterRemaining() == 0) {
             throw new NoWaterException();
@@ -213,7 +226,18 @@ public class Controller {
         throw new IOException();
     }
 
+    public int getCatLevel() {
+        return catLevel;
+    }
+
     void upgrade(String type) throws IOException, CantUpgradeException, NotEnoughMoneyException {
+        if(type.equals("cat")){
+            if(catLevel==1)
+                throw new CantUpgradeException();
+            subtractMoney(CAT_UPGRADE_COST);
+            catLevel=1;
+            return ;
+        }
         Object object=getObject(type);
         if (!(object instanceof Upgradable)) {
             throw new IOException();

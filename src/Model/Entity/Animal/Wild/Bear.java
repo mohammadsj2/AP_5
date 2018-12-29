@@ -6,6 +6,9 @@ import Model.Entity.Item;
 import Model.Map.Cell;
 
 public class Bear extends Wild{
+
+    public static final String CAGED_BROWN_BEAR = "cagedbrownbear";
+
     public Bear(Cell cell) {
         super(cell);
     }
@@ -14,7 +17,10 @@ public class Bear extends Wild{
     }
     @Override
     public Item toItem() {
-        return new Item(Constant.BEAR_NAME, Constant.BEAR_VOLUME, Constant.BEAR_COST, InputReader.getCurrentController().getTurn(), this.getCell());
+        Item item=Constant.getItemByType(CAGED_BROWN_BEAR);
+        item.setCreatingTurn(InputReader.getCurrentController().getTurn());
+        item.setCell(getCell());
+        return item;
     }
 
 }
