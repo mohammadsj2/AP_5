@@ -7,7 +7,6 @@ import Exception.NotEnoughMoneyException;
 import Exception.NoWaterException;
 
 public class Well implements Upgradable,Loadable{
-    public static final int WELL_MAX_LEVEL = 3;
     private int level=0;
     private int waterRemaining=Constant.WELL_BASE_WATER,maxWater=Constant.WELL_BASE_WATER;
 
@@ -33,12 +32,12 @@ public class Well implements Upgradable,Loadable{
 
     @Override
     public boolean canUpgrade() {
-        return level<WELL_MAX_LEVEL;
+        return level<Constant.WELL_MAX_LEVEL;
     }
 
     @Override
     public void upgrade() throws CantUpgradeException {
-        if(level>= WELL_MAX_LEVEL){
+        if(level>= Constant.WELL_MAX_LEVEL){
             throw new CantUpgradeException();
         }
         level++;

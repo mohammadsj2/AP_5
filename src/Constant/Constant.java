@@ -66,12 +66,14 @@ public class Constant {
         Item item=null;
         type=type.toLowerCase();
         try {
-            InputStream inputStream=new FileInputStream("Items.txt");
+            InputStream inputStream=
+            new FileInputStream("C:\\Users\\Sa1378\\Desktop\\Ex1\\AP_5\\AP_5\\Project_Kooft\\src\\Constant\\Items.txt");
+
             Scanner scanner=new Scanner(inputStream);
             scanner.nextLine();
             String[] input;
             while(scanner.hasNextLine()){
-                input=scanner.nextLine().toLowerCase().trim().split(" ");
+                input=scanner.nextLine().toLowerCase().trim().replaceAll("\\s+", " ").split(" ");
                 if(!input[0].equals(type)){
                     continue;
                 }
