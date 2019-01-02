@@ -58,6 +58,20 @@ public class Constant {
     public static final int HELICOPTER_UPGRADE_COST_PER_LEVEL=4000;
     public static final int HELICOPTER_MAX_LEVEL = 3;
 
+    public static final String NOT_ENOUGH_MONEY_MASSEGE = "**** Error: Not Enough Money! ****";
+    public static final String WORK_SHOP_NOT_USED_EXCEPTION_MASSEGE = "**** Error: WorkShopNotUsedException! ****";
+    public static final String CELL_DOES_NOT_EXIST_MASSEGE = "**** Error: Cell Does Not Exist! ****";
+    public static final String BAD_INPUT_FORMAT_MASSEGE = "**** Error: Bad input Format! ****";
+    public static final String NOT_ENOUGH_WATER_MASSEGE = "**** Error: Not enough water! ****";
+    public static final String WORKSHOP_DOESNT_EXIST_MASSEGE = "**** Error: Invalid workshop index! ****";
+    public static final String START_BUSY_WORKSPACE_EXCEPTION_MASSEGE = "**** Error: workshop is busy! ****";
+    public static final String CANT_UPGRADE_MASSEGE = "**** Error: this objec cant upgrade! ****";
+    public static final String THIS_LEVEL_NOT_LOADED_MASSEGE = "**** Error: this level not loaded yet! ****";
+    public static final String NO_SUCH_ITEM_MESSAGE = "**** Error: You don't have that item! ****";
+    public static final String NOT_ENOUGH_SPACE_MESSAGE = "**** Error: Not enough space! ****";
+    public static final String CURRENT_CONTROLLER_NOT_EXIST_MASSEGE = "**** Error: Please run a Controller first! ****";
+    public static final String WIN_LEVEL_MASSEGE = "*** Congratulation: bordi !! ***";
+
     public static Item getItemByType(String type){
         type=type.toLowerCase();
         try {
