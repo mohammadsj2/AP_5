@@ -8,6 +8,10 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 public class Constant {
+
+    public static final int GAME_SCENE_HEIGHT=700;
+    public static final int GAME_SCENE_WIDTH=900;
+
     public static final int TERM_OF_DESTROY_ITEM_IN_MAP = 12;
     public static final int MAP_ROWS = 100;
     public static final int MAP_COLUMNS = 101;
@@ -31,6 +35,8 @@ public class Constant {
     public static final int COW_ADD_COST = 10000;
     public static final int SHEEP_ADD_COST = 5000;
     public static final int CHICKEN_ADD_COST = 100;
+
+    public static final int CAT_UPGRADE_COST = 2000;
 
     public static final int WAREHOUSE_CAPACITY = 50;
     public static final int WAREHOUSE_CAPACITY_PER_LEVEL = 150;
