@@ -25,6 +25,10 @@ public class Item extends Entity {
         this.creatingTurn=creatingTurn;
     }
 
+    public void setCreatingTurn(int creatingTurn) {
+        this.creatingTurn = creatingTurn;
+    }
+
     public boolean isInWareHouse() {
         return isInWareHouse;
     }
@@ -34,7 +38,10 @@ public class Item extends Entity {
     }
     public boolean isExpired(){
         if(isInWareHouse)return false;
-        return (creatingTurn+ Constant.TERM_OF_DESTROY_ITEM_IN_MAP >= InputReader.getCurrentController().getTurn());
+        return (creatingTurn+ Constant.TERM_OF_DESTROY_ITEM_IN_MAP <= InputReader.getCurrentController().getTurn());
+    }
+    public void expire(){
+        getCell().destroyEntity(this);
     }
     public int getCost() {
         return cost;
@@ -48,10 +55,9 @@ public class Item extends Entity {
         return name;
     }
 
-
-    public boolean equals(Item x)
-    {
-        if(this.name.equals(x.getName()))return true;
-        return false;
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Item))return false;
+        return ((Item) obj).getName().equals(getName());
     }
 }

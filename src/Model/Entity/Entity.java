@@ -13,6 +13,7 @@ public abstract class Entity {
     }
 
     public Entity(Cell cell) {
+        alive=true;
         this.setCell(cell);
         cell.addEntity(this);
     }
@@ -32,7 +33,10 @@ public abstract class Entity {
         cell = x;
     }
     public void destroyFromMap() throws CellDoesNotExistException {
-        InputReader.getCurrentController().getMap().destroyEntity(this.getCell().getPositionX(), this.getCell().getPositionY(), this);
+        if(getCell()==null){
+            throw new CellDoesNotExistException();
+        }
+        getCell().destroyEntity(this);
     }
     public void destroy() throws CellDoesNotExistException {
         this.destroyFromMap();

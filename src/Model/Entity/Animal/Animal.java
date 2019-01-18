@@ -2,6 +2,7 @@ package Model.Entity.Animal;
 
 import Model.Entity.Entity;
 import Model.Loadable;
+import Model.Map.Map;
 import Model.Upgradable;
 import Model.Map.Cell;
 import Constant.Constant;
@@ -41,11 +42,10 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
     }
 
 
-    // TODO walk piade sazi bshe
-
     public void walk() throws CellDoesNotExistException {
-        Cell cur = InputReader.getCurrentController().getMap().getRandomCell();
-        this.changeCell(cur);
+        Map map=InputReader.getCurrentController().getMap();
+        Cell cur = map.getRandomCell();
+        this.changeCell(map.getBestCellBySpeed(getCell(),cur,Constant.ANIMAL_SPEED));
     }
     public void changeCell(Cell cur) {
         this.getCell().destroyEntity(this);

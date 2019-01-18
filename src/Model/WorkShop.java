@@ -25,7 +25,7 @@ public class WorkShop implements Producer,Upgradable{
 
     @Override
     public boolean canUpgrade() {
-        return (level== Constant.MAX_WORKSHOP_LEVEL || isCustom );
+        return !(level== Constant.MAX_WORKSHOP_LEVEL || isCustom );
     }
 
     @Override
@@ -42,6 +42,10 @@ public class WorkShop implements Producer,Upgradable{
             throw new CantUpgradeException();
         }
         level++;
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     public int getProduceDuration() {
@@ -76,7 +80,7 @@ public class WorkShop implements Producer,Upgradable{
     }
 
     public ArrayList<Item> getOutputItemsByUsedLevel() throws WorkShopNotUsedException {
-        if(usedLevel==-10)throw new WorkShopNotUsedException();
+        if(!busy)throw new WorkShopNotUsedException();
         return multipleItems(outputs,usedLevel+1);
     }
 
@@ -85,7 +89,7 @@ public class WorkShop implements Producer,Upgradable{
         return multipleItems(inputs,level+1);
     }
     public ArrayList<Item> getInputItemsByUsedLevel() throws WorkShopNotUsedException {
-        if(usedLevel==-10)throw new WorkShopNotUsedException();
+        if(!busy)throw new WorkShopNotUsedException();
         return multipleItems(inputs,usedLevel+1);
     }
     public int maxLevelCanDoWithItems(ArrayList<Item> items){
