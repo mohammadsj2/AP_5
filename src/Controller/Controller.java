@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import Exception.WorkshopDoesntExistException;
 
 public class Controller {
-    public static final int CAT_UPGRADE_COST = 2000;
     private int money, turn;
     private ArrayList<WorkShop> workShops = new ArrayList<>();
     private Map map;
@@ -234,7 +233,7 @@ public class Controller {
         if(type.equals("cat")){
             if(catLevel==1)
                 throw new CantUpgradeException();
-            subtractMoney(CAT_UPGRADE_COST);
+            subtractMoney(Constant.CAT_UPGRADE_COST);
             catLevel=1;
             return ;
         }
@@ -331,11 +330,28 @@ public class Controller {
         helicopter.startTransportation();
     }
 
-    public Map getMap() {
+    public ArrayList<WorkShop> getWorkShops()
+    {
+        return workShops;
+    }
+
+    public Map getMap()
+    {
         return map;
     }
 
-    public WareHouse getWareHouse() {
+    public Well getWell()
+    {
+        return well;
+    }
+
+    public WareHouse getWareHouse()
+    {
         return wareHouse;
+    }
+
+    public Level getLevel()
+    {
+        return level;
     }
 }

@@ -121,4 +121,44 @@ public class WorkShop implements Producer,Upgradable{
         startTime=InputReader.getCurrentController().getTurn();
         this.usedLevel=usedLevel;
     }
+
+    public ArrayList<Item> getInputs()
+    {
+        return inputs;
+    }
+
+    public ArrayList<Item> getOutputs()
+    {
+        return outputs;
+    }
+
+    public int getLocation()
+    {
+        return location;
+    }
+
+    public int getStartTime()
+    {
+        return startTime;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public boolean isBusy()
+    {
+        return busy;
+    }
+
+    public boolean isCustom()
+    {
+        return isCustom;
+    }
+
+    public int getUsedLevel()
+    {
+        return usedLevel;
+    }
 }
