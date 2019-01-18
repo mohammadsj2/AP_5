@@ -13,6 +13,7 @@ import java.util.Scanner;
 
 import Exception.*;
 import javafx.application.Application;
+
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -34,6 +35,7 @@ public class InputReader extends Application
     static ArrayList<Controller> loadedLevelsControllers = new ArrayList<>();
     static ArrayList<Integer> indexOfLevel = new ArrayList<>();
     static Stage primaryStage;
+
 
 
     public static void main(String[] args) throws StartBusyTransporter, IOException {
@@ -284,5 +286,6 @@ public class InputReader extends Application
     public void setScene(Scene scene)
     {
         primaryStage.setScene(scene);
+
     }
 }
