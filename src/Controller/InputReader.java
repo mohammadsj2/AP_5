@@ -10,14 +10,20 @@ import java.util.Formatter;
 import java.util.Scanner;
 
 import Exception.*;
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class InputReader {
-
+public class InputReader extends Application {
+    public static Stage primaryStage;
     static Controller currentController = null;
     static ArrayList<Controller> loadedLevelsControllers = new ArrayList<>();
     static ArrayList<Integer> indexOfLevel = new ArrayList<>();
 
+
     public static void main(String[] args) throws StartBusyTransporter, IOException {
+        launch(args);
         Scanner scanner = new Scanner(System.in);
         String[] input;
         while (true) {
@@ -268,5 +274,15 @@ public class InputReader {
 
     public static Controller getCurrentController() {
         return currentController;
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        this.primaryStage=primaryStage;
+        primaryStage.setTitle("Hello World");
+        Group root=new Group();
+        Scene scene=new Scene(root,1000,800);
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 }
