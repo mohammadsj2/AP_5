@@ -9,6 +9,7 @@ import Constant.Constant;
 import Controller.*;
 import Exception.CantUpgradeException;
 import Exception.CellDoesNotExistException;
+import javafx.scene.image.ImageView;
 
 public abstract class Animal extends Entity implements Upgradable, Loadable {
     private int level;

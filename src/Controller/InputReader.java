@@ -39,103 +39,112 @@ public class InputReader extends Application
 
 
     public static void main(String[] args) throws StartBusyTransporter, IOException {
+        Thread thread=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    System.out.println("salam");
+                    Scanner scanner = new Scanner(System.in);
+                    String[] input;
+                    while (true) {
+                        input = scanner.nextLine().split(" ");
+                        switch (input[0]) {
+                            case "save":
+                                if (input[1].equals("game")) {
+                                    save(input[2]);
+                                }
+                                break;
+                            case "load":
+                                if (input[1].equals("game")) {
+                                    load(input[2]);
+                                } else {
+                                    loadLevel(new Integer(input[2]));
+                                }
+                                break;
+                            case "buy":
+                                buy(input[1]);
+                                break;
+                            case "pickup":
+                                pickup(new Integer(input[1]), new Integer(input[2]));
+                                break;
+                            case "cage":
+                                cage(new Integer(input[1]), new Integer(input[2]));
+                                break;
+                            case "plant":
+                                plant(new Integer(input[1]), new Integer(input[2]));
+                                break;
+                            case "well":
+                                fillWell();
+                                break;
+                            case "start":
+                                startWorkshop(new Integer(input[1]));
+                                break;
+                            case "upgrade":
+                                upgrade(input[1]);
+                                break;
+                            case "run":
+                                runByLevelNumber(new Integer(input[1]));
+                                break;
+                            case "turn":
+                                nextTurn(new Integer(input[1]));
+                                break;
+                            case "truck":
+                                if (input[1].equals("go")) {
+                                    currentController.startTruck();
+                                } else if (input[1].equals("clear")) {
+                                    currentController.clearTruck();
+                                } else {
+                                    Item item = Constant.getItemByType(input[2]);
+                                    for (int i = 0; i < new Integer(input[3]); i++) {
+                                        try {
+                                            currentController.addItemToTruck(item);
+                                        } catch (NoTransporterSpaceException e) {
+                                            System.out.println(NOT_ENOUGH_SPACE_MESSAGE);
+                                        } catch (NoSuchItemInWarehouseException e) {
+                                            System.out.println(NO_SUCH_ITEM_MESSAGE);
+                                        }
+                                    }
+                                }
+                                break;
+                            case "helicopter":
+                                if (input[1].equals("go")) {
+                                    try {
+                                        currentController.startHelicopter();
+                                    } catch (NotEnoughMoneyException e) {
+                                        System.out.println(NOT_ENOUGH_MONEY_MASSEGE);
+                                    }
+                                } else if (input[1].equals("clear")) {
+                                    currentController.clearHelicopter();
+                                } else {
+                                    Item item = Constant.getItemByType(input[2]);
+                                    for (int i = 0; i < new Integer(input[3]); i++) {
+                                        try {
+                                            currentController.addItemToHelicopter(item);
+                                        } catch (NoTransporterSpaceException e) {
+                                            System.out.println(NOT_ENOUGH_SPACE_MESSAGE);
+                                        }
+                                    }
+                                }
+                                break;
+                            case "print":
+                                System.out.println(currentController.getInfo(input[1]));
+                                break;
+                            case "cheat":
+                                currentController.increaseMoney(1000);
+                                break;
+                            default:
+                                System.out.println(BAD_INPUT_FORMAT_MASSEGE);
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
         loadLevel(1);
         runByLevelNumber(1);
         launch(args);
-        /*Scanner scanner = new Scanner(System.in);
-        String[] input;
-        while (true) {
-            input = scanner.nextLine().split(" ");
-            switch (input[0]) {
-                case "save":
-                    if (input[1].equals("game")) {
-                        save(input[2]);
-                    }
-                    break;
-                case "load":
-                    if (input[1].equals("game")) {
-                        load(input[2]);
-                    } else {
-                        loadLevel(new Integer(input[2]));
-                    }
-                    break;
-                case "buy":
-                    buy(input[1]);
-                    break;
-                case "pickup":
-                    pickup(new Integer(input[1]), new Integer(input[2]));
-                    break;
-                case "cage":
-                    cage(new Integer(input[1]), new Integer(input[2]));
-                    break;
-                case "plant":
-                    plant(new Integer(input[1]), new Integer(input[2]));
-                    break;
-                case "well":
-                    fillWell();
-                    break;
-                case "start":
-                    startWorkshop(new Integer(input[1]));
-                    break;
-                case "upgrade":
-                    upgrade(input[1]);
-                    break;
-                case "run":
-                    runByLevelNumber(new Integer(input[1]));
-                    break;
-                case "turn":
-                    nextTurn(new Integer(input[1]));
-                    break;
-                case "truck":
-                    if (input[1].equals("go")) {
-                        currentController.startTruck();
-                    } else if (input[1].equals("clear")) {
-                        currentController.clearTruck();
-                    } else {
-                        Item item = Constant.getItemByType(input[2]);
-                        for(int i=0;i<new Integer(input[3]);i++) {
-                            try{
-                                currentController.addItemToTruck(item);
-                            }catch (NoTransporterSpaceException e){
-                                System.out.println(NOT_ENOUGH_SPACE_MESSAGE);
-                            }
-                            catch (NoSuchItemInWarehouseException e){
-                                System.out.println(NO_SUCH_ITEM_MESSAGE);
-                            }
-                        }
-                    }
-                    break;
-                case "helicopter":
-                    if (input[1].equals("go")) {
-                        try {
-                            currentController.startHelicopter();
-                        } catch (NotEnoughMoneyException e) {
-                            System.out.println(NOT_ENOUGH_MONEY_MASSEGE);
-                        }
-                    } else if (input[1].equals("clear")) {
-                        currentController.clearHelicopter();
-                    } else {
-                        Item item = Constant.getItemByType(input[2]);
-                        for(int i=0;i<new Integer(input[3]);i++)
-                        {
-                            try{
-                                currentController.addItemToHelicopter(item);
-                            }catch (NoTransporterSpaceException e){
-                                System.out.println(NOT_ENOUGH_SPACE_MESSAGE);
-                            }
-                        }
-                    }
-                    break;
-                case "print":
-                    System.out.println(currentController.getInfo(input[1]));
-                    break;
-                case "cheat":
-                    currentController.increaseMoney(1000);
-                    break;
-                default:
-                    System.out.println(BAD_INPUT_FORMAT_MASSEGE);
-            }
-        }*/
     }
 
     public static void save(String saveName) {
