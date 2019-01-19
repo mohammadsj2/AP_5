@@ -59,7 +59,9 @@ public class Map {
         }
     }
 
-
+    public void destroyGrass(Cell cell){
+        cell.destroyGrass();
+    }
     private Cell getCell(int x, int y) throws CellDoesNotExistException {
         for (Cell cell : cells) {
             if (cell.getPositionX() == x && cell.getPositionY() == y) {
@@ -129,8 +131,15 @@ public class Map {
 
     public void destroyEntity(int x, int y, Entity entity) throws CellDoesNotExistException {
         Cell cell = getCell(x, y);
+        destroyEntity(cell,entity);
+    }
+    public void destroyEntity(Cell cell, Entity entity){
         cell.destroyEntity(entity);
     }
+    public void addEntity(Cell cell, Entity entity){
+        cell.addEntity(entity);
+    }
+
 
     private void wildsToItems(ArrayList<Wild> wilds) {
         for (Wild wild : wilds) {

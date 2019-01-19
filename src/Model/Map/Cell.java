@@ -9,46 +9,24 @@ import Exception.CellDoesNotExistException;
 import java.util.ArrayList;
 
 public class Cell {
-    ArrayList<Entity> entities=new ArrayList<>();
-    boolean grass=false;
-    int positionX,positionY;
+    private ArrayList<Entity> entities=new ArrayList<>();
+    private boolean grass=false;
+    private int positionX,positionY;
 
     Cell(int x,int y){
         positionX=x;
         positionY=y;
     }
 
-    boolean plantGrass(){
-        if(grass)return false;
+    void plantGrass(){
         grass=true;
-        return true;
     }
-    public void destroyGrass(){
+    void destroyGrass(){
         grass=false;
     }
 
     public boolean haveGrass() {
         return grass;
-    }
-    void nextTurn() throws CellDoesNotExistException {
-        ArrayList<Entity> copyOfEntities=new ArrayList<>();
-        for(Entity entity:entities){
-            copyOfEntities.add(entity);
-        }
-        for(Entity entity:copyOfEntities){
-            if(entity instanceof Animal) {
-                try {
-                    ((Animal) entity).nextTurn();
-                } catch (CellDoesNotExistException cellDoesNotExist) {
-                    cellDoesNotExist.printStackTrace();
-                }
-            }else if(entity instanceof Item){
-                Item item=(Item)entity;
-                if(item.isExpired()){
-                    destroyEntity(entity);
-                }
-            }
-        }
     }
 
     public int getPositionX() {
@@ -59,17 +37,17 @@ public class Cell {
         return positionY;
     }
 
-    public void destroyEntity(Entity entity){
+    void destroyEntity(Entity entity){
         entities.remove(entity);
     }
-    public void addEntity(Entity entity){
+    void addEntity(Entity entity){
         entities.add(entity);
     }
 
     public ArrayList<Entity> getEntities() {
         return entities;
     }
-    public boolean haveItem(){
+    boolean haveItem(){
         for(Entity entity:entities){
             if(entity instanceof Item){
                 return true;
@@ -95,7 +73,7 @@ public class Cell {
         }
         return wilds;
     }
-    public ArrayList<Animal> getAnimals(){
+    ArrayList<Animal> getAnimals(){
         ArrayList<Animal> animals=new ArrayList<>();
         for(Entity entity:entities){
             if(entity instanceof Animal){
