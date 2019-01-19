@@ -18,7 +18,7 @@ public abstract class Entity {
     }
 
     public Entity(Cell cell) {
-        map=getMap();
+        map=InputReader.getCurrentController().getMap();
         GameScene.addNode(imageView);
         alive=true;
         this.setCell(cell);

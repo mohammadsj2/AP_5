@@ -53,8 +53,12 @@ public class Dog extends Animal {
     @Override
     public void walk() throws CellDoesNotExistException {
         Map map=InputReader.getCurrentController().getMap();
-        Cell cur = map.nearestCellWithWild(this.getCell());
-        if (cur.equals(this.getCell())) {
+        Cell cur = map.nearestCellWithWild(getCell());
+        if(cur==null){
+            super.walk();
+            return ;
+        }
+        if (cur.equals(getCell())) {
             kill();
         } else {
             changeCell(map.getBestCellBySpeed(getCell(),cur, DOG_SPEED));

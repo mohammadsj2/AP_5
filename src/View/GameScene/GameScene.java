@@ -31,9 +31,29 @@ public class GameScene {
             initBackground();
             initWorkShops();
             initAddAnimalButtons();
+            nextTurnButtonForDebug();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void nextTurnButtonForDebug() throws FileNotFoundException {
+        Image buttonImage;
+        ImageView button;
+        buttonImage = new Image(new FileInputStream("./Textures/AddAnimalButtons/A.png"));
+        button = new ImageView(buttonImage);
+        button.setX(400);
+        button.setY(10);
+        button.setFitHeight(60);
+        button.setFitWidth(60);
+        addNode(button);
+
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                InputReader.nextTurn(1);
+            }
+        });
     }
 
     private static void initAddAnimalButtons() throws FileNotFoundException {
@@ -99,7 +119,12 @@ public class GameScene {
     }
 
     public static void addNode(Node node) {
-        root.getChildren().add(node);
+        if(!root.getChildren().contains(node))
+            root.getChildren().add(node);
+    }
+
+    public static void deleteNode(Node node) {
+        root.getChildren().remove(node);
     }
 
     private static void initBackground() throws FileNotFoundException {

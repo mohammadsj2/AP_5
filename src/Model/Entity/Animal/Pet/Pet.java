@@ -20,7 +20,7 @@ public abstract class Pet extends Animal implements Producer {
     public static final int PET_HUNGRY_HEALTH = 30;
     public static final int ANIMAL_PRODUCT_TURN = 3;
     private int health;
-    final public int PET_MAX_HEALTH = 100;
+    private static final int PET_MAX_HEALTH = 100;
     private int lastProductTurn=0;
 
     @Override
@@ -83,13 +83,13 @@ public abstract class Pet extends Animal implements Producer {
     @Override
     public void walk() throws CellDoesNotExistException {
         Map map=InputReader.getCurrentController().getMap();
-        Cell cur=map.nearestCellWithGrass(this.getCell());
+        Cell cur=map.nearestCellWithGrass(getCell());
         if (isHungry() &&  cur != null) {
-            if (!this.getCell().haveGrass()) {
+            if (!getCell().haveGrass()) {
                 changeCell(map.getBestCellBySpeed(getCell(),cur,Constant.ANIMAL_SPEED));
             } else {
-                this.eatGrass();
-                this.updateHealth(INCREASE_PET_HEALTH_AFTER_EAT_GRASS);
+                eatGrass();
+                updateHealth(INCREASE_PET_HEALTH_AFTER_EAT_GRASS);
             }
         } else {
             super.walk();
@@ -101,11 +101,11 @@ public abstract class Pet extends Animal implements Producer {
     }
     public void updateHealth(int x) throws CellDoesNotExistException {
         this.setHealth(this.getHealth() + x);
-        if (this.getHealth() <= 0) {
-            this.destroy();
+        if (getHealth() <= 0) {
+            destroy();
         }
-        if (this.getHealth() > this.PET_MAX_HEALTH) {
-            this.setHealth(this.PET_MAX_HEALTH);
+        if (getHealth() > PET_MAX_HEALTH) {
+            setHealth(PET_MAX_HEALTH);
         }
     }
 
