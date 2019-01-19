@@ -40,16 +40,78 @@ public class GameScene {
     }
 
     private static void initAddAnimalButtons() throws FileNotFoundException {
-        Image chickenButtonImage = new Image(new FileInputStream("./Textures/AddAnimalButtons/ChickenButton.png"));
-        ImageView chickenButton = new ImageView(chickenButtonImage);
-        chickenButton.setX(20);
-        chickenButton.setY(10);
-        addNode(chickenButton);
+        Image buttonImage = new Image(new FileInputStream("./Textures/AddAnimalButtons/ChickenButton.png"));
+        ImageView button = new ImageView(buttonImage);
+        button.setX(20);
+        button.setY(10);
+        button.setFitHeight(80);
+        button.setFitWidth(80);
+        addNode(button);
 
-        chickenButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 InputReader.buy("chicken");
+            }
+        });
+        buttonImage = new Image(new FileInputStream("./Textures/AddAnimalButtons/CowButton.png"));
+        button = new ImageView(buttonImage);
+        button.setX(100);
+        button.setY(10);
+        button.setFitHeight(80);
+        button.setFitWidth(80);
+        addNode(button);
+
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                InputReader.buy("cow");
+            }
+        });
+
+        buttonImage = new Image(new FileInputStream("./Textures/AddAnimalButtons/SheepButton.png"));
+        button = new ImageView(buttonImage);
+        button.setX(180);
+        button.setY(10);
+        button.setFitHeight(80);
+        button.setFitWidth(80);
+        addNode(button);
+
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                InputReader.buy("sheep");
+            }
+        });
+
+        buttonImage = new Image(new FileInputStream("./Textures/AddAnimalButtons/CatButton.png"));
+        button = new ImageView(buttonImage);
+        button.setX(260);
+        button.setY(10);
+        button.setFitHeight(80);
+        button.setFitWidth(80);
+
+        addNode(button);
+
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                InputReader.buy("cat");
+            }
+        });
+
+        buttonImage = new Image(new FileInputStream("./Textures/AddAnimalButtons/DogButton.png"));
+        button = new ImageView(buttonImage);
+        button.setX(340);
+        button.setY(10);
+        button.setFitHeight(80);
+        button.setFitWidth(80);
+        addNode(button);
+
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                InputReader.buy("dog");
             }
         });
     }
@@ -74,7 +136,6 @@ public class GameScene {
             root.getChildren().add(workshopView);
 
             workshopView.setViewport(new Rectangle2D(0, 0, imageWidth / 4, imageHeight / 4));
-//sprite animation  useful for your project
             final Animation animation = new SpriteAnimation(
                     workshopView,
                     Duration.millis(700),
@@ -91,7 +152,6 @@ public class GameScene {
 
     public static void addNode(Node node) {
         root.getChildren().add(node);
-        System.out.println("node added to root");
     }
 
     private static void initBackground() throws FileNotFoundException {
@@ -104,10 +164,8 @@ public class GameScene {
     }
 
     public static void setImageViewPositionOnMap(ImageView imageView, int x, int y) {
-        System.out.println("salam");
         imageView.setX(x*3.7 + 230.0);
         imageView.setY(y*2.1 + 230.0);
-        System.out.printf("%d %d\n", x + 100, y + 100);
     }
 
     public static Scene getScene() {

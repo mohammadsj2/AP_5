@@ -21,7 +21,6 @@ public class Chicken extends Pet {
         super(cell);
         ImageView imageView=getImageView();
         Image image= null;
-        System.out.println("hello");
         try {
             image = new Image(new FileInputStream("./Textures/Animals/Africa/GuineaFowl/eat.png"));
             imageView.setImage(image);
@@ -39,7 +38,6 @@ public class Chicken extends Pet {
             );
             animation.setCycleCount(Animation.INDEFINITE);
             animation.play();
-            System.out.println("noError");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
