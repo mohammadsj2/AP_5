@@ -34,84 +34,35 @@ public class GameScene {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-        //  Rectangle rectangle=new Rectangle(100,100,100,100);
-        //  root.getChildren().add(rectangle);
     }
 
     private static void initAddAnimalButtons() throws FileNotFoundException {
-        Image buttonImage = new Image(new FileInputStream("./Textures/AddAnimalButtons/ChickenButton.png"));
-        ImageView button = new ImageView(buttonImage);
-        button.setX(20);
-        button.setY(10);
-        button.setFitHeight(80);
-        button.setFitWidth(80);
-        addNode(button);
+        addAnAnimalButton("./Textures/AddAnimalButtons/ChickenButton.png", 20, "chicken");
 
-        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                InputReader.buy("chicken");
-            }
-        });
-        buttonImage = new Image(new FileInputStream("./Textures/AddAnimalButtons/CowButton.png"));
+        addAnAnimalButton("./Textures/AddAnimalButtons/CowButton.png", 80, "cow");
+
+        addAnAnimalButton("./Textures/AddAnimalButtons/SheepButton.png", 140, "sheep");
+
+        addAnAnimalButton("./Textures/AddAnimalButtons/CatButton.png", 200, "cat");
+
+        addAnAnimalButton("./Textures/AddAnimalButtons/DogButton.png", 260, "dog");
+    }
+
+    private static void addAnAnimalButton(String pathToImage, int positionXOfButton, String typeOfAnimal) throws FileNotFoundException {
+        Image buttonImage;
+        ImageView button;
+        buttonImage = new Image(new FileInputStream(pathToImage));
         button = new ImageView(buttonImage);
-        button.setX(100);
+        button.setX(positionXOfButton);
         button.setY(10);
-        button.setFitHeight(80);
-        button.setFitWidth(80);
+        button.setFitHeight(60);
+        button.setFitWidth(60);
         addNode(button);
 
         button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                InputReader.buy("cow");
-            }
-        });
-
-        buttonImage = new Image(new FileInputStream("./Textures/AddAnimalButtons/SheepButton.png"));
-        button = new ImageView(buttonImage);
-        button.setX(180);
-        button.setY(10);
-        button.setFitHeight(80);
-        button.setFitWidth(80);
-        addNode(button);
-
-        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                InputReader.buy("sheep");
-            }
-        });
-
-        buttonImage = new Image(new FileInputStream("./Textures/AddAnimalButtons/CatButton.png"));
-        button = new ImageView(buttonImage);
-        button.setX(260);
-        button.setY(10);
-        button.setFitHeight(80);
-        button.setFitWidth(80);
-
-        addNode(button);
-
-        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                InputReader.buy("cat");
-            }
-        });
-
-        buttonImage = new Image(new FileInputStream("./Textures/AddAnimalButtons/DogButton.png"));
-        button = new ImageView(buttonImage);
-        button.setX(340);
-        button.setY(10);
-        button.setFitHeight(80);
-        button.setFitWidth(80);
-        addNode(button);
-
-        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                InputReader.buy("dog");
+                InputReader.buy(typeOfAnimal);
             }
         });
     }
@@ -121,8 +72,6 @@ public class GameScene {
         int[] workshopsPositionY = {450, 0, 0, 0, 0, 0};
         WorkShop[] workShops = InputReader.getCurrentController().getWorkShops().toArray(new WorkShop[0]);
         for (int i = 0; i < workShops.length; i++) {
-            //   System.out.println("file:Texture/Workshops/"+workShops[i].getName()+
-            //   "/0"+(workShops[i].getLevel()+1)+".png");
             String imageAddress = "Textures/Workshops/" + workShops[i].getName() +
                     "/0" + (workShops[i].getLevel() + 1) + ".png";
             Image workshopImage = new Image(new FileInputStream(imageAddress));
@@ -135,13 +84,12 @@ public class GameScene {
 
             root.getChildren().add(workshopView);
 
-            workshopView.setViewport(new Rectangle2D(0, 0, imageWidth / 4, imageHeight / 4));
+            workshopView.setViewport(new Rectangle2D(0, 0, imageWidth / 4.0, imageHeight / 4.0));
             final Animation animation = new SpriteAnimation(
                     workshopView,
                     Duration.millis(700),
                     16, 4,
                     0, 0,
-                    // 64=829/13
                     imageWidth / 4, imageHeight / 4
             );
             animation.setCycleCount(Animation.INDEFINITE);
@@ -164,8 +112,8 @@ public class GameScene {
     }
 
     public static void setImageViewPositionOnMap(ImageView imageView, int x, int y) {
-        imageView.setX(x*3.7 + 230.0);
-        imageView.setY(y*2.1 + 230.0);
+        imageView.setX(x * 3.7 + 230.0);
+        imageView.setY(y * 2.1 + 230.0);
     }
 
     public static Scene getScene() {

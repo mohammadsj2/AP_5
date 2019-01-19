@@ -41,7 +41,7 @@ public class Item extends Entity {
         return (creatingTurn+ Constant.TERM_OF_DESTROY_ITEM_IN_MAP <= InputReader.getCurrentController().getTurn());
     }
     public void expire(){
-        getCell().destroyEntity(this);
+        getMap().destroyEntity(getCell(),this);
     }
     public int getCost() {
         return cost;

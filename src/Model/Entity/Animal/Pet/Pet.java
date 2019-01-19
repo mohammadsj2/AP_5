@@ -74,7 +74,7 @@ public abstract class Pet extends Animal implements Producer {
         if(haveProduct()){
             if(getOutputItems()!=null) {
                 for (Item item : getOutputItems()) {
-                    getCell().addEntity(item);
+                    getMap().addEntity(getCell(),item);
                 }
                 endProduction();
             }
@@ -96,7 +96,8 @@ public abstract class Pet extends Animal implements Producer {
         }
     }
     public void eatGrass() {
-        this.getCell().destroyGrass();
+        Map map=InputReader.getCurrentController().getMap();
+        map.destroyGrass(getCell());
     }
     public void updateHealth(int x) throws CellDoesNotExistException {
         this.setHealth(this.getHealth() + x);

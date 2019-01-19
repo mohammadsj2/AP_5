@@ -204,7 +204,7 @@ public class Controller {
     private void distributeItems(ArrayList<Item> items) {
         for (Item item : items) {
             Cell randomCell = map.getRandomCell();
-            randomCell.addEntity(item);
+            getMap().addEntity(randomCell,item);
         }
     }
 
