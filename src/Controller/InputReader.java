@@ -13,6 +13,7 @@ import java.util.Formatter;
 import java.util.Scanner;
 
 import Exception.*;
+import com.google.gson.Gson;
 import javafx.application.Application;
 
 import javafx.scene.Scene;
@@ -32,11 +33,12 @@ public class InputReader extends Application
     public static final String THIS_LEVEL_NOT_LOADED_MESSAGE = "**** Error: this level not loaded yet! ****";
     public static final String NO_SUCH_ITEM_MESSAGE = "**** Error: You don't have that item! ****";
     public static final String NOT_ENOUGH_SPACE_MESSAGE = "**** Error: Not enough space! ****";
+    public static final String NOT_ENOUGH_ITEM_MESSAGE = "**** Error: Not enough item! ****";
+
     static Controller currentController = null;
     static ArrayList<Controller> loadedLevelsControllers = new ArrayList<>();
     static ArrayList<Integer> indexOfLevel = new ArrayList<>();
     static Stage primaryStage;
-
 
 
     public static void main(String[] args) throws StartBusyTransporter, IOException {
@@ -142,8 +144,8 @@ public class InputReader extends Application
             }
         });
         thread.start();
-        loadLevel(2);
-        runByLevelNumber(2);
+        loadLevel(1);
+        runByLevelNumber(1);
         launch(args);
 
     }
@@ -229,14 +231,16 @@ public class InputReader extends Application
         }
     }
 
-    public static void startWorkshop(int index) {
+    public static void startWorkshop(int index) throws NotEnoughItemException
+    {
         try {
             currentController.startAWorkShop(index);
         } catch (WorkshopDoesntExistException e) {
             System.out.println(WORKSHOP_DOESNT_EXIST_MESSAGE);
         } catch (StartBusyProducerException e) {
             System.out.println(START_BUSY_WORKSPACE_EXCEPTION_MESSAGE);
-        } catch (WorkShopNotUsedException e) {
+        } catch (WorkShopNotUsedException e)
+        {
             System.out.println(WORK_SHOP_NOT_USED_EXCEPTION_MESSAGE);
         }
     }
