@@ -6,6 +6,7 @@ import Model.Entity.Entity;
 import Model.Entity.Item;
 import Model.Viewable;
 import View.GameScene.GameScene;
+import javafx.animation.Animation;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -21,9 +22,27 @@ public class Cell implements Viewable {
     @Override
     public ImageView getImageView() { return this.imageView; }
 
-    void initView() {
+    public void initView() {
         imageView = new ImageView();
         GameScene.addNode(getImageView());
+    }
+
+    @Override
+    public void refreshView()
+    {
+
+    }
+
+    @Override
+    public Animation getAnimation()
+    {
+        return null;
+    }
+
+    @Override
+    public void setAnimation(Animation animation)
+    {
+
     }
 
     Cell(int x,int y) {

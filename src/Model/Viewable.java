@@ -9,9 +9,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
+import java.io.FileNotFoundException;
+
 public interface Viewable {
     ImageView getImageView();
-    public void initView();
+    default public void initView() throws FileNotFoundException {
+        ImageView imageView = new ImageView();
+        GameScene.addNode(getImageView());
+    }
     public void refreshView();
     Animation getAnimation();
     void setAnimation(Animation animation);
