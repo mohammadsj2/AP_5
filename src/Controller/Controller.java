@@ -46,7 +46,7 @@ public class Controller {
     private Level level;
     private Helicopter helicopter;
     private Truck truck;
-    private int catLevel=0;
+    private int catLevel=1;
 
 
     Controller(int goalMoney, ArrayList<Entity> earnedEnitities) {

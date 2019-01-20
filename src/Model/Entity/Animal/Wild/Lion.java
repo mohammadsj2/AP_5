@@ -25,21 +25,7 @@ public class Lion extends Wild{
         Image image= null;
         try {
             image = new Image(new FileInputStream("./Textures/Animals/Africa/Lion/left.png"));
-            imageView.setImage(image);
-            GameScene.setImageViewPositionOnMap(imageView,cell.getPositionX(),cell.getPositionY());
-            int imageWidth= (int) image.getWidth();
-            int imageHeight= (int) image.getHeight();
-
-            imageView.setViewport(new Rectangle2D(0, 0, imageWidth/3, imageHeight/8));
-            final Animation animation = new SpriteAnimation(
-                    imageView,
-                    Duration.millis(700),
-                    24, 3,
-                    0, 0,
-                    imageWidth/3, imageHeight/8
-            );
-            animation.setCycleCount(Animation.INDEFINITE);
-            animation.play();
+            changeImageView(image,24,8,3,cell.getPositionX(),cell.getPositionY());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

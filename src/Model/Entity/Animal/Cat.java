@@ -29,21 +29,7 @@ public class Cat extends Animal {
         Image image= null;
         try {
             image = new Image(new FileInputStream("./Textures/Animals/Africa/Cat/down.png"));
-            imageView.setImage(image);
-            GameScene.setImageViewPositionOnMap(imageView,cell.getPositionX(),cell.getPositionY());
-            int imageWidth= (int) image.getWidth();
-            int imageHeight= (int) image.getHeight();
-
-            imageView.setViewport(new Rectangle2D(0, 0, imageWidth/6, imageHeight/4));
-            final Animation animation = new SpriteAnimation(
-                    imageView,
-                    Duration.millis(700),
-                    24, 6,
-                    0, 0,
-                    imageWidth/6, imageHeight/4
-            );
-            animation.setCycleCount(Animation.INDEFINITE);
-            animation.play();
+            changeImageView(image,24,4,6,cell.getPositionX(),cell.getPositionY());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -67,8 +53,8 @@ public class Cat extends Animal {
     @Override
     public void walk() {
         Map map = InputReader.getCurrentController().getMap();
-        Cell targetCell = map.getRandomCell();
-        if (InputReader.getCurrentController().getCatLevel() > 0) {
+        Cell targetCell = map.getRandomCell(getCell(), getSpeed());
+        if (InputReader.getCurrentController().getCatLevel() >= 0) {
             targetCell = map.nearestCellWithItem(this.getCell());
         }
         targetCell = map.getBestCellBySpeed(this.getCell(), targetCell, getSpeed());

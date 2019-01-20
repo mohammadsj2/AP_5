@@ -27,21 +27,7 @@ public class Dog extends Animal {
         Image image= null;
         try {
             image = new Image(new FileInputStream("./Textures/Animals/Africa/Dog/down.png"));
-            imageView.setImage(image);
-            GameScene.setImageViewPositionOnMap(imageView,cell.getPositionX(),cell.getPositionY());
-            int imageWidth= (int) image.getWidth();
-            int imageHeight= (int) image.getHeight();
-
-            imageView.setViewport(new Rectangle2D(0, 0, imageWidth/6, imageHeight/4));
-            final Animation animation = new SpriteAnimation(
-                    imageView,
-                    Duration.millis(700),
-                    24, 6,
-                    0, 0,
-                    imageWidth/6, imageHeight/4
-            );
-            animation.setCycleCount(Animation.INDEFINITE);
-            animation.play();
+            changeImageView(image,24,4,6,cell.getPositionX(),cell.getPositionY());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
