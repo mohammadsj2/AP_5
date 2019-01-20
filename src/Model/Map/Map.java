@@ -177,10 +177,17 @@ public class Map {
 
     public Cell getRandomCell(Cell first, int speed){
         Random random=new Random();
+        int t= random.nextInt((int) cells.size());
+        return cells.get(t);
+    }
+
+   /* public Cell getRandomCell(Cell first, int speed){
+        Random random=new Random();
         ArrayList<Cell> inRange = getNearbyCells(first, speed);
         int t= random.nextInt((int) inRange.size());
         return inRange.get(t);
-    }
+    }*/
+
     public Cell getRandomCell(){
         Random random=new Random();
         int t= random.nextInt((int) cells.size());

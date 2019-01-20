@@ -33,6 +33,7 @@ public class FancyButton
         imageView.setFitWidth(width);
         insideText.setText(text);
         insideText.setStyle("-fx-font-family: 'Comic Sans MS';");
+        insideText.setFill(Color.WHITE);
         pane.getChildren().add(imageView);
         pane.getChildren().add(insideText);
         pane.setAlignment(Pos.CENTER);

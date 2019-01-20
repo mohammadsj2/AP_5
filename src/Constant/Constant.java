@@ -19,10 +19,10 @@ public class Constant {
     public static final int TERM_OF_DESTROY_ITEM_IN_MAP = 50;
     public static final int MAP_ROWS = 100;
     public static final int MAP_COLUMNS = 101;
-    public static final int MAX_WORKSHOP_LEVEL = 5;
+    public static final int WORKSHOP_MAX_LEVEL = 4;
     public static final int WORKSHOP_UPGRADE_COST_PER_LEVEL = 500;
     public static final int ANIMAL_SPEED = 4;
-    public static final int INIT_HEALTH=50;
+    public static final int INIT_HEALTH=100;
 
     public static final String BEAR_NAME = "bear";
 
