@@ -1,23 +1,17 @@
 package Model.Entity.Animal;
 
-import Controller.*;
+import Controller.InputReader;
+import Exception.CellDoesNotExistException;
+import Exception.NoWarehouseSpaceException;
 import Model.Entity.Item;
 import Model.Map.Cell;
+import Model.Map.Map;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-
-import Exception.CellDoesNotExistException;
-import Exception.NoWarehouseSpaceException;
-import Model.Map.Map;
-import View.GameScene.GameScene;
-import View.SpriteAnimation;
-import javafx.animation.Animation;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.util.Duration;
 
 public class Cat extends Animal {
 
@@ -36,7 +30,8 @@ public class Cat extends Animal {
     }
 
     public Cat(Cell cell, int level) {
-        super(cell, level);
+        this(cell);
+        setLevel(level);
     }
 
     @Override

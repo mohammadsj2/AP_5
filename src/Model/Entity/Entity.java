@@ -1,3 +1,4 @@
+
 package Model.Entity;
 
 import Controller.*;
@@ -43,7 +44,7 @@ public abstract class Entity implements Viewable {
     }//TODO
 
     @Override
-    public void changeImageView(Image image, int count, int rows, int columns, int x, int y) {
+    public void changeImageView(Image image, int count, int rows, int columns, double x, double y) {
         ImageView imageView=getImageView();
 
         imageView.setImage(image);
