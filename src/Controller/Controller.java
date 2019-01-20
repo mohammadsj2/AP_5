@@ -270,8 +270,10 @@ public class Controller {
                 break;
             case Constant.BEAR_NAME:
                 new Bear(map.getRandomCell());
+                break;
             case Constant.LION_NAME:
                 new Lion(map.getRandomCell());
+                break;
             default:
                 throw new IOException();
         }

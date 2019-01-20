@@ -1,5 +1,6 @@
 package Controller;
 
+import Constant.Constant;
 import Exception.*;
 import Model.Entity.Item;
 import View.GameScene.GameScene;
@@ -13,14 +14,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Scanner;
-import Constant.Constant;
-
-import Exception.*;
-import com.google.gson.Gson;
-import javafx.application.Application;
-
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 public class InputReader extends Application
 {
