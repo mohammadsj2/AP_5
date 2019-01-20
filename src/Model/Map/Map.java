@@ -11,6 +11,7 @@ import com.gilecode.yagson.YaGson;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 public class Map {
     public static final int MAX_DISTANCE_2 = 100 * 100 * 100;
@@ -158,11 +159,23 @@ public class Map {
     }
 
 
+    public Cell getRandomCell(Cell first, int speed){
+        Random random=new Random();
+        ArrayList<Cell> inRange = new ArrayList<>();
+        for (int i = 0; i < cells.size(); ++i)
+            if (Math.abs(cells.get(i).getPositionY() + cells.get(i).getPositionX() -
+                    first.getPositionX() - first.getPositionY()) <= speed)
+                inRange.add(cells.get(i));
+        int t= random.nextInt((int) inRange.size());
+        return inRange.get(t);
+    }
     public Cell getRandomCell(){
-        int t=(int)(Math.random()*2.0*cells.size());
-        return cells.get(t%(cells.size()));
+        Random random=new Random();
+        int t= random.nextInt((int) cells.size());
+        return cells.get(t);
     }
     public Cell getBestCellBySpeed(Cell first,Cell last,int speed){
+
         speed*=speed;
         if(distance2(first,last)<=speed)
             return last;

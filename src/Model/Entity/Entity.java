@@ -4,10 +4,11 @@ import Controller.*;
 import Model.Map.Cell;
 import Exception.CellDoesNotExistException;
 import Model.Map.Map;
+import Model.Viewable;
 import View.GameScene.GameScene;
 import javafx.scene.image.ImageView;
 
-public abstract class Entity {
+public abstract class Entity implements Viewable {
     private Map map;
     private Cell cell;
     private boolean alive;

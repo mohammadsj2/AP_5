@@ -45,7 +45,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
 
     public void walk() throws CellDoesNotExistException {
         Map map=InputReader.getCurrentController().getMap();
-        Cell cur = map.getRandomCell();
+        Cell cur = map.getRandomCell(getCell(), getSpeed());
         this.changeCell(map.getBestCellBySpeed(getCell(),cur,Constant.ANIMAL_SPEED));
     }
     public void changeCell(Cell cur) {

@@ -23,21 +23,7 @@ public class Chicken extends Pet {
         Image image= null;
         try {
             image = new Image(new FileInputStream("./Textures/Animals/Africa/GuineaFowl/eat.png"));
-            imageView.setImage(image);
-            GameScene.setImageViewPositionOnMap(imageView,cell.getPositionX(),cell.getPositionY());
-            int imageWidth= (int) image.getWidth();
-            int imageHeight= (int) image.getHeight();
-
-            imageView.setViewport(new Rectangle2D(0, 0, imageWidth/5, imageHeight/5));
-            final Animation animation = new SpriteAnimation(
-                    imageView,
-                    Duration.millis(700),
-                    24, 5,
-                    0, 0,
-                    imageWidth/5, imageHeight/5
-            );
-            animation.setCycleCount(Animation.INDEFINITE);
-            animation.play();
+            changeImageView(image,24,5,5,cell.getPositionX(),cell.getPositionY());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
