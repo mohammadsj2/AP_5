@@ -13,6 +13,7 @@ import Exception.NotEnoughMoneyException;
 import Exception.NoSuchItemInWarehouseException;
 import Exception.NoWarehouseSpaceException;
 import View.GameScene.GameScene;
+import View.WareHouseScene.WareHouseScene;
 import javafx.animation.Animation;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
@@ -51,8 +52,11 @@ public class WareHouse implements Upgradable,Viewable{
         imageView=new ImageView();
         GameScene.addNode(imageView);
         refreshView();
-        imageView.setOnMouseClicked(event -> {
-
+        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                InputReader.setScene(WareHouseScene.getScene());
+            }
         });
     }
     private int placeTaken()

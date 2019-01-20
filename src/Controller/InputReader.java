@@ -3,6 +3,7 @@ package Controller;
 import Exception.*;
 import Model.Entity.Item;
 import View.GameScene.GameScene;
+import View.WareHouseScene.WareHouseScene;
 import com.gilecode.yagson.YaGson;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -299,10 +300,11 @@ public class InputReader extends Application
 
     private void initScenes()
     {
+        WareHouseScene.init();
         GameScene.init();
     }
 
-    public void setScene(Scene scene)
+    public static void setScene(Scene scene)
     {
         primaryStage.setScene(scene);
 
