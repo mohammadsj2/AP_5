@@ -5,6 +5,7 @@ import Controller.InputReader;
 import Exception.CantUpgradeException;
 import Exception.NoWaterException;
 import View.GameScene.GameScene;
+import javafx.animation.Animation;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,12 +30,25 @@ public class Well implements Upgradable, Loadable, Viewable {
         try {
             System.out.println(" : ) ");
             Image image = new Image(new FileInputStream("./Textures/Service/Well/0" + (new Integer(getLevel() + 1)).toString() + ".png"));
-            changeImageView(image, 1, 4, 4, 350, 68);
+            changeImageView(image, 1, 4, 4, 450, 125);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
     }
+
+    @Override
+    public Animation getAnimation()
+    {
+        return null;
+    }
+
+    @Override
+    public void setAnimation(Animation animation)
+    {
+
+    }
+
     public void initView() {
         System.out.println("wtf");
         setImageView(new ImageView());

@@ -1,5 +1,7 @@
 package Constant;
 
+import Controller.Controller;
+import Controller.InputReader;
 import Model.Entity.Item;
 
 import java.io.FileInputStream;
@@ -94,7 +96,7 @@ public class Constant {
                 if(!input[0].equals(type)){
                     continue;
                 }
-                return new Item(input[0],new Integer(input[1]),new Integer(input[2]),0);
+                return new Item(input[0],new Integer(input[1]),new Integer(input[2]), InputReader.getCurrentController().getTurn());
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
