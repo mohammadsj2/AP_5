@@ -61,6 +61,15 @@ public abstract class Entity implements Viewable {
         );
         animation.setCycleCount(Animation.INDEFINITE);
         animation.play();
+    public void setAnimation(Animation animation)
+    {
+
+    }
+
+    @Override
+    public Animation getAnimation()
+    {
+        return null;
     }
 
     public Map getMap() {

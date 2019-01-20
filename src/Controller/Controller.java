@@ -30,6 +30,7 @@ import Exception.WinningMessage;
 import Exception.NoTransporterSpaceException;
 import Exception.NoSuchItemInWarehouseException;
 import Exception.NoWarehouseSpaceException;
+import Exception.NotEnoughItemException;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -129,11 +130,13 @@ public class Controller {
     }
 
 
-    void startAWorkShop(int index) throws WorkshopDoesntExistException, StartBusyProducerException,
-                                                    WorkShopNotUsedException {
+    public void startAWorkShop(int index) throws WorkshopDoesntExistException, StartBusyProducerException,
+            WorkShopNotUsedException, NotEnoughItemException
+    {
         if (index >= workShops.size()) throw new WorkshopDoesntExistException();
         WorkShop workShop = workShops.get(index);
         int usedLevel = workShop.maxLevelCanDoWithItems(wareHouse.getItems());
+        if(usedLevel==-1)throw new NotEnoughItemException();
         workShop.startByLevel(usedLevel);
         ArrayList<Item> neededItems = workShop.getInputItemsByUsedLevel();
         for (Item item : neededItems) {
