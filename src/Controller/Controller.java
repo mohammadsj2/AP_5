@@ -75,6 +75,7 @@ public class Controller {
     }
 
     public void addItemToWareHouse(Item item) throws NoWarehouseSpaceException{
+        level.entityEarned(item);
         wareHouse.addItem(item);
         item.setInWareHouse(true);
         try {

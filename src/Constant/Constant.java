@@ -47,8 +47,8 @@ public class Constant {
     public static final int WAREHOUSE_UPGRADE_COST_PER_LEVEL = 2000;
     public static final int WAREHOUSE_MAX_LEVEL = 3;
 
-    public static final int WELL_BASE_WATER = 5;
-    public static final int WELL_WATER_PER_LEVEL = 10;
+    public static final int WELL_BASE_WATER = 27;
+    public static final int WELL_WATER_PER_LEVEL = 18;
     public static final int WELL_FILL_COST = 19;
     public static final int WELL_FILL_COST_PER_LEVEL = -3;
     public static final int WELL_UPGRADE_COST_PER_LEVEL = 700;

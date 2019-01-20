@@ -147,8 +147,10 @@ public class GameScene {
                 double y = event.getSceneY();
                 int cellx = (int) ((x - 230) / 3.7);
                 int celly = (int) ((y - 230) / 2.1);
-                if (cellx >= 0 && cellx < 100 && celly >= 0 && celly < 100) {
-                    InputReader.plant(cellx, celly);
+                for(int i=Math.max(0,cellx-1);i<Math.min(Constant.MAP_COLUMNS-1,cellx+1);i++){
+                    for(int j=Math.max(0,celly-1);j<Math.min(Constant.MAP_ROWS,celly+1);j++){
+                        InputReader.plant(i, j);
+                    }
                 }
             }
         });
