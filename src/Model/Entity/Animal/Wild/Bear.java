@@ -25,21 +25,7 @@ public class Bear extends Wild{
         Image image= null;
         try {
             image = new Image(new FileInputStream("./Textures/Animals/Grizzly/down.png"));
-            imageView.setImage(image);
-            GameScene.setImageViewPositionOnMap(imageView,cell.getPositionX(),cell.getPositionY());
-            int imageWidth= (int) image.getWidth();
-            int imageHeight= (int) image.getHeight();
-
-            imageView.setViewport(new Rectangle2D(0, 0, imageWidth/4, imageHeight/6));
-            final Animation animation = new SpriteAnimation(
-                    imageView,
-                    Duration.millis(700),
-                    24, 4,
-                    0, 0,
-                    imageWidth/4, imageHeight/6
-            );
-            animation.setCycleCount(Animation.INDEFINITE);
-            animation.play();
+            changeImageView(image,24,6,4,cell.getPositionX(),cell.getPositionY());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
