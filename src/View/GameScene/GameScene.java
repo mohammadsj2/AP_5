@@ -3,15 +3,24 @@ package View.GameScene;
 import Constant.Constant;
 import Controller.Controller;
 import Controller.InputReader;
-import Model.WorkShop;
+import Model.*;
+import Model.Transporter.Helicopter;
+import Model.Transporter.Truck;
+import View.FancyButton;
 import View.NextTurnTimer;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,19 +37,32 @@ public class GameScene {
             initBackground();
             initWorkShops();
             initWell();
+            initWareHouse();
             initMap();
             initAddAnimalButtons();
             nextTurnButtonForDebug();
-            controller.getWareHouse().initView();
             new NextTurnTimer().start();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
+    private static void initWareHouse()
+    {
+        WareHouse wareHouse=InputReader.getCurrentController().getWareHouse();
+        wareHouse.initView();
+        ImageView wareHouseView=wareHouse.getImageView();
+        setUpgradeButton(wareHouse,wareHouseView.getX(),wareHouseView.getY()+wareHouseView.getImage().getHeight()-23);
+
+    }
+
     private static void initWell() {
-        InputReader.getCurrentController().getWell().initView();
-        InputReader.getCurrentController().getWell().refreshView();
+        Well well=InputReader.getCurrentController().getWell();
+        well.initView();
+        well.refreshView();
+        ImageView wellView=well.getImageView();
+        setUpgradeButton(well,wellView.getX(),wellView.getY()+wellView.getImage().getHeight()/4-23);
+
 
     }
     private static void initMap() {
@@ -102,21 +124,36 @@ public class GameScene {
         for(WorkShop workShop:workShops)
         {
             workShop.initView();
-            ImageView upgradeButtonView=new ImageView();
-            Image upgradeButtonImage= new Image(new FileInputStream("./Textures/AddAnimalButtons/A.png"));
-            upgradeButtonView.setFitHeight(20);
-            upgradeButtonView.setFitWidth(50);
-            upgradeButtonView.setImage(upgradeButtonImage);
             ImageView workShopView=workShop.getImageView();
-            upgradeButtonView.setY(workShopView.getY()+workShopView.getImage().getHeight()/4);
-            upgradeButtonView.setX(workShopView.getX());
-            upgradeButtonView.setOnMouseClicked(event ->
-            {
-                if(!workShop.isBusy())
-                    InputReader.upgrade("workshop"+workShop.getLocation());
-            });
-            root.getChildren().add(upgradeButtonView);
+            setUpgradeButton(workShop,workShopView.getX(),workShopView.getY()+workShopView.getImage().getHeight()/4);
         }
+    }
+
+    private static void setUpgradeButton(Upgradable upgradable,double x,double y)
+    {
+        ImageView imageView=((Viewable)upgradable).getImageView();
+        FancyButton upgradeButton=new FancyButton(String.valueOf(upgradable.upgradeCost()),20,50
+                ,x,y);
+        upgradeButton.getNode().setOnMouseClicked(event ->
+        {
+            if(!(upgradable instanceof WorkShop) || !((WorkShop) upgradable).isBusy())
+            {
+                String inputReaderString = null;
+                if(upgradable instanceof Well)
+                    inputReaderString="well";
+                else if(upgradable instanceof Helicopter)
+                    inputReaderString="helicopter";
+                else if(upgradable instanceof Truck)
+                    inputReaderString="truck";
+                else if(upgradable instanceof WareHouse)
+                    inputReaderString="warehouse";
+                else if(upgradable instanceof WorkShop)
+                    inputReaderString="workshop" + ((WorkShop)upgradable).getLocation();
+                InputReader.upgrade(inputReaderString);
+                upgradeButton.setText(String.valueOf(upgradable.upgradeCost()));
+            }
+        });
+        root.getChildren().add(upgradeButton.getNode());
     }
 
     public static void addNode(Node node) {
@@ -140,16 +177,14 @@ public class GameScene {
         backgroundView.setFitHeight(Constant.GAME_SCENE_HEIGHT);
         backgroundView.setImage(backgroundImage);
         root.getChildren().add(backgroundView);
-        backgroundView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                double x = event.getSceneX();
-                double y = event.getSceneY();
-                int cellx = (int) ((x - 230) / 3.7);
-                int celly = (int) ((y - 230) / 2.1);
-                if (cellx >= 0 && cellx < 100 && celly >= 0 && celly < 100) {
-                    InputReader.plant(cellx, celly);
-                }
+        backgroundView.setOnMouseClicked(event ->
+        {
+            double x = event.getSceneX();
+            double y = event.getSceneY();
+            int cellX = (int) ((x - 230) / 3.7);
+            int cellY = (int) ((y - 230) / 2.1);
+            if (cellX >= 0 && cellX < 100 && cellY >= 0 && cellY < 100) {
+                InputReader.plant(cellX, cellY);
             }
         });
     }

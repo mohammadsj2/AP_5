@@ -107,6 +107,7 @@ public class Well implements Upgradable, Loadable, Viewable {
         level++;
         maxWater+=Constant.WELL_WATER_PER_LEVEL;
         waterRemaining=maxWater;
+        refreshView();
     }
 
     public int getWaterRemaining() {

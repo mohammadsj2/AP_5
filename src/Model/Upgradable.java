@@ -4,6 +4,6 @@ import Exception.CantUpgradeException;
 
 public interface Upgradable {
     void upgrade()throws CantUpgradeException;
-    int upgradeCost()throws CantUpgradeException;
+    int upgradeCost();
     boolean canUpgrade();
 }

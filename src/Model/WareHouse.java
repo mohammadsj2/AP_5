@@ -97,6 +97,7 @@ public class WareHouse implements Upgradable,Viewable{
         }
         level++;
         capacity+=Constant.WAREHOUSE_CAPACITY_PER_LEVEL;
+        refreshView();
     }
 
     @Override
