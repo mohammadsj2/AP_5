@@ -100,7 +100,23 @@ public class GameScene {
     private static void initWorkShops() throws FileNotFoundException {
         ArrayList<WorkShop> workShops=InputReader.getCurrentController().getWorkShops();
         for(WorkShop workShop:workShops)
+        {
             workShop.initView();
+            ImageView upgradeButtonView=new ImageView();
+            Image upgradeButtonImage= new Image(new FileInputStream("./Textures/AddAnimalButtons/A.png"));
+            upgradeButtonView.setFitHeight(20);
+            upgradeButtonView.setFitWidth(50);
+            upgradeButtonView.setImage(upgradeButtonImage);
+            ImageView workShopView=workShop.getImageView();
+            upgradeButtonView.setY(workShopView.getY()+workShopView.getImage().getHeight()/4);
+            upgradeButtonView.setX(workShopView.getX());
+            upgradeButtonView.setOnMouseClicked(event ->
+            {
+                if(!workShop.isBusy())
+                    InputReader.upgrade("workshop"+workShop.getLocation());
+            });
+            root.getChildren().add(upgradeButtonView);
+        }
     }
 
     public static void addNode(Node node) {

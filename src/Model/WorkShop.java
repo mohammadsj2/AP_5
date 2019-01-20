@@ -6,6 +6,7 @@ import Model.Entity.Item;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+
 import Exception.*;
 import Constant.Constant;
 import View.GameScene.GameScene;
@@ -18,105 +19,122 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 
-public class WorkShop implements Producer,Upgradable,Viewable{
-    private ArrayList<Item> inputs,outputs;
-    private int location,level,startTime,produceDuration;
+public class WorkShop implements Producer, Upgradable, Viewable
+{
+    private ArrayList<Item> inputs, outputs;
+    private int location, level, startTime, produceDuration;
     private String name;
-    private boolean busy,isCustom;
-    private int usedLevel=-10;
+    private boolean busy, isCustom;
+    private int usedLevel = -10;
     private ImageView imageView;
     private Animation animation;
 
-    public WorkShop(String name,int location,boolean isCustom,ArrayList<Item> inputs
-            ,ArrayList<Item> outputs,int produceDuration){
-        this.name=name;
-        this.location=location;
-        this.isCustom=isCustom;
-        this.inputs=inputs;
-        this.outputs=outputs;
-        this.produceDuration=produceDuration;
+    public WorkShop(String name, int location, boolean isCustom, ArrayList<Item> inputs
+            , ArrayList<Item> outputs, int produceDuration)
+    {
+        this.name = name;
+        this.location = location;
+        this.isCustom = isCustom;
+        this.inputs = inputs;
+        this.outputs = outputs;
+        this.produceDuration = produceDuration;
     }
 
-    public void initView() throws FileNotFoundException
+    public void initView()
     {
-        String imageAddress = "Textures/Workshops/" + this.getName() +
-                "/0" + (this.getLevel() + 1) + ".png";
-        Image workshopImage = new Image(new FileInputStream(imageAddress));
-        imageView= new ImageView();
+        imageView = new ImageView();
         imageView.setOnMouseClicked(event ->
         {
-            try
-            {
-                InputReader.startWorkshop(location);
+            InputReader.startWorkshop(location);
+            if (this.busy)
                 startAnimation();
-            } catch (NotEnoughItemException e)
-            {
-                e.printStackTrace();
-            }
+
         });
         GameScene.addNode(imageView);
-        changeImageView(workshopImage,16,4,4,Constant.WORKSHOPS_POSITION_X[location],Constant.WORKSHOPS_POSITION_Y[location]);
-        //System.out.println(animation==null);
-        stopAnimation(4,4);
+        refreshView();
     }
 
     @Override
     public void refreshView()
     {
-
+        String imageAddress = "Textures/Workshops/" + this.getName() +
+                "/0" + (this.getLevel() + 1) + ".png";
+        Image workshopImage = null;
+        try
+        {
+            workshopImage = new Image(new FileInputStream(imageAddress));
+        } catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        changeImageView(workshopImage, 16, 4, 4,
+                Constant.WORKSHOPS_POSITION_X[location], Constant.WORKSHOPS_POSITION_Y[location]);
+        //System.out.println(animation==null);
+        stopAnimation(4, 4);
     }
 
-    public void setLocation(int location) {
+    public void setLocation(int location)
+    {
         this.location = location;
     }
 
     @Override
-    public boolean canUpgrade() {
-        return !(level== Constant.MAX_WORKSHOP_LEVEL || isCustom );
+    public boolean canUpgrade()
+    {
+        return !(level+1 == Constant.MAX_WORKSHOP_LEVEL || isCustom);
     }
 
     @Override
-    public int upgradeCost() throws CantUpgradeException {
-        if(!canUpgrade()){
-            throw new CantUpgradeException();
-        }
-        return Constant.WORKSHOP_UPGRADE_COST_PER_LEVEL *(level+1);
+    public int upgradeCost()
+    {
+        return Constant.WORKSHOP_UPGRADE_COST_PER_LEVEL * (level + 1);
     }
 
     @Override
-    public void upgrade() throws CantUpgradeException {
-        if(!canUpgrade()){
+    public void upgrade() throws CantUpgradeException
+    {
+        if (!canUpgrade())
+        {
             throw new CantUpgradeException();
         }
         level++;
+        refreshView();
     }
 
-    public int getLevel() {
+    public int getLevel()
+    {
         return level;
     }
 
-    public int getProduceDuration() {
+    public int getProduceDuration()
+    {
         return produceDuration;
     }
 
     @Override
-    public boolean haveProduct() {
-        return (busy && InputReader.getCurrentController().getTurn()>=startTime+getProduceDuration());
+    public boolean haveProduct()
+    {
+        return (busy && InputReader.getCurrentController().getTurn() >= startTime + getProduceDuration());
     }
 
     @Override
-    public void startProduction() throws StartBusyProducerException {
-        if(busy){
+    public void startProduction() throws StartBusyProducerException
+    {
+        if (busy)
+        {
             throw new StartBusyProducerException();
         }
-        busy=true;
-        startTime=InputReader.getCurrentController().getTurn();
+        busy = true;
+        startTime = InputReader.getCurrentController().getTurn();
     }
 
-    private ArrayList<Item> multipleItems(ArrayList<Item> items,int cnt){
-        ArrayList<Item> answer=new ArrayList<>();
-        for(int i=0;i<cnt;i++){
-            for(Item item:items){
+    private ArrayList<Item> multipleItems(ArrayList<Item> items, int cnt)
+    {
+        ArrayList<Item> answer = new ArrayList<>();
+        for (int i = 0; i < cnt; i++)
+        {
+            for (Item item : items)
+            {
                 answer.add(Constant.getItemByType(item.getName()));
             }
         }
@@ -124,51 +142,64 @@ public class WorkShop implements Producer,Upgradable,Viewable{
     }
 
     @Override
-    public ArrayList<Item> getOutputItems() {
-        return multipleItems(outputs,level+1);
+    public ArrayList<Item> getOutputItems()
+    {
+        return multipleItems(outputs, level + 1);
     }
 
-    public ArrayList<Item> getOutputItemsByUsedLevel() throws WorkShopNotUsedException {
-        if(!busy)throw new WorkShopNotUsedException();
-        return multipleItems(outputs,usedLevel+1);
+    public ArrayList<Item> getOutputItemsByUsedLevel() throws WorkShopNotUsedException
+    {
+        if (!busy) throw new WorkShopNotUsedException();
+        return multipleItems(outputs, usedLevel + 1);
     }
 
     @Override
-    public ArrayList<Item> getInputItems() {
-        return multipleItems(inputs,level+1);
+    public ArrayList<Item> getInputItems()
+    {
+        return multipleItems(inputs, level + 1);
     }
-    public ArrayList<Item> getInputItemsByUsedLevel() throws WorkShopNotUsedException {
-        if(!busy)throw new WorkShopNotUsedException();
-        return multipleItems(inputs,usedLevel+1);
+
+    public ArrayList<Item> getInputItemsByUsedLevel() throws WorkShopNotUsedException
+    {
+        if (!busy) throw new WorkShopNotUsedException();
+        return multipleItems(inputs, usedLevel + 1);
     }
-    public int maxLevelCanDoWithItems(ArrayList<Item> items){
-        ArrayList<Item> copyOfItems=new ArrayList<>();
+
+    public int maxLevelCanDoWithItems(ArrayList<Item> items)
+    {
+        ArrayList<Item> copyOfItems = new ArrayList<>();
         copyOfItems.addAll(items);
-        int level=-1;
-        while(level<this.level){
-            boolean flag=true;
-            for(Item item:inputs){
-                flag&=copyOfItems.remove(item);
+        int level = -1;
+        while (level < this.level)
+        {
+            boolean flag = true;
+            for (Item item : inputs)
+            {
+                flag &= copyOfItems.remove(item);
             }
-            if(!flag)break;
+            if (!flag) break;
             level++;
         }
         return level;
     }
 
     @Override
-    public void endProduction() {
-        busy=false;
-        usedLevel=-10;
+    public void endProduction()
+    {
+        busy = false;
+        usedLevel = -10;
+        stopAnimation(4,4);
     }
 
-    public void startByLevel(int usedLevel) throws StartBusyProducerException {
-        if(busy){
+    public void startByLevel(int usedLevel) throws StartBusyProducerException
+    {
+        if (busy)
+        {
             throw new StartBusyProducerException();
         }
-        busy=true;
-        startTime=InputReader.getCurrentController().getTurn();
-        this.usedLevel=usedLevel;
+        busy = true;
+        startTime = InputReader.getCurrentController().getTurn();
+        this.usedLevel = usedLevel;
     }
 
     public ArrayList<Item> getInputs()
@@ -211,7 +242,8 @@ public class WorkShop implements Producer,Upgradable,Viewable{
         return usedLevel;
     }
 
-    public ImageView getImageView() {
+    public ImageView getImageView()
+    {
         return imageView;
     }
 
@@ -224,6 +256,6 @@ public class WorkShop implements Producer,Upgradable,Viewable{
     @Override
     public void setAnimation(Animation animation)
     {
-        this.animation=animation;
+        this.animation = animation;
     }
 }

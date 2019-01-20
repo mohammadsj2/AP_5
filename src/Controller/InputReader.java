@@ -4,6 +4,7 @@ import Constant.Constant;
 import Exception.*;
 import Model.Entity.Item;
 import View.GameScene.GameScene;
+import View.WareHouseScene.WareHouseScene;
 import com.gilecode.yagson.YaGson;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -228,7 +229,7 @@ public class InputReader extends Application
         }
     }
 
-    public static void startWorkshop(int index) throws NotEnoughItemException
+    public static void startWorkshop(int index)
     {
         try {
             currentController.startAWorkShop(index);
@@ -239,6 +240,9 @@ public class InputReader extends Application
         } catch (WorkShopNotUsedException e)
         {
             System.out.println(WORK_SHOP_NOT_USED_EXCEPTION_MESSAGE);
+        } catch (NotEnoughItemException e)
+        {
+            System.out.println(NOT_ENOUGH_ITEM_MESSAGE);
         }
     }
 
@@ -292,10 +296,11 @@ public class InputReader extends Application
 
     private void initScenes()
     {
+        WareHouseScene.init();
         GameScene.init();
     }
 
-    public void setScene(Scene scene)
+    public static void setScene(Scene scene)
     {
         primaryStage.setScene(scene);
 
