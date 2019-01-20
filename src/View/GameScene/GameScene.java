@@ -1,6 +1,7 @@
 package View.GameScene;
 
 import Constant.Constant;
+import Controller.Controller;
 import Controller.InputReader;
 import Model.WorkShop;
 import javafx.event.EventHandler;
@@ -22,10 +23,12 @@ public class GameScene {
 
     public static void init() {
         try {
+            Controller controller=InputReader.getCurrentController();
             initBackground();
             initWorkShops();
             initAddAnimalButtons();
             nextTurnButtonForDebug();
+            controller.getWareHouse().initView();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
