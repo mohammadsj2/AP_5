@@ -2,7 +2,6 @@ package View;
 
 import Controller.InputReader;
 import javafx.animation.AnimationTimer;
-import javafx.scene.control.Label;
 
 import java.util.Random;
 
@@ -18,6 +17,12 @@ public class NextTurnTimer extends AnimationTimer {
         {
             lastTime=now;
             time+=1;
+            Random random = new Random();
+            if (random.nextInt(130) == 1) {
+                String wildName = (random.nextInt(2) == 0 ? "bear" : "lion");
+                for (int j = 0; j < 2; ++j)
+                    InputReader.buy(wildName);
+            }
             InputReader.nextTurn(1);
         }
     }

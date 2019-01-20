@@ -1,10 +1,11 @@
 package Model.Entity.Animal.Wild;
 
+import Exception.CellDoesNotExistException;
 import Model.Entity.Animal.Animal;
+import Model.Entity.Animal.Dog;
 import Model.Entity.Entity;
 import Model.Entity.Item;
 import Model.Map.Cell;
-import Exception.CellDoesNotExistException;
 
 import java.util.ArrayList;
 
@@ -15,14 +16,40 @@ public abstract class Wild extends Animal {
     protected Wild(Cell cell, int level) {
         super(cell, level);
     }
-    public void kill(Cell cell) throws CellDoesNotExistException {
-        ArrayList<Entity> entities = cell.getEntities();
-        for (Entity e : entities) {
+    public boolean kill(Cell cell) throws CellDoesNotExistException {
+        Entity[] entities = cell.getEntities().toArray(new Entity[0]);
+        boolean dog_near = false;
+        for (int j = 0; j < entities.length; ++j) if (entities[j].getAlive()) {
+            Entity e = entities[j];
             if (!(e instanceof Wild)) {
+                if (e instanceof Dog)
+                    dog_near = true;
                 e.destroy();
             }
         }
+        return dog_near;
     }
+
+    @Override
+    public void nextTurn() throws CellDoesNotExistException {
+        super.nextTurn();
+        int range = 2;
+        boolean die = false;
+        int x = getCell().getPositionX();
+        int y = getCell().getPositionY();
+        ArrayList<Cell> inRange = getMap().getNearbyCells(getCell(), 2);
+        for (Cell cell : inRange) {
+            if (kill(cell)) {
+                die = true;
+            }
+        }
+
+        if (die) {
+            this.destroy();
+        }
+
+    }
+
     public void cage() throws CellDoesNotExistException {
         Cell cur = this.getCell();
         this.destroyFromMap();
