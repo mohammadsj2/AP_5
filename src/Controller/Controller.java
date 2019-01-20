@@ -199,6 +199,7 @@ public class Controller {
     private void distributeItems(ArrayList<Item> items) {
         for (Item item : items) {
             Cell randomCell = map.getRandomCell();
+            item.setCell(randomCell);
             getMap().addEntity(randomCell,item);
         }
     }

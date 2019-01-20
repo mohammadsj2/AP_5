@@ -60,6 +60,12 @@ public class WorkShop implements Producer,Upgradable,Viewable{
         stopAnimation(4,4);
     }
 
+    @Override
+    public void refreshView()
+    {
+
+    }
+
     public void setLocation(int location) {
         this.location = location;
     }
@@ -110,7 +116,9 @@ public class WorkShop implements Producer,Upgradable,Viewable{
     private ArrayList<Item> multipleItems(ArrayList<Item> items,int cnt){
         ArrayList<Item> answer=new ArrayList<>();
         for(int i=0;i<cnt;i++){
-            answer.addAll(items);
+            for(Item item:items){
+                answer.add(Constant.getItemByType(item.getName()));
+            }
         }
         return answer;
     }

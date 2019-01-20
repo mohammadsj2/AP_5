@@ -18,9 +18,9 @@ Adornment	4	400	300
 BrightHorn	5	3000	1500
 Intermediate	4	4000	2000
 Souvenir	3	5000	2500
-Flour	1.5	20	10
+Flour	2	20	10
 CheeseFerment	2	25	15
-Varnish	2.5	25	15
+Varnish	3	25	15
 MegaPie	20	20000	10000
 SpruceGrizzly	25	2500	7000
 SpruceLion	25	2500	7000

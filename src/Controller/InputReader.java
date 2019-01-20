@@ -1,6 +1,7 @@
 package Controller;
 
 import Exception.*;
+import Model.Entity.Item;
 import View.GameScene.GameScene;
 import com.gilecode.yagson.YaGson;
 import javafx.application.Application;
@@ -11,6 +12,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Scanner;
+import Constant.Constant;
 
 import Exception.*;
 import com.google.gson.Gson;

@@ -13,6 +13,7 @@ import Exception.NotEnoughMoneyException;
 import Exception.NoSuchItemInWarehouseException;
 import Exception.NoWarehouseSpaceException;
 import View.GameScene.GameScene;
+import javafx.animation.Animation;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,6 +34,19 @@ public class WareHouse implements Upgradable,Viewable{
             e.printStackTrace();
         }
     }
+
+    @Override
+    public Animation getAnimation()
+    {
+        return null;
+    }
+
+    @Override
+    public void setAnimation(Animation animation)
+    {
+
+    }
+
     public void initView(){
         imageView=new ImageView();
         GameScene.addNode(imageView);

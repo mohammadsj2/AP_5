@@ -4,6 +4,7 @@ import Constant.Constant;
 import Controller.Controller;
 import Controller.InputReader;
 import Model.WorkShop;
+import View.NextTurnTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -31,6 +32,7 @@ public class GameScene {
             initAddAnimalButtons();
             nextTurnButtonForDebug();
             controller.getWareHouse().initView();
+            new NextTurnTimer().start();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -110,7 +112,7 @@ public class GameScene {
         root.getChildren().remove(node);
     }
 
-    public static void setMiddlePosition(ImageView imageView,double width,double height, int x, int y){
+    public static void setMiddlePosition(ImageView imageView,double width,double height,double x,double y){
         imageView.setX((double)x-width/2.0);
         imageView.setY((double)y-height/2.0);
     }
@@ -136,7 +138,7 @@ public class GameScene {
         });
     }
 
-    public static void setImageViewPositionOnMap(ImageView imageView, int x, int y) {
+    public static void setImageViewPositionOnMap(ImageView imageView, double x, double y) {
         imageView.setX(x * 3.7 + 230.0);
         imageView.setY(y * 2.1 + 230.0);
     }
