@@ -2,16 +2,30 @@ package Model;
 
 import Controller.*;
 import Model.Entity.Item;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import Exception.*;
 import Constant.Constant;
+import View.GameScene.GameScene;
+import View.SpriteAnimation;
+import javafx.animation.Animation;
+import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
 
-public class WorkShop implements Producer,Upgradable{
+public class WorkShop implements Producer,Upgradable,Viewable{
     private ArrayList<Item> inputs,outputs;
     private int location,level,startTime,produceDuration;
     private String name;
     private boolean busy,isCustom;
     private int usedLevel=-10;
+    private ImageView imageView;
+    private Animation animation;
 
     public WorkShop(String name,int location,boolean isCustom,ArrayList<Item> inputs
             ,ArrayList<Item> outputs,int produceDuration){
@@ -21,6 +35,29 @@ public class WorkShop implements Producer,Upgradable{
         this.inputs=inputs;
         this.outputs=outputs;
         this.produceDuration=produceDuration;
+    }
+
+    public void initView() throws FileNotFoundException
+    {
+        String imageAddress = "Textures/Workshops/" + this.getName() +
+                "/0" + (this.getLevel() + 1) + ".png";
+        Image workshopImage = new Image(new FileInputStream(imageAddress));
+        imageView= new ImageView();
+        imageView.setOnMouseClicked(event ->
+        {
+            try
+            {
+                InputReader.startWorkshop(location);
+                startAnimation();
+            } catch (NotEnoughItemException e)
+            {
+                e.printStackTrace();
+            }
+        });
+        GameScene.addNode(imageView);
+        changeImageView(workshopImage,16,4,4,Constant.WORKSHOPS_POSITION_X[location],Constant.WORKSHOPS_POSITION_Y[location]);
+        //System.out.println(animation==null);
+        stopAnimation(4,4);
     }
 
     public void setLocation(int location) {
@@ -164,5 +201,21 @@ public class WorkShop implements Producer,Upgradable{
     public int getUsedLevel()
     {
         return usedLevel;
+    }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+
+    @Override
+    public Animation getAnimation()
+    {
+        return animation;
+    }
+
+    @Override
+    public void setAnimation(Animation animation)
+    {
+        this.animation=animation;
     }
 }

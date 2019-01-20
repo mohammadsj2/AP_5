@@ -3,20 +3,17 @@ package View.GameScene;
 import Constant.Constant;
 import Controller.InputReader;
 import Model.WorkShop;
-import View.SpriteAnimation;
-import javafx.animation.Animation;
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 
 public class GameScene {
@@ -85,33 +82,9 @@ public class GameScene {
     }
 
     private static void initWorkShops() throws FileNotFoundException {
-        int[] workshopsPositionX = {114, 730, 114, 730, 114, 730};
-        int[] workshopsPositionY = {500, 480, 350, 350, 205, 205};
-        WorkShop[] workShops = InputReader.getCurrentController().getWorkShops().toArray(new WorkShop[0]);
-        for (int i = 0; i < workShops.length; i++) {
-            String imageAddress = "Textures/Workshops/" + workShops[i].getName() +
-                    "/0" + (workShops[i].getLevel() + 1) + ".png";
-            Image workshopImage = new Image(new FileInputStream(imageAddress));
-            ImageView workshopView = new ImageView();
-            workshopView.setImage(workshopImage);
-
-            int imageWidth = (int) workshopImage.getWidth();
-            int imageHeight = (int) workshopImage.getHeight();
-            setMiddlePosition(workshopView,imageWidth/4.0,imageHeight/4.0,workshopsPositionX[i],workshopsPositionY[i]);
-            root.getChildren().add(workshopView);
-
-            workshopView.setViewport(new Rectangle2D(0, 0, imageWidth / 4.0, imageHeight / 4.0));
-            final Animation animation = new SpriteAnimation(
-                    workshopView,
-                    Duration.millis(700),
-                    16, 4,
-                    0, 0,
-                    imageWidth / 4, imageHeight / 4
-            );
-            animation.setCycleCount(Animation.INDEFINITE);
-            animation.play();
-        }
-
+        ArrayList<WorkShop> workShops=InputReader.getCurrentController().getWorkShops();
+        for(WorkShop workShop:workShops)
+            workShop.initView();
     }
 
     public static void addNode(Node node) {

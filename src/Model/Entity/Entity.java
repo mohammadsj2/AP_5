@@ -6,6 +6,7 @@ import Exception.CellDoesNotExistException;
 import Model.Map.Map;
 import Model.Viewable;
 import View.GameScene.GameScene;
+import javafx.animation.Animation;
 import javafx.scene.image.ImageView;
 
 public abstract class Entity implements Viewable {
@@ -25,6 +26,18 @@ public abstract class Entity implements Viewable {
         alive=true;
         this.setCell(cell);
         InputReader.getCurrentController().getMap().addEntity(cell,this);
+    }
+
+    @Override
+    public void setAnimation(Animation animation)
+    {
+
+    }
+
+    @Override
+    public Animation getAnimation()
+    {
+        return null;
     }
 
     public Map getMap() {
