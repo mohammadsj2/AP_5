@@ -56,6 +56,12 @@ public class Cat extends Animal {
         Cell targetCell = map.getRandomCell(getCell(), getSpeed());
         if (InputReader.getCurrentController().getCatLevel() >= 0) {
             targetCell = map.nearestCellWithItem(this.getCell());
+            if (targetCell == null) {
+                targetCell = map.getRandomCell(getCell(), getSpeed());
+            } else if (targetCell.getPositionY() == getCell().getPositionY()
+                        && targetCell.getPositionX() == getCell().getPositionX()) {
+                catchItem();
+            }
         }
         targetCell = map.getBestCellBySpeed(this.getCell(), targetCell, getSpeed());
         this.changeCell(targetCell);
