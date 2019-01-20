@@ -1,11 +1,11 @@
 package Controller;
 
-import Constant.Constant;
-import Model.Entity.Entity;
-import Model.Entity.Item;
-import Model.WorkShop;
+import Exception.*;
 import View.GameScene.GameScene;
 import com.gilecode.yagson.YaGson;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -42,6 +42,7 @@ public class InputReader extends Application
 
 
     public static void main(String[] args) throws StartBusyTransporter, IOException {
+        
         Thread thread=new Thread(new Runnable() {
             @Override
             public void run() {
@@ -144,6 +145,7 @@ public class InputReader extends Application
             }
         });
         thread.start();
+        
         loadLevel(1);
         runByLevelNumber(1);
         launch(args);

@@ -80,7 +80,16 @@ public class Map {
         return true;
 
     }
-
+    public void initView() {
+        for (Cell cell : cells) {
+            cell.initView();
+        }
+    }
+    public void refreshView() {
+        for (Cell cell : cells) {
+      //      cell.refreshView();
+        }
+    }
     private int distance2(Cell cell1, Cell cell2) {
         int x = (cell1.getPositionX() - cell2.getPositionX());
         int y = (cell1.getPositionY() - cell2.getPositionY());

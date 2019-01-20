@@ -4,25 +4,48 @@ import Model.Entity.Animal.Animal;
 import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
-import Exception.CellDoesNotExistException;
+import Model.Viewable;
+import View.GameScene.GameScene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-public class Cell {
+public class Cell implements Viewable {
     private ArrayList<Entity> entities=new ArrayList<>();
     private boolean grass=false;
     private int positionX,positionY;
+    private ImageView imageView = new ImageView();
+    @Override
+    public ImageView getImageView() { return this.imageView; }
 
-    Cell(int x,int y){
-        positionX=x;
-        positionY=y;
+    void initView() {
+        imageView = new ImageView();
+        GameScene.addNode(getImageView());
+    }
+
+    Cell(int x,int y) {
+        initView();
+        positionX = x;
+        positionY = y;
     }
 
     void plantGrass(){
-        grass=true;
+        Image image = null;
+        try {
+            image = new Image(new FileInputStream("./Textures/Grass/grass1.png"));
+            changeImageView(image, 16, 4, 4, (230 + 3.7 * getPositionX()), (230 + 2.1 * getPositionY()));
+            grass = true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
     void destroyGrass(){
-        grass=false;
+        getImageView().setImage(null);
+        grass = false;
     }
 
     public boolean haveGrass() {
@@ -82,6 +105,7 @@ public class Cell {
         }
         return animals;
     }
+
 
 
 }

@@ -9,18 +9,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
 public interface Viewable {
     ImageView getImageView();
+    public void initView();
+    public void refreshView();
     Animation getAnimation();
     void setAnimation(Animation animation);
-
-    default public void changeImageView(Image image,int count,int rows,int columns,int x,int y){
+    default public void changeImageView(Image image,int count,int rows,int columns,double x,double y){
         ImageView imageView=getImageView();
         imageView.setImage(image);
-        //GameScene.setImageViewPositionOnMap(imageView,x,y);
         int imageWidth= (int) image.getWidth();
         int imageHeight= (int) image.getHeight();
         GameScene.setMiddlePosition(imageView,imageWidth/4.0

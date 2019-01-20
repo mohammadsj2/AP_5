@@ -1,6 +1,7 @@
 package Controller;
 
 import Constant.Constant;
+import Exception.*;
 import Model.Entity.Animal.Cat;
 import Model.Entity.Animal.Dog;
 import Model.Entity.Animal.Pet.Chicken;
@@ -18,13 +19,6 @@ import Model.Upgradable;
 import Model.WareHouse;
 import Model.Well;
 import Model.WorkShop;
-import Exception.NotEnoughMoneyException;
-import Exception.NoWaterException;
-import Exception.CellDoesNotExistException;
-import Exception.CantUpgradeException;
-import Exception.StartBusyProducerException;
-import Exception.WorkShopNotUsedException;
-import Exception.StartBusyTransporter;
 import com.gilecode.yagson.YaGson;
 import Exception.WinningMessage;
 import Exception.NoTransporterSpaceException;
@@ -35,8 +29,6 @@ import Exception.NotEnoughItemException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import Exception.WorkshopDoesntExistException;
 
 public class Controller {
     private int money, turn;
@@ -253,6 +245,7 @@ public class Controller {
     }
 
     void addAnimal(String type) throws IOException, NotEnoughMoneyException {
+        type = type.toLowerCase();
         switch (type) {
             case Constant.DOG_NAME:
                 subtractMoney(Constant.DOG_ADD_COST);
