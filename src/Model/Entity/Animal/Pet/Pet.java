@@ -13,12 +13,12 @@ import Model.Producer;
 import java.util.ArrayList;
 
 public abstract class Pet extends Animal implements Producer {
-    public static final int CHANGE_PET_HEALTH_PER_TURN = -3;
-    public static final int INCREASE_PET_HEALTH_AFTER_EAT_GRASS = 50;
-    public static final int PET_HUNGRY_HEALTH = 50;
-    public static final int ANIMAL_PRODUCT_TURN = 6;
+    public static final int CHANGE_PET_HEALTH_PER_TURN = -1;
+    public static final int INCREASE_PET_HEALTH_AFTER_EAT_GRASS = 70;
+    public static final int PET_HUNGRY_HEALTH = 30;
+    public static final int ANIMAL_PRODUCT_TURN = 70;
     private int health;
-    private static final int PET_MAX_HEALTH = 300;
+    private static final int PET_MAX_HEALTH = 100;
     private int lastProductTurn=0;
 
     @Override
@@ -49,10 +49,12 @@ public abstract class Pet extends Animal implements Producer {
     protected Pet(Cell cell) {
         super(cell);
         this.health=Constant.INIT_HEALTH;
+        this.lastProductTurn=InputReader.getCurrentController().getTurn();
     }
     protected Pet(Cell cell, int level) {
         super(cell, level);
         this.health=Constant.INIT_HEALTH;
+        this.lastProductTurn=InputReader.getCurrentController().getTurn();
     }
     public int getHealth() {
         return health;

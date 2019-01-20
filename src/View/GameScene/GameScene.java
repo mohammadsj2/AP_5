@@ -8,6 +8,7 @@ import Model.Transporter.Helicopter;
 import Model.Transporter.Truck;
 import View.FancyButton;
 import View.NextTurnTimer;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -132,7 +133,7 @@ public class GameScene {
     private static void setUpgradeButton(Upgradable upgradable,double x,double y)
     {
         ImageView imageView=((Viewable)upgradable).getImageView();
-        FancyButton upgradeButton=new FancyButton(String.valueOf(upgradable.upgradeCost()),20,50
+        FancyButton upgradeButton=new FancyButton(String.valueOf(upgradable.upgradeCost())+"\uD83D\uDCB0",20,50
                 ,x,y);
         upgradeButton.getNode().setOnMouseClicked(event ->
         {
@@ -150,10 +151,13 @@ public class GameScene {
                 else if(upgradable instanceof WorkShop)
                     inputReaderString="workshop" + ((WorkShop)upgradable).getLocation();
                 InputReader.upgrade(inputReaderString);
-                upgradeButton.setText(String.valueOf(upgradable.upgradeCost()));
+                if(!upgradable.canUpgrade())
+                    deleteNode(upgradeButton.getNode());
+                else
+                    upgradeButton.setText(String.valueOf(upgradable.upgradeCost())+"\uD83D\uDCB0");
             }
         });
-        root.getChildren().add(upgradeButton.getNode());
+        addNode(upgradeButton.getNode());
     }
 
     public static void addNode(Node node) {

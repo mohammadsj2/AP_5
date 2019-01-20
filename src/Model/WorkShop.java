@@ -10,14 +10,9 @@ import java.util.ArrayList;
 import Exception.*;
 import Constant.Constant;
 import View.GameScene.GameScene;
-import View.SpriteAnimation;
 import javafx.animation.Animation;
-import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.util.Duration;
 
 public class WorkShop implements Producer, Upgradable, Viewable
 {
@@ -81,7 +76,7 @@ public class WorkShop implements Producer, Upgradable, Viewable
     @Override
     public boolean canUpgrade()
     {
-        return !(level+1 == Constant.MAX_WORKSHOP_LEVEL || isCustom);
+        return !(level == Constant.WORKSHOP_MAX_LEVEL || isCustom);
     }
 
     @Override
