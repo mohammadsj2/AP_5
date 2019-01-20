@@ -60,7 +60,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
     }
 
     @Override
-    public int upgradeCost() throws CantUpgradeException {
+    public int upgradeCost(){
         return 0;
     }
 
