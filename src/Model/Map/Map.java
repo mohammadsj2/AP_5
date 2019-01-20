@@ -6,6 +6,7 @@ import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
 import Exception.CellDoesNotExistException;
+import View.GameScene.GameScene;
 import com.gilecode.yagson.YaGson;
 
 import java.util.ArrayList;
@@ -59,7 +60,9 @@ public class Map {
         }
     }
 
-
+    public void destroyGrass(Cell cell){
+        cell.destroyGrass();
+    }
     private Cell getCell(int x, int y) throws CellDoesNotExistException {
         for (Cell cell : cells) {
             if (cell.getPositionX() == x && cell.getPositionY() == y) {
@@ -129,8 +132,18 @@ public class Map {
 
     public void destroyEntity(int x, int y, Entity entity) throws CellDoesNotExistException {
         Cell cell = getCell(x, y);
-        cell.destroyEntity(entity);
+        destroyEntity(cell,entity);
     }
+    public void destroyEntity(Cell cell, Entity entity){
+        cell.destroyEntity(entity);
+        GameScene.deleteNode(entity.getImageView());
+    }
+    public void addEntity(Cell cell, Entity entity){
+        GameScene.setImageViewPositionOnMap(entity.getImageView(),cell.getPositionX(),cell.getPositionY());
+        GameScene.addNode(entity.getImageView());
+        cell.addEntity(entity);
+    }
+
 
     private void wildsToItems(ArrayList<Wild> wilds) {
         for (Wild wild : wilds) {

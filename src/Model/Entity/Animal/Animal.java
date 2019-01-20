@@ -9,6 +9,7 @@ import Constant.Constant;
 import Controller.*;
 import Exception.CantUpgradeException;
 import Exception.CellDoesNotExistException;
+import javafx.scene.image.ImageView;
 
 public abstract class Animal extends Entity implements Upgradable, Loadable {
     private int level;
@@ -48,9 +49,11 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
         this.changeCell(map.getBestCellBySpeed(getCell(),cur,Constant.ANIMAL_SPEED));
     }
     public void changeCell(Cell cur) {
-        this.getCell().destroyEntity(this);
-        this.setCell(cur);
-        cur.addEntity(this);
+        Map map=getMap();
+
+        map.destroyEntity(getCell(),this);
+        setCell(cur);
+        map.addEntity(cur,this);
     }
     public void nextTurn() throws CellDoesNotExistException {
         this.walk();
