@@ -236,7 +236,7 @@ public class InputReader extends Application
         }
     }
 
-    public static void startWorkshop(int index) throws NotEnoughItemException
+    public static void startWorkshop(int index)
     {
         try {
             currentController.startAWorkShop(index);
@@ -247,6 +247,9 @@ public class InputReader extends Application
         } catch (WorkShopNotUsedException e)
         {
             System.out.println(WORK_SHOP_NOT_USED_EXCEPTION_MESSAGE);
+        } catch (NotEnoughItemException e)
+        {
+            System.out.println(NOT_ENOUGH_ITEM_MESSAGE);
         }
     }
 
