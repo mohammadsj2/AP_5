@@ -1,14 +1,78 @@
 package Model;
 
 import Constant.Constant;
-import Controller.*;
+import Controller.InputReader;
 import Exception.CantUpgradeException;
-import Exception.NotEnoughMoneyException;
 import Exception.NoWaterException;
+import View.GameScene.GameScene;
+import javafx.animation.Animation;
+import javafx.event.EventHandler;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
-public class Well implements Upgradable,Loadable{
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+public class Well implements Upgradable, Loadable, Viewable {
     private int level=0;
     private int waterRemaining=Constant.WELL_BASE_WATER,maxWater=Constant.WELL_BASE_WATER;
+
+    private ImageView imageView = new ImageView();
+    @Override
+    public ImageView getImageView() { return imageView; }
+
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
+    }
+
+    public void refreshView() {
+        try {
+            System.out.println(" : ) ");
+            Image image = new Image(new FileInputStream("./Textures/Service/Well/0" + (new Integer(getLevel() + 1)).toString() + ".png"));
+            changeImageView(image, 1, 4, 4, 450, 125);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public Animation getAnimation()
+    {
+        return null;
+    }
+
+    @Override
+    public void setAnimation(Animation animation)
+    {
+
+    }
+
+    public void initView() {
+        System.out.println("wtf");
+        setImageView(new ImageView());
+        getImageView().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                InputReader.fillWell();
+            }
+        });
+        GameScene.addNode(getImageView());
+    }
+    public Well() {
+        this(0);
+    }
+    public Well(int level) {
+//        System.out.println(" :D ");
+  //      initView();
+    //    setLevel(level);
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+        refreshView();
+    }
 
     private int fillCost()
     {

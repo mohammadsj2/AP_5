@@ -4,6 +4,7 @@ import Constant.Constant;
 import Controller.Controller;
 import Controller.InputReader;
 import Model.WorkShop;
+import View.NextTurnTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -26,14 +27,26 @@ public class GameScene {
             Controller controller=InputReader.getCurrentController();
             initBackground();
             initWorkShops();
+            initWell();
+            initMap();
             initAddAnimalButtons();
             nextTurnButtonForDebug();
             controller.getWareHouse().initView();
+            new NextTurnTimer().start();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
+    private static void initWell() {
+        InputReader.getCurrentController().getWell().initView();
+        InputReader.getCurrentController().getWell().refreshView();
+
+    }
+    private static void initMap() {
+        InputReader.getCurrentController().getMap().initView();
+        InputReader.getCurrentController().getMap().refreshView();
+    }
     private static void nextTurnButtonForDebug() throws FileNotFoundException {
         Image buttonImage;
         ImageView button;
@@ -99,7 +112,7 @@ public class GameScene {
         root.getChildren().remove(node);
     }
 
-    public static void setMiddlePosition(ImageView imageView,double width,double height, int x, int y){
+    public static void setMiddlePosition(ImageView imageView,double width,double height,double x,double y){
         imageView.setX((double)x-width/2.0);
         imageView.setY((double)y-height/2.0);
     }
@@ -111,9 +124,21 @@ public class GameScene {
         backgroundView.setFitHeight(Constant.GAME_SCENE_HEIGHT);
         backgroundView.setImage(backgroundImage);
         root.getChildren().add(backgroundView);
+        backgroundView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                double x = event.getSceneX();
+                double y = event.getSceneY();
+                int cellx = (int) ((x - 230) / 3.7);
+                int celly = (int) ((y - 230) / 2.1);
+                if (cellx >= 0 && cellx < 100 && celly >= 0 && celly < 100) {
+                    InputReader.plant(cellx, celly);
+                }
+            }
+        });
     }
 
-    public static void setImageViewPositionOnMap(ImageView imageView, int x, int y) {
+    public static void setImageViewPositionOnMap(ImageView imageView, double x, double y) {
         imageView.setX(x * 3.7 + 230.0);
         imageView.setY(y * 2.1 + 230.0);
     }

@@ -1,3 +1,4 @@
+
 package Model.Entity;
 
 import Controller.*;
@@ -21,7 +22,9 @@ public abstract class Entity implements Viewable {
 
     public Entity(){
         if(InputReader.getCurrentController()!=null)
-            map=InputReader.getCurrentController().getMap();
+        {
+            map = InputReader.getCurrentController().getMap();
+        }
     }
 
     public Entity(Cell cell) {
@@ -43,24 +46,26 @@ public abstract class Entity implements Viewable {
     }//TODO
 
     @Override
-    public void changeImageView(Image image, int count, int rows, int columns, int x, int y) {
-        ImageView imageView=getImageView();
+    public void changeImageView(Image image, int count, int rows, int columns, double x, double y)
+    {
+        ImageView imageView = getImageView();
 
         imageView.setImage(image);
-        GameScene.setImageViewPositionOnMap(imageView,x,y);
-        int imageWidth= (int) image.getWidth();
-        int imageHeight= (int) image.getHeight();
+        GameScene.setImageViewPositionOnMap(imageView, x, y);
+        int imageWidth = (int) image.getWidth();
+        int imageHeight = (int) image.getHeight();
 
-        imageView.setViewport(new Rectangle2D(0, 0, imageWidth/columns, imageHeight/rows));
+        imageView.setViewport(new Rectangle2D(0, 0, imageWidth / columns, imageHeight / rows));
         final Animation animation = new SpriteAnimation(
                 imageView,
                 Duration.millis(700),
                 count, columns,
                 0, 0,
-                imageWidth/columns, imageHeight/rows
+                imageWidth / columns, imageHeight / rows
         );
         animation.setCycleCount(Animation.INDEFINITE);
         animation.play();
+    }
     public void setAnimation(Animation animation)
     {
 
