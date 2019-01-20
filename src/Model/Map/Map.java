@@ -43,7 +43,7 @@ public class Map {
         }
         Collections.shuffle(animals);
         //bekhatere in ke ye dog nare donbale wild bad wild nobatesh beshe bere ye ja dg
-        for(Animal animal:animals){
+        for(Animal animal:animals) if (animal.getAlive()) {
             try {
                 animal.nextTurn();
             } catch (CellDoesNotExistException cellDoesNotExistException) {
@@ -166,15 +166,18 @@ public class Map {
         Cell cell = getCell(x, y);
         wildsToItems(cell.getWilds());
     }
-
-
-    public Cell getRandomCell(Cell first, int speed){
-        Random random=new Random();
+    public ArrayList<Cell> getNearbyCells(Cell first, int speed) {
         ArrayList<Cell> inRange = new ArrayList<>();
         for (int i = 0; i < cells.size(); ++i)
             if (Math.abs(cells.get(i).getPositionY() + cells.get(i).getPositionX() -
                     first.getPositionX() - first.getPositionY()) <= speed)
                 inRange.add(cells.get(i));
+        return inRange;
+    }
+
+    public Cell getRandomCell(Cell first, int speed){
+        Random random=new Random();
+        ArrayList<Cell> inRange = getNearbyCells(first, speed);
         int t= random.nextInt((int) inRange.size());
         return inRange.get(t);
     }

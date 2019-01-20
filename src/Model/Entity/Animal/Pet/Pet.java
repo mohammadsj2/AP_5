@@ -1,26 +1,24 @@
 package Model.Entity.Animal.Pet;
 
 import Constant.Constant;
-import Controller.*;
+import Controller.InputReader;
+import Exception.CellDoesNotExistException;
+import Exception.StartBusyProducerException;
 import Model.Entity.Animal.Animal;
-import Model.Entity.Entity;
 import Model.Entity.Item;
 import Model.Map.Cell;
 import Model.Map.Map;
 import Model.Producer;
-import Exception.StartBusyProducerException;
-import Exception.CellDoesNotExistException;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public abstract class Pet extends Animal implements Producer {
     public static final int CHANGE_PET_HEALTH_PER_TURN = -3;
-    public static final int INCREASE_PET_HEALTH_AFTER_EAT_GRASS = 20;
-    public static final int PET_HUNGRY_HEALTH = 30;
-    public static final int ANIMAL_PRODUCT_TURN = 3;
+    public static final int INCREASE_PET_HEALTH_AFTER_EAT_GRASS = 50;
+    public static final int PET_HUNGRY_HEALTH = 50;
+    public static final int ANIMAL_PRODUCT_TURN = 6;
     private int health;
-    private static final int PET_MAX_HEALTH = 100;
+    private static final int PET_MAX_HEALTH = 300;
     private int lastProductTurn=0;
 
     @Override
