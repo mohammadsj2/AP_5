@@ -1,6 +1,5 @@
 package Constant;
 
-import Controller.Controller;
 import Controller.InputReader;
 import Model.Entity.Item;
 

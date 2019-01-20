@@ -55,7 +55,7 @@ public class Cell implements Viewable {
         Image image = null;
         try {
             image = new Image(new FileInputStream("./Textures/Grass/grass1.png"));
-            changeImageView(image, 16, 4, 4, (230 + 3.7 * getPositionX()), (230 + 2.1 * getPositionY()));
+            changeImageView(image, 1, 4, 4, (230 + 3.7 * getPositionX()), (230 + 2.1 * getPositionY()));
             grass = true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
