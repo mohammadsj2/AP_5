@@ -4,8 +4,10 @@ import Constant.Constant;
 import Controller.*;
 import Model.Map.Cell;
 import View.GameScene.GameScene;
+import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -40,6 +42,22 @@ public class Item extends Entity
         refreshView();
     }
 
+    @Override
+    public void initView() {
+        super.initView();
+        getImageView().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                int x=getCell().getPositionX();
+                int y=getCell().getPositionY();
+                for(int i=Math.max(0,x-3);i<Math.max(x+3,100);i++){
+                    for(int j=Math.max(0,y-3);j<Math.max(y+3,100);j++){
+                        InputReader.pickup(i,j);
+                    }
+                }
+            }
+        });
+    }
 
     @Override
     public void refreshView()
