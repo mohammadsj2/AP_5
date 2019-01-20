@@ -2,7 +2,6 @@ package View.GameScene;
 
 import Constant.Constant;
 import Controller.InputReader;
-import Model.Map.Cell;
 import Model.WorkShop;
 import View.SpriteAnimation;
 import javafx.animation.Animation;
@@ -14,12 +13,10 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 
 
 public class GameScene {
@@ -31,9 +28,29 @@ public class GameScene {
             initBackground();
             initWorkShops();
             initAddAnimalButtons();
+            nextTurnButtonForDebug();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void nextTurnButtonForDebug() throws FileNotFoundException {
+        Image buttonImage;
+        ImageView button;
+        buttonImage = new Image(new FileInputStream("./Textures/AddAnimalButtons/A.png"));
+        button = new ImageView(buttonImage);
+        button.setX(400);
+        button.setY(10);
+        button.setFitHeight(60);
+        button.setFitWidth(60);
+        addNode(button);
+
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                InputReader.nextTurn(1);
+            }
+        });
     }
 
     private static void initAddAnimalButtons() throws FileNotFoundException {
@@ -68,8 +85,8 @@ public class GameScene {
     }
 
     private static void initWorkShops() throws FileNotFoundException {
-        int[] workshopsPositionX = {70, 0, 0, 0, 0, 0};
-        int[] workshopsPositionY = {450, 0, 0, 0, 0, 0};
+        int[] workshopsPositionX = {114, 730, 114, 730, 114, 730};
+        int[] workshopsPositionY = {500, 480, 350, 350, 205, 205};
         WorkShop[] workShops = InputReader.getCurrentController().getWorkShops().toArray(new WorkShop[0]);
         for (int i = 0; i < workShops.length; i++) {
             String imageAddress = "Textures/Workshops/" + workShops[i].getName() +
@@ -77,11 +94,10 @@ public class GameScene {
             Image workshopImage = new Image(new FileInputStream(imageAddress));
             ImageView workshopView = new ImageView();
             workshopView.setImage(workshopImage);
-            workshopView.setX(workshopsPositionX[i]);
-            workshopView.setY(workshopsPositionY[i]);
+
             int imageWidth = (int) workshopImage.getWidth();
             int imageHeight = (int) workshopImage.getHeight();
-
+            setMiddlePosition(workshopView,imageWidth/4.0,imageHeight/4.0,workshopsPositionX[i],workshopsPositionY[i]);
             root.getChildren().add(workshopView);
 
             workshopView.setViewport(new Rectangle2D(0, 0, imageWidth / 4.0, imageHeight / 4.0));
@@ -99,7 +115,17 @@ public class GameScene {
     }
 
     public static void addNode(Node node) {
-        root.getChildren().add(node);
+        if(!root.getChildren().contains(node))
+            root.getChildren().add(node);
+    }
+
+    public static void deleteNode(Node node) {
+        root.getChildren().remove(node);
+    }
+
+    public static void setMiddlePosition(ImageView imageView,double width,double height, int x, int y){
+        imageView.setX((double)x-width/2.0);
+        imageView.setY((double)y-height/2.0);
     }
 
     private static void initBackground() throws FileNotFoundException {

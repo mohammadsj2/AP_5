@@ -23,6 +23,10 @@ public class WorkShop implements Producer,Upgradable{
         this.produceDuration=produceDuration;
     }
 
+    public void setLocation(int location) {
+        this.location = location;
+    }
+
     @Override
     public boolean canUpgrade() {
         return !(level== Constant.MAX_WORKSHOP_LEVEL || isCustom );

@@ -6,6 +6,7 @@ import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
 import Exception.CellDoesNotExistException;
+import View.GameScene.GameScene;
 import com.gilecode.yagson.YaGson;
 
 import java.util.ArrayList;
@@ -135,8 +136,11 @@ public class Map {
     }
     public void destroyEntity(Cell cell, Entity entity){
         cell.destroyEntity(entity);
+        GameScene.deleteNode(entity.getImageView());
     }
     public void addEntity(Cell cell, Entity entity){
+        GameScene.setImageViewPositionOnMap(entity.getImageView(),cell.getPositionX(),cell.getPositionY());
+        GameScene.addNode(entity.getImageView());
         cell.addEntity(entity);
     }
 

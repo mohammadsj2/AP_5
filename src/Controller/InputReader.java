@@ -1,7 +1,9 @@
 package Controller;
 
 import Constant.Constant;
+import Model.Entity.Entity;
 import Model.Entity.Item;
+import Model.WorkShop;
 import View.GameScene.GameScene;
 import com.gilecode.yagson.YaGson;
 
@@ -140,9 +142,10 @@ public class InputReader extends Application
             }
         });
         thread.start();
-        loadLevel(1);
-        runByLevelNumber(1);
+        loadLevel(2);
+        runByLevelNumber(2);
         launch(args);
+
     }
 
     public static void save(String saveName) {
@@ -158,6 +161,7 @@ public class InputReader extends Application
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public static void load(String saveName) {

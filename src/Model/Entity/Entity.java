@@ -14,11 +14,12 @@ public abstract class Entity {
     private ImageView imageView=new ImageView();
 
     public Entity(){
-        map=InputReader.getCurrentController().getMap();
+        if(InputReader.getCurrentController()!=null)
+            map=InputReader.getCurrentController().getMap();
     }
 
     public Entity(Cell cell) {
-        map=getMap();
+        map=InputReader.getCurrentController().getMap();
         GameScene.addNode(imageView);
         alive=true;
         this.setCell(cell);

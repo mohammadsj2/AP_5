@@ -50,6 +50,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
     }
     public void changeCell(Cell cur) {
         Map map=getMap();
+
         map.destroyEntity(getCell(),this);
         setCell(cur);
         map.addEntity(cur,this);
