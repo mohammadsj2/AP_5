@@ -1,3 +1,4 @@
+
 package Model.Entity;
 
 import Controller.*;
@@ -30,6 +31,46 @@ public abstract class Entity implements Viewable {
         alive=true;
         this.setCell(cell);
         InputReader.getCurrentController().getMap().addEntity(cell,this);
+    }
+
+    @Override
+    public void refreshView() {
+
+    }//TODO
+
+    @Override
+    public void initView() {
+
+    }//TODO
+
+    @Override
+    public void changeImageView(Image image, int count, int rows, int columns, double x, double y) {
+        ImageView imageView=getImageView();
+
+        imageView.setImage(image);
+        GameScene.setImageViewPositionOnMap(imageView,x,y);
+        int imageWidth= (int) image.getWidth();
+        int imageHeight= (int) image.getHeight();
+
+        imageView.setViewport(new Rectangle2D(0, 0, imageWidth/columns, imageHeight/rows));
+        final Animation animation = new SpriteAnimation(
+                imageView,
+                Duration.millis(700),
+                count, columns,
+                0, 0,
+                imageWidth/columns, imageHeight/rows
+        );
+        animation.setCycleCount(Animation.INDEFINITE);
+        animation.play();
+    public void setAnimation(Animation animation)
+    {
+
+    }
+
+    @Override
+    public Animation getAnimation()
+    {
+        return null;
     }
 
     public Map getMap() {
@@ -66,24 +107,4 @@ public abstract class Entity implements Viewable {
         setAlive(false);
     }
 
-    @Override
-    public void changeImageView(Image image, int count, int rows, int columns, double x, double y) {
-        ImageView imageView=getImageView();
-
-        imageView.setImage(image);
-        GameScene.setImageViewPositionOnMap(imageView,(int) x,(int) y);
-        int imageWidth= (int) image.getWidth();
-        int imageHeight= (int) image.getHeight();
-
-        imageView.setViewport(new Rectangle2D(0, 0, imageWidth/columns, imageHeight/rows));
-        final Animation animation = new SpriteAnimation(
-                imageView,
-                Duration.millis(700),
-                count, columns,
-                0, 0,
-                imageWidth/columns, imageHeight/rows
-        );
-        animation.setCycleCount(Animation.INDEFINITE);
-        animation.play();
-    }
 }
