@@ -63,7 +63,6 @@ public class Item extends Entity
             } else
             {
                 image = new Image(new FileInputStream("./Textures/Products/" + name + ".png"));
-                System.out.println("HIR");
             }
             getImageView().setImage(image);
         } catch (FileNotFoundException e)
