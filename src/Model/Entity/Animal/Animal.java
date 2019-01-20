@@ -2,23 +2,25 @@ package Model.Entity.Animal;
 
 import Model.Entity.Entity;
 import Model.Loadable;
+import Model.Map.Map;
 import Model.Upgradable;
 import Model.Map.Cell;
 import Constant.Constant;
 import Controller.*;
 import Exception.CantUpgradeException;
 import Exception.CellDoesNotExistException;
+import javafx.scene.image.ImageView;
 
 public abstract class Animal extends Entity implements Upgradable, Loadable {
     private int level;
     private int speed = Constant.ANIMAL_SPEED;
 
 
-    public Animal(Cell cell) {
+    protected Animal(Cell cell) {
         super(cell);
     }
 
-    public Animal(Cell cell, int level) {
+    protected Animal(Cell cell, int level) {
         super(cell);
         setLevel(level);
     }
@@ -40,14 +42,18 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
         return level;
     }
 
+
     public void walk() throws CellDoesNotExistException {
-        Cell cur = InputReader.getCurrentController().getMap().getRandomCell();
-        this.changeCell(cur);
+        Map map=InputReader.getCurrentController().getMap();
+        Cell cur = map.getRandomCell();
+        this.changeCell(map.getBestCellBySpeed(getCell(),cur,Constant.ANIMAL_SPEED));
     }
     public void changeCell(Cell cur) {
-        this.getCell().destroyEntity(this);
-        this.setCell(cur);
-        cur.addEntity(this);
+        Map map=getMap();
+
+        map.destroyEntity(getCell(),this);
+        setCell(cur);
+        map.addEntity(cur,this);
     }
     public void nextTurn() throws CellDoesNotExistException {
         this.walk();

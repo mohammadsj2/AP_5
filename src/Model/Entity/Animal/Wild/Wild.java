@@ -9,10 +9,10 @@ import Exception.CellDoesNotExistException;
 import java.util.ArrayList;
 
 public abstract class Wild extends Animal {
-    public Wild(Cell cell) {
+    protected Wild(Cell cell) {
         super(cell);
     }
-    public Wild(Cell cell, int level) {
+    protected Wild(Cell cell, int level) {
         super(cell, level);
     }
     public void kill(Cell cell) throws CellDoesNotExistException {
@@ -26,7 +26,7 @@ public abstract class Wild extends Animal {
     public void cage() throws CellDoesNotExistException {
         Cell cur = this.getCell();
         this.destroyFromMap();
-        cur.addEntity(this.toItem());
+        getMap().addEntity(cur,toItem());
     }
     abstract public Item toItem();
 

@@ -3,13 +3,37 @@ package Model.Entity;
 import Controller.*;
 import Model.Map.Cell;
 import Exception.CellDoesNotExistException;
+import Model.Map.Map;
+import View.GameScene.GameScene;
+import javafx.scene.image.ImageView;
 
 public abstract class Entity {
+    private Map map;
     private Cell cell;
     private boolean alive;
-    public Entity(Cell cell) {
-        this.setCell(cell);
+    private ImageView imageView=new ImageView();
+
+    public Entity(){
+        if(InputReader.getCurrentController()!=null)
+            map=InputReader.getCurrentController().getMap();
     }
+
+    public Entity(Cell cell) {
+        map=InputReader.getCurrentController().getMap();
+        GameScene.addNode(imageView);
+        alive=true;
+        this.setCell(cell);
+        InputReader.getCurrentController().getMap().addEntity(cell,this);
+    }
+
+    public Map getMap() {
+        return map;
+    }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+
     public boolean getAlive() {
         return alive;
     }
@@ -26,7 +50,10 @@ public abstract class Entity {
         cell = x;
     }
     public void destroyFromMap() throws CellDoesNotExistException {
-        InputReader.getCurrentController().getMap().destroyEntity(this.getCell().getPositionX(), this.getCell().getPositionY(), this);
+        if(getCell()==null){
+            throw new CellDoesNotExistException();
+        }
+        InputReader.getCurrentController().getMap().destroyEntity(getCell(),this);
     }
     public void destroy() throws CellDoesNotExistException {
         this.destroyFromMap();

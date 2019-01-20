@@ -6,13 +6,15 @@ import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
 import Exception.CellDoesNotExistException;
+import View.GameScene.GameScene;
+import com.gilecode.yagson.YaGson;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Map {
     public static final int MAX_DISTANCE_2 = 100 * 100 * 100;
-    ArrayList<Cell> cells = new ArrayList<>();
+    private ArrayList<Cell> cells = new ArrayList<>();
 
     public Map(){
         for(int i = 0; i< Constant.MAP_ROWS; i++){
@@ -21,10 +23,21 @@ public class Map {
             }
         }
     }
-
-    public void nextTurn() throws CellDoesNotExistException {
-        ArrayList<Animal> animals=new ArrayList<>();
+    public String printInfo(){
+        StringBuilder stringBuilder=new StringBuilder("");
+        YaGson yaGson=new YaGson();
         for(Cell cell:cells){
+            if(cell.getEntities().size()==0 && !cell.haveGrass())continue;
+            stringBuilder.append(yaGson.toJson(cell));
+            stringBuilder.append("\n");
+        }
+        return stringBuilder.toString();
+    }
+
+    public void nextTurn(){
+        ArrayList<Animal> animals = new ArrayList<>();
+        ArrayList<Item> items=new ArrayList<>();
+        for (Cell cell : cells) {
             animals.addAll(cell.getAnimals());
         }
         Collections.shuffle(animals);
@@ -36,9 +49,20 @@ public class Map {
                 cellDoesNotExistException.printStackTrace();
             }
         }
+
+        for(Cell cell: cells){
+            items.addAll(cell.getItems());
+        }
+        for(Item item:items){
+            if(item.isExpired()){
+                item.expire();
+            }
+        }
     }
 
-
+    public void destroyGrass(Cell cell){
+        cell.destroyGrass();
+    }
     private Cell getCell(int x, int y) throws CellDoesNotExistException {
         for (Cell cell : cells) {
             if (cell.getPositionX() == x && cell.getPositionY() == y) {
@@ -56,13 +80,13 @@ public class Map {
 
     }
 
-    public int distance2(Cell cell1, Cell cell2) {
+    private int distance2(Cell cell1, Cell cell2) {
         int x = (cell1.getPositionX() - cell2.getPositionX());
         int y = (cell1.getPositionY() - cell2.getPositionY());
         return x * x + y * y;
     }
 
-    public Cell nearestCell(Cell cell, ArrayList<Cell> cells) {
+    private Cell nearestCell(Cell cell, ArrayList<Cell> cells) {
         int distance2 = MAX_DISTANCE_2;
         Cell nearestCell = null;
         for (Cell cell2 : cells) {
@@ -108,8 +132,18 @@ public class Map {
 
     public void destroyEntity(int x, int y, Entity entity) throws CellDoesNotExistException {
         Cell cell = getCell(x, y);
-        cell.destroyEntity(entity);
+        destroyEntity(cell,entity);
     }
+    public void destroyEntity(Cell cell, Entity entity){
+        cell.destroyEntity(entity);
+        GameScene.deleteNode(entity.getImageView());
+    }
+    public void addEntity(Cell cell, Entity entity){
+        GameScene.setImageViewPositionOnMap(entity.getImageView(),cell.getPositionX(),cell.getPositionY());
+        GameScene.addNode(entity.getImageView());
+        cell.addEntity(entity);
+    }
+
 
     private void wildsToItems(ArrayList<Wild> wilds) {
         for (Wild wild : wilds) {
@@ -122,9 +156,11 @@ public class Map {
         Cell cell = getCell(x, y);
         wildsToItems(cell.getWilds());
     }
+
+
     public Cell getRandomCell(){
         int t=(int)(Math.random()*2.0*cells.size());
-        return cells.get(t%cells.size());
+        return cells.get(t%(cells.size()));
     }
     public Cell getBestCellBySpeed(Cell first,Cell last,int speed){
         speed*=speed;
@@ -143,4 +179,12 @@ public class Map {
         return answer;
     }
 
+    public ArrayList<Entity> getEntities() {
+        ArrayList<Entity> everything=new ArrayList<>();
+        for(Cell cell:cells) {
+            everything.addAll(cell.getEntities());
+        }
+        return everything;
+
+    }
 }

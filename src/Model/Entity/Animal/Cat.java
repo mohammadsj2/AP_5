@@ -4,38 +4,85 @@ import Controller.*;
 import Model.Entity.Item;
 import Model.Map.Cell;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import Exception.CellDoesNotExistException;
 
-public class Cat extends Animal{
+import Exception.CellDoesNotExistException;
+import Exception.NoWarehouseSpaceException;
+import Model.Map.Map;
+import View.GameScene.GameScene;
+import View.SpriteAnimation;
+import javafx.animation.Animation;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
+
+public class Cat extends Animal {
+
+    public static final int CAT_SPEED = 4;
+
     public Cat(Cell cell) {
         super(cell);
+        ImageView imageView=getImageView();
+        Image image= null;
+        try {
+            image = new Image(new FileInputStream("./Textures/Animals/Africa/Cat/down.png"));
+            imageView.setImage(image);
+            GameScene.setImageViewPositionOnMap(imageView,cell.getPositionX(),cell.getPositionY());
+            int imageWidth= (int) image.getWidth();
+            int imageHeight= (int) image.getHeight();
+
+            imageView.setViewport(new Rectangle2D(0, 0, imageWidth/6, imageHeight/4));
+            final Animation animation = new SpriteAnimation(
+                    imageView,
+                    Duration.millis(700),
+                    24, 6,
+                    0, 0,
+                    imageWidth/6, imageHeight/4
+            );
+            animation.setCycleCount(Animation.INDEFINITE);
+            animation.play();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public Cat(Cell cell, int level) {
         super(cell, level);
     }
+
+    @Override
+    public int getSpeed() {
+        return CAT_SPEED;
+    }
+
+    @Override
+    public void nextTurn() throws CellDoesNotExistException {
+        walk();
+
+    }
+
     @Override
     public void walk() {
-        if (this.getLevel() > 1) {
-            Cell cur = InputReader.getCurrentController().getMap().nearestCellWithItem(this.getCell());
-            cur = InputReader.getCurrentController().getMap().getBestCellBySpeed(this.getCell(), cur, this.getSpeed());
-            this.changeCell(cur);
-        } else {
-            Cell cur = InputReader.getCurrentController().getMap().getRandomCell();
-            this.changeCell(cur);
+        Map map = InputReader.getCurrentController().getMap();
+        Cell targetCell = map.getRandomCell();
+        if (InputReader.getCurrentController().getCatLevel() > 0) {
+            targetCell = map.nearestCellWithItem(this.getCell());
         }
+        targetCell = map.getBestCellBySpeed(this.getCell(), targetCell, getSpeed());
+        this.changeCell(targetCell);
     }
-    public void catchItem() throws CellDoesNotExistException {
+
+    public void catchItem(){
         ArrayList<Item> items = this.getCell().getItems();
         for (Item item : items) {
-            InputReader.getCurrentController().getWareHouse().addItem(item);
-            item.setInWareHouse(true);
-            item.destroyFromMap();
+            try {
+                InputReader.getCurrentController().addItemToWareHouse(item);
+            } catch (NoWarehouseSpaceException ignored) {
+
+            }
         }
-    }
-    @Override
-    public int upgradeCost() {
-        return 0;
     }
 }

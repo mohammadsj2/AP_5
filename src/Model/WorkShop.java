@@ -23,9 +23,13 @@ public class WorkShop implements Producer,Upgradable{
         this.produceDuration=produceDuration;
     }
 
+    public void setLocation(int location) {
+        this.location = location;
+    }
+
     @Override
     public boolean canUpgrade() {
-        return (level== Constant.MAX_WORKSHOP_LEVEL || isCustom );
+        return !(level== Constant.MAX_WORKSHOP_LEVEL || isCustom );
     }
 
     @Override
@@ -42,6 +46,10 @@ public class WorkShop implements Producer,Upgradable{
             throw new CantUpgradeException();
         }
         level++;
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     public int getProduceDuration() {
@@ -65,9 +73,7 @@ public class WorkShop implements Producer,Upgradable{
     private ArrayList<Item> multipleItems(ArrayList<Item> items,int cnt){
         ArrayList<Item> answer=new ArrayList<>();
         for(int i=0;i<cnt;i++){
-            for(Item item:items){
-                answer.add(item);
-            }
+            answer.addAll(items);
         }
         return answer;
     }
@@ -78,7 +84,7 @@ public class WorkShop implements Producer,Upgradable{
     }
 
     public ArrayList<Item> getOutputItemsByUsedLevel() throws WorkShopNotUsedException {
-        if(usedLevel==-10)throw new WorkShopNotUsedException();
+        if(!busy)throw new WorkShopNotUsedException();
         return multipleItems(outputs,usedLevel+1);
     }
 
@@ -87,7 +93,7 @@ public class WorkShop implements Producer,Upgradable{
         return multipleItems(inputs,level+1);
     }
     public ArrayList<Item> getInputItemsByUsedLevel() throws WorkShopNotUsedException {
-        if(usedLevel==-10)throw new WorkShopNotUsedException();
+        if(!busy)throw new WorkShopNotUsedException();
         return multipleItems(inputs,usedLevel+1);
     }
     public int maxLevelCanDoWithItems(ArrayList<Item> items){
@@ -118,5 +124,45 @@ public class WorkShop implements Producer,Upgradable{
         busy=true;
         startTime=InputReader.getCurrentController().getTurn();
         this.usedLevel=usedLevel;
+    }
+
+    public ArrayList<Item> getInputs()
+    {
+        return inputs;
+    }
+
+    public ArrayList<Item> getOutputs()
+    {
+        return outputs;
+    }
+
+    public int getLocation()
+    {
+        return location;
+    }
+
+    public int getStartTime()
+    {
+        return startTime;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public boolean isBusy()
+    {
+        return busy;
+    }
+
+    public boolean isCustom()
+    {
+        return isCustom;
+    }
+
+    public int getUsedLevel()
+    {
+        return usedLevel;
     }
 }
