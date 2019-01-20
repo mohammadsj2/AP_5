@@ -13,6 +13,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Scanner;
+
 import Constant.Constant;
 
 public class InputReader extends Application
