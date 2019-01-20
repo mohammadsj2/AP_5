@@ -13,11 +13,14 @@ import java.io.FileNotFoundException;
 
 public interface Viewable {
     ImageView getImageView();
+    public void initView();
+    public void refreshView();
     default public void changeImageView(Image image,int count,int rows,int columns,int x,int y){
         ImageView imageView=getImageView();
 
         imageView.setImage(image);
-        GameScene.setImageViewPositionOnMap(imageView,x,y);
+        imageView.setX(x);
+        imageView.setY(y);
         int imageWidth= (int) image.getWidth();
         int imageHeight= (int) image.getHeight();
 
