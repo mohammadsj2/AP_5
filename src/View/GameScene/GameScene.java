@@ -134,7 +134,9 @@ public class GameScene {
     }
 
     private static void initBackground() throws FileNotFoundException {
-        Image backgroundImage = new Image(new FileInputStream("Textures/back.png"));
+        int numberOfWorkshops=InputReader.getCurrentController().getWorkShops().size();
+        Image backgroundImage = new Image(new FileInputStream("./Textures/GameBackGround/back"+
+                numberOfWorkshops+".png"));
         ImageView backgroundView = new ImageView();
         backgroundView.setFitWidth(Constant.GAME_SCENE_WIDTH);
         backgroundView.setFitHeight(Constant.GAME_SCENE_HEIGHT);

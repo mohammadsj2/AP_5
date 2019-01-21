@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class Constant {
 
 
-    public static final int[] WORKSHOPS_POSITION_X = {114, 730, 114, 730, 114, 730};
+    public static final int[] WORKSHOPS_POSITION_X = {114, 730, 114, 730, 173, 730};
     public static final int[] WORKSHOPS_POSITION_Y = {500, 480, 350, 350, 205, 205};
     public static final int GAME_SCENE_HEIGHT=700;
     public static final int GAME_SCENE_WIDTH=900;
