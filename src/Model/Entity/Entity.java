@@ -37,7 +37,6 @@ public abstract class Entity implements Viewable {
 
     @Override
     public void refreshView() {
-
     }//TODO
 
     @Override
