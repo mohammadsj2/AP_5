@@ -1,17 +1,28 @@
-package View.GameScene;
+package View.Scene;
 
 import Constant.Constant;
 import Controller.Controller;
 import Controller.InputReader;
-import Model.WorkShop;
+import Model.*;
+import Model.Transporter.Helicopter;
+import Model.Transporter.Truck;
+import View.FancyButton;
 import View.NextTurnTimer;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,28 +30,67 @@ import java.util.ArrayList;
 
 
 public class GameScene {
+    private static NextTurnTimer nextTurnTimer;
     private static Group root = new Group();
     private static Scene scene = new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
+    private static Text moneyText=null;
 
     public static void init() {
         try {
-            Controller controller=InputReader.getCurrentController();
             initBackground();
             initWorkShops();
             initWell();
+            initWareHouse();
             initMap();
             initAddAnimalButtons();
             nextTurnButtonForDebug();
-            controller.getWareHouse().initView();
-            new NextTurnTimer().start();
+            initMoney();
+            initButtons();
+            nextTurnTimer=new NextTurnTimer();
+            nextTurnTimer.start();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
+    private static void initButtons()
+    {
+        FancyButton menuButton=new FancyButton("Menu",40,90,780,80);
+        menuButton.getNode().setOnMouseClicked(event ->
+        {
+            nextTurnTimer.stop();
+            MenuScene.init(true);
+            InputReader.setScene(MenuScene.getScene());
+        });
+        addNode(menuButton.getNode());
+
+    }
+
+    private static void initMoney()
+    {
+        FancyButton moneyLabel=new FancyButton(String.valueOf(InputReader.getCurrentController().getMoney())
+                ,40,90,780,20);
+        moneyText=moneyLabel.getTextLabel();
+        moneyText.setFill(Color.YELLOW);
+        addNode(moneyLabel.getNode());
+    }
+
+    private static void initWareHouse()
+    {
+        WareHouse wareHouse=InputReader.getCurrentController().getWareHouse();
+        wareHouse.initView();
+        ImageView wareHouseView=wareHouse.getImageView();
+        setUpgradeButton(wareHouse,wareHouseView.getX(),wareHouseView.getY()+wareHouseView.getImage().getHeight()-23);
+
+    }
+
     private static void initWell() {
-        InputReader.getCurrentController().getWell().initView();
-        InputReader.getCurrentController().getWell().refreshView();
+        Well well=InputReader.getCurrentController().getWell();
+        well.initView();
+        well.refreshView();
+        ImageView wellView=well.getImageView();
+        setUpgradeButton(well,wellView.getX(),wellView.getY()+wellView.getImage().getHeight()/4-23);
+
 
     }
     private static void initMap() {
@@ -102,21 +152,39 @@ public class GameScene {
         for(WorkShop workShop:workShops)
         {
             workShop.initView();
-            ImageView upgradeButtonView=new ImageView();
-            Image upgradeButtonImage= new Image(new FileInputStream("./Textures/AddAnimalButtons/A.png"));
-            upgradeButtonView.setFitHeight(20);
-            upgradeButtonView.setFitWidth(50);
-            upgradeButtonView.setImage(upgradeButtonImage);
             ImageView workShopView=workShop.getImageView();
-            upgradeButtonView.setY(workShopView.getY()+workShopView.getImage().getHeight()/4);
-            upgradeButtonView.setX(workShopView.getX());
-            upgradeButtonView.setOnMouseClicked(event ->
-            {
-                if(!workShop.isBusy())
-                    InputReader.upgrade("workshop"+workShop.getLocation());
-            });
-            root.getChildren().add(upgradeButtonView);
+            setUpgradeButton(workShop,workShopView.getX(),workShopView.getY()+workShopView.getImage().getHeight()/4);
         }
+    }
+
+    private static void setUpgradeButton(Upgradable upgradable,double x,double y)
+    {
+        ImageView imageView=((Viewable)upgradable).getImageView();
+        FancyButton upgradeButton=new FancyButton(String.valueOf(upgradable.upgradeCost())+"\uD83D\uDCB0",20,50
+                ,x,y);
+        upgradeButton.getNode().setOnMouseClicked(event ->
+        {
+            if(!(upgradable instanceof WorkShop) || !((WorkShop) upgradable).isBusy())
+            {
+                String inputReaderString = null;
+                if(upgradable instanceof Well)
+                    inputReaderString="well";
+                else if(upgradable instanceof Helicopter)
+                    inputReaderString="helicopter";
+                else if(upgradable instanceof Truck)
+                    inputReaderString="truck";
+                else if(upgradable instanceof WareHouse)
+                    inputReaderString="warehouse";
+                else if(upgradable instanceof WorkShop)
+                    inputReaderString="workshop" + ((WorkShop)upgradable).getLocation();
+                InputReader.upgrade(inputReaderString);
+                if(!upgradable.canUpgrade())
+                    deleteNode(upgradeButton.getNode());
+                else
+                    upgradeButton.setText(String.valueOf(upgradable.upgradeCost())+"\uD83D\uDCB0");
+            }
+        });
+        addNode(upgradeButton.getNode());
     }
 
     public static void addNode(Node node) {
@@ -165,5 +233,16 @@ public class GameScene {
 
     public static Scene getScene() {
         return scene;
+    }
+
+    public static NextTurnTimer getNextTurnTimer()
+    {
+        return nextTurnTimer;
+    }
+
+    public static void updateMoney()
+    {
+        if(moneyText==null)return ;
+        moneyText.setText(String.valueOf(InputReader.getCurrentController().getMoney()));
     }
 }

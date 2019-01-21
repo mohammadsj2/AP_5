@@ -14,6 +14,8 @@ import javafx.scene.image.ImageView;
 public abstract class Animal extends Entity implements Upgradable, Loadable {
     private int level;
     private int speed = Constant.ANIMAL_SPEED;
+    private int step=0;
+    private Cell currentCell;
 
 
     protected Animal(Cell cell) {
@@ -45,8 +47,11 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
 
     public void walk() throws CellDoesNotExistException {
         Map map=InputReader.getCurrentController().getMap();
-        Cell cur = map.getRandomCell(getCell(), getSpeed());
-        this.changeCell(map.getBestCellBySpeed(getCell(),cur,Constant.ANIMAL_SPEED));
+        if(currentCell==null || step==0 || getCell()==currentCell)
+        {
+            currentCell = map.getRandomCell(getCell(), getSpeed());
+        }
+        this.changeCell(map.getBestCellBySpeed(getCell(),currentCell,Constant.ANIMAL_SPEED));
     }
     public void changeCell(Cell cur) {
         Map map=getMap();
@@ -57,10 +62,12 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
     }
     public void nextTurn() throws CellDoesNotExistException {
         this.walk();
+        step++;
+        step%=15;
     }
 
     @Override
-    public int upgradeCost() throws CantUpgradeException {
+    public int upgradeCost(){
         return 0;
     }
 

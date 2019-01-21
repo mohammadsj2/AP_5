@@ -2,8 +2,8 @@ package Controller;
 
 import Exception.*;
 import Model.Entity.Item;
-import View.GameScene.GameScene;
-import View.WareHouseScene.WareHouseScene;
+import View.Scene.MenuScene;
+import View.Scene.WareHouseScene;
 import com.gilecode.yagson.YaGson;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -22,7 +22,7 @@ public class InputReader extends Application
     static Controller currentController = null;
     static ArrayList<Controller> loadedLevelsControllers = new ArrayList<>();
     static ArrayList<Integer> indexOfLevel = new ArrayList<>();
-    static Stage primaryStage;
+    public static Stage primaryStage;
 
 
     public static void main(String[] args) throws StartBusyTransporter, IOException {
@@ -152,13 +152,11 @@ public class InputReader extends Application
 
     }
 
-    public static void load(String saveName) {
+    public static void load(String saveName) throws FileNotFoundException
+    {
         YaGson yaGson = new YaGson();
-        try {
             currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/" + saveName + ".json")), Controller.class);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
     }
 
     public static void loadLevel(int levelNumber) {
@@ -278,14 +276,16 @@ public class InputReader extends Application
     {
         initScenes();
         this.primaryStage=primaryStage;
+        primaryStage.setX(300);
+        primaryStage.setY(100);
         primaryStage.show();
-        setScene(GameScene.getScene());
+        setScene(MenuScene.getScene());
     }
 
     private void initScenes()
     {
         WareHouseScene.init();
-        GameScene.init();
+        MenuScene.init(false);
     }
 
     public static void setScene(Scene scene)

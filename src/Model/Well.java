@@ -4,7 +4,7 @@ import Constant.Constant;
 import Controller.InputReader;
 import Exception.CantUpgradeException;
 import Exception.NoWaterException;
-import View.GameScene.GameScene;
+import View.Scene.GameScene;
 import javafx.animation.Animation;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
@@ -103,10 +103,14 @@ public class Well implements Upgradable, Loadable, Viewable {
         level++;
         maxWater+=Constant.WELL_WATER_PER_LEVEL;
         waterRemaining=maxWater;
+        refreshView();
     }
 
     public int getWaterRemaining() {
         return waterRemaining;
+    }
+    public int getMaxWater() {
+        return maxWater;
     }
 
 

@@ -1,7 +1,6 @@
 package Model;
 
 import Constant.Constant;
-import Controller.Controller;
 import Controller.InputReader;
 import Model.Entity.Item;
 
@@ -9,11 +8,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import Exception.CantUpgradeException;
-import Exception.NotEnoughMoneyException;
 import Exception.NoSuchItemInWarehouseException;
 import Exception.NoWarehouseSpaceException;
-import View.GameScene.GameScene;
-import View.WareHouseScene.WareHouseScene;
+import View.Scene.GameScene;
+import View.Scene.WareHouseScene;
 import javafx.animation.Animation;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
@@ -97,6 +95,7 @@ public class WareHouse implements Upgradable,Viewable{
         }
         level++;
         capacity+=Constant.WAREHOUSE_CAPACITY_PER_LEVEL;
+        refreshView();
     }
 
     @Override
