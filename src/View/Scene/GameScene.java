@@ -1,4 +1,4 @@
-package View.GameScene;
+package View.Scene;
 
 import Constant.Constant;
 import Controller.Controller;
@@ -21,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.io.FileInputStream;
@@ -29,12 +30,13 @@ import java.util.ArrayList;
 
 
 public class GameScene {
+    private static NextTurnTimer nextTurnTimer;
     private static Group root = new Group();
     private static Scene scene = new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
+    private static Text moneyText=null;
 
     public static void init() {
         try {
-            Controller controller=InputReader.getCurrentController();
             initBackground();
             initWorkShops();
             initWell();
@@ -42,10 +44,35 @@ public class GameScene {
             initMap();
             initAddAnimalButtons();
             nextTurnButtonForDebug();
-            new NextTurnTimer().start();
+            initMoney();
+            initButtons();
+            nextTurnTimer=new NextTurnTimer();
+            nextTurnTimer.start();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void initButtons()
+    {
+        FancyButton menuButton=new FancyButton("Menu",40,90,780,80);
+        menuButton.getNode().setOnMouseClicked(event ->
+        {
+            nextTurnTimer.stop();
+            MenuScene.init(true);
+            InputReader.setScene(MenuScene.getScene());
+        });
+        addNode(menuButton.getNode());
+
+    }
+
+    private static void initMoney()
+    {
+        FancyButton moneyLabel=new FancyButton(String.valueOf(InputReader.getCurrentController().getMoney())
+                ,40,90,780,20);
+        moneyText=moneyLabel.getTextLabel();
+        moneyText.setFill(Color.YELLOW);
+        addNode(moneyLabel.getNode());
     }
 
     private static void initWareHouse()
@@ -200,5 +227,16 @@ public class GameScene {
 
     public static Scene getScene() {
         return scene;
+    }
+
+    public static NextTurnTimer getNextTurnTimer()
+    {
+        return nextTurnTimer;
+    }
+
+    public static void updateMoney()
+    {
+        if(moneyText==null)return ;
+        moneyText.setText(String.valueOf(InputReader.getCurrentController().getMoney()));
     }
 }

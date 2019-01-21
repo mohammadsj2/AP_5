@@ -5,13 +5,8 @@ import Model.Map.Cell;
 import Model.Entity.Animal.Wild.Wild;
 import Exception.CellDoesNotExistException;
 import Model.Map.Map;
-import View.GameScene.GameScene;
-import View.SpriteAnimation;
-import javafx.animation.Animation;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

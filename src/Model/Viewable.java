@@ -1,7 +1,6 @@
 package Model;
 
-import Constant.Constant;
-import View.GameScene.GameScene;
+import View.Scene.GameScene;
 import View.SpriteAnimation;
 import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;

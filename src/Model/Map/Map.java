@@ -6,7 +6,7 @@ import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
 import Exception.CellDoesNotExistException;
-import View.GameScene.GameScene;
+import View.Scene.GameScene;
 import com.gilecode.yagson.YaGson;
 
 import java.util.ArrayList;
