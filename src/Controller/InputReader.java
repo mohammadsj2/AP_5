@@ -3,8 +3,8 @@ package Controller;
 import Constant.Constant;
 import Exception.*;
 import Model.Entity.Item;
-import View.GameScene.GameScene;
-import View.WareHouseScene.WareHouseScene;
+import View.Scene.MenuScene;
+import View.Scene.WareHouseScene;
 import com.gilecode.yagson.YaGson;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -22,7 +22,6 @@ public class InputReader extends Application
     public static final String CELL_DOES_NOT_EXIST_MESSAGE = "**** Error: Cell Does Not Exist! ****";
     public static final String BAD_INPUT_FORMAT_MESSAGE = "**** Error: Bad input Format! ****";
     public static final String NOT_ENOUGH_WATER_MESSAGE = "**** Error: Not enough water! ****";
-    public static final String WORKSHOP_DOESNT_EXIST_MESSAGE = "**** Error: Invalid workshop index! ****";
     public static final String START_BUSY_WORKSPACE_EXCEPTION_MESSAGE = "**** Error: workshop is busy! ****";
     public static final String WORK_SHOP_NOT_USED_EXCEPTION_MESSAGE = "**** Error: WorkShopNotUsedException! ****";
     public static final String CANT_UPGRADE_MESSAGE = "**** Error: this objec cant upgrade! ****";
@@ -30,11 +29,13 @@ public class InputReader extends Application
     public static final String NO_SUCH_ITEM_MESSAGE = "**** Error: You don't have that item! ****";
     public static final String NOT_ENOUGH_SPACE_MESSAGE = "**** Error: Not enough space! ****";
     public static final String NOT_ENOUGH_ITEM_MESSAGE = "**** Error: Not enough item! ****";
+    public static final String WORKSHOP_DOESNT_EXIST_MESSAGE = "**** Error: Workshop doesn't exist! ****";
+    public static final String NO_SAVE_MESSAGE = "**** Error: There is no save! ****";
 
     static Controller currentController = null;
     static ArrayList<Controller> loadedLevelsControllers = new ArrayList<>();
     static ArrayList<Integer> indexOfLevel = new ArrayList<>();
-    static Stage primaryStage;
+    public static Stage primaryStage;
 
 
     public static void main(String[] args) throws StartBusyTransporter, IOException {
@@ -141,9 +142,6 @@ public class InputReader extends Application
             }
         });
         thread.start();
-        
-        loadLevel(1);
-        runByLevelNumber(1);
         launch(args);
 
     }
@@ -164,13 +162,11 @@ public class InputReader extends Application
 
     }
 
-    public static void load(String saveName) {
+    public static void load(String saveName) throws FileNotFoundException
+    {
         YaGson yaGson = new YaGson();
-        try {
             currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/" + saveName + ".json")), Controller.class);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
     }
 
     public static void loadLevel(int levelNumber) {
@@ -290,14 +286,16 @@ public class InputReader extends Application
     {
         initScenes();
         this.primaryStage=primaryStage;
+        primaryStage.setX(300);
+        primaryStage.setY(100);
         primaryStage.show();
-        setScene(GameScene.getScene());
+        setScene(MenuScene.getScene());
     }
 
     private void initScenes()
     {
         WareHouseScene.init();
-        GameScene.init();
+        MenuScene.init(false);
     }
 
     public static void setScene(Scene scene)

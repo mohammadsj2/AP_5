@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import Exception.*;
 import Constant.Constant;
-import View.GameScene.GameScene;
+import View.Scene.GameScene;
 import javafx.animation.Animation;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

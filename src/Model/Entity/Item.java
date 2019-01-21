@@ -3,10 +3,8 @@ package Model.Entity;
 import Constant.Constant;
 import Controller.*;
 import Model.Map.Cell;
-import View.GameScene.GameScene;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.io.FileInputStream;

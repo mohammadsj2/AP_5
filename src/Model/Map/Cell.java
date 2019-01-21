@@ -5,7 +5,7 @@ import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
 import Model.Viewable;
-import View.GameScene.GameScene;
+import View.Scene.GameScene;
 import javafx.animation.Animation;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

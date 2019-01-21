@@ -32,7 +32,7 @@ public class FancyButton
         imageView.setFitHeight(height);
         imageView.setFitWidth(width);
         insideText.setText(text);
-        insideText.setStyle("-fx-font-family: 'Comic Sans MS';");
+        insideText.setStyle("-fx-font-family: 'Comic Sans MS';-fx-font-size: "+(int)(0.4*Math.min(height,width)));
         insideText.setFill(Color.WHITE);
         pane.getChildren().add(imageView);
         pane.getChildren().add(insideText);
@@ -44,7 +44,7 @@ public class FancyButton
     {
         return pane;
     }
-
+    public Text getTextLabel(){return insideText;}
     public void setText(String text)
     {
         insideText.setText(text);
