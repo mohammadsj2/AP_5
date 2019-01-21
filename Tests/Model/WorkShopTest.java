@@ -28,10 +28,8 @@ public class WorkShopTest {
 
             int usedLevel = workShop.maxLevelCanDoWithItems(inputItems);
             workShop.startByLevel(usedLevel);
-            System.out.println("salam");
             Assert.assertEquals(usedLevel,1);
         } catch (FileNotFoundException | CantUpgradeException | StartBusyProducerException e) {
-            System.out.println("asdf");
             Assert.fail();
         }
 

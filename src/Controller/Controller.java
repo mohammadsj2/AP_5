@@ -19,6 +19,7 @@ import Model.Upgradable;
 import Model.WareHouse;
 import Model.Well;
 import Model.WorkShop;
+import View.Scene.GameScene;
 import com.gilecode.yagson.YaGson;
 import Exception.WinningMessage;
 import Exception.NoTransporterSpaceException;
@@ -64,17 +65,21 @@ public class Controller {
         if (money < money2)
             throw new NotEnoughMoneyException();
         money -= money2;
+        GameScene.updateMoney();
     }
 
     void setMoney(int money) {
         this.money = money;
+        GameScene.updateMoney();
     }
 
     void increaseMoney(int money2) {
         money += money2;
+        GameScene.updateMoney();
     }
 
     public void addItemToWareHouse(Item item) throws NoWarehouseSpaceException{
+        //TODO level.entityEarned(item);
         wareHouse.addItem(item);
         item.setInWareHouse(true);
         try {
@@ -293,6 +298,7 @@ public class Controller {
     }
 
     void fillWell() throws NotEnoughMoneyException {
+        if(well.getWaterRemaining()==well.getMaxWater())return ;
         subtractMoney(Constant.WELL_FILL_COST + well.getLevel() * Constant.WELL_FILL_COST_PER_LEVEL);
         well.fill();
     }

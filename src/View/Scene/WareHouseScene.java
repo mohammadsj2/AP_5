@@ -1,4 +1,4 @@
-package View.WareHouseScene;
+package View.Scene;
 
 import Constant.Constant;
 import javafx.scene.Group;

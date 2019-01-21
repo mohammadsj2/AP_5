@@ -6,7 +6,7 @@ import Model.Map.Cell;
 import Exception.CellDoesNotExistException;
 import Model.Map.Map;
 import Model.Viewable;
-import View.GameScene.GameScene;
+import View.Scene.GameScene;
 import View.SpriteAnimation;
 import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
@@ -37,7 +37,6 @@ public abstract class Entity implements Viewable {
 
     @Override
     public void refreshView() {
-
     }//TODO
 
     @Override

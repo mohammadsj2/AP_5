@@ -15,6 +15,8 @@ import java.util.ArrayList;
 
 public class Cat extends Animal {
 
+    private int step=0;
+    private Cell currentCell;
     public static final int CAT_SPEED = 4;
 
     public Cat(Cell cell) {
@@ -27,6 +29,7 @@ public class Cat extends Animal {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
     }
 
     public Cat(Cell cell, int level) {
@@ -42,17 +45,23 @@ public class Cat extends Animal {
     @Override
     public void nextTurn() throws CellDoesNotExistException {
         walk();
+        step++;
+        step%=15;
 
     }
 
     @Override
     public void walk() {
         Map map = InputReader.getCurrentController().getMap();
+
         Cell targetCell = map.getRandomCell(getCell(), getSpeed());
         if (InputReader.getCurrentController().getCatLevel() >= 0) {
             targetCell = map.nearestCellWithItem(this.getCell());
             if (targetCell == null) {
-                targetCell = map.getRandomCell(getCell(), getSpeed());
+                if(step==0 || currentCell==getCell())
+                    targetCell =currentCell= map.getRandomCell(getCell(), getSpeed());
+                else
+                    targetCell=currentCell;
             } else if (targetCell.getPositionY() == getCell().getPositionY()
                         && targetCell.getPositionX() == getCell().getPositionX()) {
                 catchItem();

@@ -1,10 +1,9 @@
 package Controller;
 
-import Constant.Constant;
 import Exception.*;
 import Model.Entity.Item;
-import View.GameScene.GameScene;
-import View.WareHouseScene.WareHouseScene;
+import View.Scene.MenuScene;
+import View.Scene.WareHouseScene;
 import com.gilecode.yagson.YaGson;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -15,26 +14,15 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Scanner;
 
+import Constant.Constant;
+
 public class InputReader extends Application
 {
-
-    public static final String NOT_ENOUGH_MONEY_MESSAGE = "**** Error: Not Enough Money! ****";
-    public static final String CELL_DOES_NOT_EXIST_MESSAGE = "**** Error: Cell Does Not Exist! ****";
-    public static final String BAD_INPUT_FORMAT_MESSAGE = "**** Error: Bad input Format! ****";
-    public static final String NOT_ENOUGH_WATER_MESSAGE = "**** Error: Not enough water! ****";
-    public static final String WORKSHOP_DOESNT_EXIST_MESSAGE = "**** Error: Invalid workshop index! ****";
-    public static final String START_BUSY_WORKSPACE_EXCEPTION_MESSAGE = "**** Error: workshop is busy! ****";
-    public static final String WORK_SHOP_NOT_USED_EXCEPTION_MESSAGE = "**** Error: WorkShopNotUsedException! ****";
-    public static final String CANT_UPGRADE_MESSAGE = "**** Error: this objec cant upgrade! ****";
-    public static final String THIS_LEVEL_NOT_LOADED_MESSAGE = "**** Error: this level not loaded yet! ****";
-    public static final String NO_SUCH_ITEM_MESSAGE = "**** Error: You don't have that item! ****";
-    public static final String NOT_ENOUGH_SPACE_MESSAGE = "**** Error: Not enough space! ****";
-    public static final String NOT_ENOUGH_ITEM_MESSAGE = "**** Error: Not enough item! ****";
 
     static Controller currentController = null;
     static ArrayList<Controller> loadedLevelsControllers = new ArrayList<>();
     static ArrayList<Integer> indexOfLevel = new ArrayList<>();
-    static Stage primaryStage;
+    public static Stage primaryStage;
 
 
     public static void main(String[] args) throws StartBusyTransporter, IOException {
@@ -98,9 +86,9 @@ public class InputReader extends Application
                                         try {
                                             currentController.addItemToTruck(item);
                                         } catch (NoTransporterSpaceException e) {
-                                            System.out.println(NOT_ENOUGH_SPACE_MESSAGE);
+                                            System.out.println(Constant.NOT_ENOUGH_SPACE_MESSAGE);
                                         } catch (NoSuchItemInWarehouseException e) {
-                                            System.out.println(NO_SUCH_ITEM_MESSAGE);
+                                            System.out.println(Constant.NO_SUCH_ITEM_MESSAGE);
                                         }
                                     }
                                 }
@@ -110,7 +98,7 @@ public class InputReader extends Application
                                     try {
                                         currentController.startHelicopter();
                                     } catch (NotEnoughMoneyException e) {
-                                        System.out.println(NOT_ENOUGH_MONEY_MESSAGE);
+                                        System.out.println(Constant.NOT_ENOUGH_MONEY_MESSAGE);
                                     }
                                 } else if (input[1].equals("clear")) {
                                     currentController.clearHelicopter();
@@ -120,7 +108,7 @@ public class InputReader extends Application
                                         try {
                                             currentController.addItemToHelicopter(item);
                                         } catch (NoTransporterSpaceException e) {
-                                            System.out.println(NOT_ENOUGH_SPACE_MESSAGE);
+                                            System.out.println(Constant.NOT_ENOUGH_SPACE_MESSAGE);
                                         }
                                     }
                                 }
@@ -132,7 +120,7 @@ public class InputReader extends Application
                                 currentController.increaseMoney(1000);
                                 break;
                             default:
-                                System.out.println(BAD_INPUT_FORMAT_MESSAGE);
+                                System.out.println(Constant.BAD_INPUT_FORMAT_MESSAGE);
                         }
                     }
                 }catch (Exception e){
@@ -164,13 +152,11 @@ public class InputReader extends Application
 
     }
 
-    public static void load(String saveName) {
+    public static void load(String saveName) throws FileNotFoundException
+    {
         YaGson yaGson = new YaGson();
-        try {
             currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/" + saveName + ".json")), Controller.class);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
     }
 
     public static void loadLevel(int levelNumber) {
@@ -190,7 +176,7 @@ public class InputReader extends Application
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NotEnoughMoneyException e) {
-            System.out.println(NOT_ENOUGH_MONEY_MESSAGE);
+            System.out.println(Constant.NOT_ENOUGH_MONEY_MESSAGE);
         }
     }
 
@@ -198,7 +184,7 @@ public class InputReader extends Application
         try {
             currentController.pickup(x, y);
         } catch (CellDoesNotExistException e) {
-            System.out.println(CELL_DOES_NOT_EXIST_MESSAGE);
+            System.out.println(Constant.CELL_DOES_NOT_EXIST_MESSAGE);
         }
     }
 
@@ -206,7 +192,7 @@ public class InputReader extends Application
         try {
             currentController.cage(x, y);
         } catch (CellDoesNotExistException e) {
-            System.out.println(CELL_DOES_NOT_EXIST_MESSAGE);
+            System.out.println(Constant.CELL_DOES_NOT_EXIST_MESSAGE);
         }
     }
 
@@ -214,9 +200,9 @@ public class InputReader extends Application
         try {
             currentController.plant(x, y);
         } catch (NoWaterException e) {
-            System.out.println(NOT_ENOUGH_WATER_MESSAGE);
+            System.out.println(Constant.NOT_ENOUGH_WATER_MESSAGE);
         } catch (CellDoesNotExistException e) {
-            System.out.println(CELL_DOES_NOT_EXIST_MESSAGE);
+            System.out.println(Constant.CELL_DOES_NOT_EXIST_MESSAGE);
         }
 
     }
@@ -225,7 +211,7 @@ public class InputReader extends Application
         try {
             currentController.fillWell();
         } catch (NotEnoughMoneyException e) {
-            System.out.println(NOT_ENOUGH_MONEY_MESSAGE);
+            System.out.println(Constant.NOT_ENOUGH_MONEY_MESSAGE);
         }
     }
 
@@ -234,15 +220,15 @@ public class InputReader extends Application
         try {
             currentController.startAWorkShop(index);
         } catch (WorkshopDoesntExistException e) {
-            System.out.println(WORKSHOP_DOESNT_EXIST_MESSAGE);
+            System.out.println(Constant.WORKSHOP_DOESNT_EXIST_MESSAGE);
         } catch (StartBusyProducerException e) {
-            System.out.println(START_BUSY_WORKSPACE_EXCEPTION_MESSAGE);
+            System.out.println(Constant.START_BUSY_WORKSPACE_EXCEPTION_MESSAGE);
         } catch (WorkShopNotUsedException e)
         {
-            System.out.println(WORK_SHOP_NOT_USED_EXCEPTION_MESSAGE);
+            System.out.println(Constant.WORK_SHOP_NOT_USED_EXCEPTION_MESSAGE);
         } catch (NotEnoughItemException e)
         {
-            System.out.println(NOT_ENOUGH_ITEM_MESSAGE);
+            System.out.println(Constant.NOT_ENOUGH_ITEM_MESSAGE);
         }
     }
 
@@ -252,9 +238,9 @@ public class InputReader extends Application
         } catch (IOException e) {
             e.printStackTrace();
         } catch (CantUpgradeException e) {
-            System.out.println(CANT_UPGRADE_MESSAGE);
+            System.out.println(Constant.CANT_UPGRADE_MESSAGE);
         } catch (NotEnoughMoneyException e) {
-            System.out.println(NOT_ENOUGH_MONEY_MESSAGE);
+            System.out.println(Constant.NOT_ENOUGH_MONEY_MESSAGE);
         }
     }
 
@@ -267,7 +253,7 @@ public class InputReader extends Application
                 return;
             }
         }
-        System.out.println(THIS_LEVEL_NOT_LOADED_MESSAGE);
+        System.out.println(Constant.THIS_LEVEL_NOT_LOADED_MESSAGE);
     }
 
     public static void nextTurn(int id) {
@@ -290,14 +276,16 @@ public class InputReader extends Application
     {
         initScenes();
         this.primaryStage=primaryStage;
+        primaryStage.setX(300);
+        primaryStage.setY(100);
         primaryStage.show();
-        setScene(GameScene.getScene());
+        setScene(MenuScene.getScene());
     }
 
     private void initScenes()
     {
         WareHouseScene.init();
-        GameScene.init();
+        MenuScene.init(false);
     }
 
     public static void setScene(Scene scene)
