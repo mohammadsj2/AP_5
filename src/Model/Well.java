@@ -28,7 +28,6 @@ public class Well implements Upgradable, Loadable, Viewable {
 
     public void refreshView() {
         try {
-            System.out.println(" : ) ");
             Image image = new Image(new FileInputStream("./Textures/Service/Well/0" + (new Integer(getLevel() + 1)).toString() + ".png"));
             changeImageView(image, 1, 4, 4, 450, 125);
         } catch (FileNotFoundException e) {
@@ -50,7 +49,6 @@ public class Well implements Upgradable, Loadable, Viewable {
     }
 
     public void initView() {
-        System.out.println("wtf");
         setImageView(new ImageView());
         getImageView().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -64,9 +62,7 @@ public class Well implements Upgradable, Loadable, Viewable {
         this(0);
     }
     public Well(int level) {
-//        System.out.println(" :D ");
-  //      initView();
-    //    setLevel(level);
+
     }
 
     public void setLevel(int level) {

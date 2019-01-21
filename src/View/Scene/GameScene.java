@@ -202,20 +202,26 @@ public class GameScene {
     }
 
     private static void initBackground() throws FileNotFoundException {
-        Image backgroundImage = new Image(new FileInputStream("Textures/back.png"));
+        int numberOfWorkshops=InputReader.getCurrentController().getWorkShops().size();
+        Image backgroundImage = new Image(new FileInputStream("./Textures/GameBackGround/back"+
+                numberOfWorkshops+".png"));
         ImageView backgroundView = new ImageView();
         backgroundView.setFitWidth(Constant.GAME_SCENE_WIDTH);
         backgroundView.setFitHeight(Constant.GAME_SCENE_HEIGHT);
         backgroundView.setImage(backgroundImage);
         root.getChildren().add(backgroundView);
-        backgroundView.setOnMouseClicked(event ->
-        {
-            double x = event.getSceneX();
-            double y = event.getSceneY();
-            int cellX = (int) ((x - 230) / 3.7);
-            int cellY = (int) ((y - 230) / 2.1);
-            if (cellX >= 0 && cellX < 100 && cellY >= 0 && cellY < 100) {
-                InputReader.plant(cellX, cellY);
+        backgroundView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                double x = event.getSceneX();
+                double y = event.getSceneY();
+                int cellx = (int) ((x - 230) / 3.7);
+                int celly = (int) ((y - 230) / 2.1);
+                for(int i=Math.max(0,cellx-1);i<Math.min(Constant.MAP_COLUMNS-1,cellx+1);i++){
+                    for(int j=Math.max(0,celly-1);j<Math.min(Constant.MAP_ROWS,celly+1);j++){
+                        InputReader.plant(i, j);
+                    }
+                }
             }
         });
     }
