@@ -6,10 +6,14 @@ import Model.Entity.Item;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Constant {
 
+
+    public static final int[] ITEM_POSITION_IN_WAREHOUSE_X = {45, 340};
+    public static final int ITEM_POSITION_IN_WAREHOUSE_Y = 115;
 
     public static final int[] WORKSHOPS_POSITION_X = {114, 730, 114, 730, 173, 730};
     public static final int[] WORKSHOPS_POSITION_Y = {500, 480, 350, 350, 205, 205};
@@ -73,13 +77,16 @@ public class Constant {
     public static final String BAD_INPUT_FORMAT_MESSAGE = "**** Error: Bad input Format! ****";
     public static final String NOT_ENOUGH_WATER_MESSAGE = "**** Error: Not enough water! ****";
     public static final String WORKSHOP_DOESNT_EXIST_MESSAGE = "**** Error: Invalid workshop index! ****";
-    public static final String START_BUSY_WORKSPACE_EXCEPTION_MESSAGE = "**** Error: workshop is busy! ****";
+    public static final String START_BUSY_WORKSPACE_MESSAGE = "**** Error: workshop is busy! ****";
+    public static final String START_BUSY_TRANSPORTER_MESSAGE = "**** Error: transporter is busy! ****";
+    public static final String START_EMPTY_TRANSPORTER_MESSAGE = "**** Error: transporter is empty! ****";
     public static final String WORK_SHOP_NOT_USED_EXCEPTION_MESSAGE = "**** Error: WorkShopNotUsedException! ****";
     public static final String CANT_UPGRADE_MESSAGE = "**** Error: this objec cant upgrade! ****";
     public static final String THIS_LEVEL_NOT_LOADED_MESSAGE = "**** Error: this level not loaded yet! ****";
     public static final String NO_SUCH_ITEM_MESSAGE = "**** Error: You don't have that item! ****";
     public static final String NOT_ENOUGH_SPACE_MESSAGE = "**** Error: Not enough space! ****";
     public static final String NOT_ENOUGH_ITEM_MESSAGE = "**** Error: Not enough item! ****";
+    public static final String NO_SAVE_MESSAGE = "**** Error: There is no save! ****";
 
     public static Item getItemByType(String type){
         type=type.toLowerCase();
@@ -100,5 +107,22 @@ public class Constant {
             e.printStackTrace();
         }
         return null;
+    }
+    public static ArrayList<Item> getAllPossibleItems(){
+        ArrayList<Item> items=new ArrayList<>();
+        try {
+            InputStream inputStream= new FileInputStream("./src/Constant/Items.txt");
+
+            Scanner scanner=new Scanner(inputStream);
+            scanner.nextLine();
+            String[] input;
+            while(scanner.hasNextLine()){
+                input=scanner.nextLine().toLowerCase().trim().replaceAll("\\s+", " ").split(" ");
+                items.add(new Item(input[0],new Integer(input[1]),new Integer(input[2]), InputReader.getCurrentController().getTurn()));
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return items;
     }
 }

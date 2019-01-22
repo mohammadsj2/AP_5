@@ -3,7 +3,7 @@ package Controller;
 import Exception.*;
 import Model.Entity.Item;
 import View.Scene.MenuScene;
-import View.Scene.WareHouseScene;
+import View.Scene.TruckScene;
 import com.gilecode.yagson.YaGson;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -77,9 +77,9 @@ public class InputReader extends Application
                                 break;
                             case "truck":
                                 if (input[1].equals("go")) {
-                                    currentController.startTruck();
+                                    startTruck();
                                 } else if (input[1].equals("clear")) {
-                                    currentController.clearTruck();
+                                    clearTruck();
                                 } else {
                                     Item item = Constant.getItemByType(input[2]);
                                     for (int i = 0; i < new Integer(input[3]); i++) {
@@ -134,6 +134,14 @@ public class InputReader extends Application
         runByLevelNumber(1);
         launch(args);
 
+    }
+
+    public static void clearTruck() {
+        currentController.clearTruck();
+    }
+
+    public static void startTruck() throws StartBusyTransporter, StartEmptyTransporter {
+        currentController.startTruck();
     }
 
     public static void save(String saveName) {
@@ -222,7 +230,7 @@ public class InputReader extends Application
         } catch (WorkshopDoesntExistException e) {
             System.out.println(Constant.WORKSHOP_DOESNT_EXIST_MESSAGE);
         } catch (StartBusyProducerException e) {
-            System.out.println(Constant.START_BUSY_WORKSPACE_EXCEPTION_MESSAGE);
+            System.out.println(Constant.START_BUSY_WORKSPACE_MESSAGE);
         } catch (WorkShopNotUsedException e)
         {
             System.out.println(Constant.WORK_SHOP_NOT_USED_EXCEPTION_MESSAGE);
@@ -265,6 +273,9 @@ public class InputReader extends Application
             }
         }
     }
+    public static void addItemToTruck(Item item) throws NoTransporterSpaceException, NoSuchItemInWarehouseException {
+        currentController.addItemToTruck(item);
+    }
 
 
     public static Controller getCurrentController() {
@@ -284,7 +295,7 @@ public class InputReader extends Application
 
     private void initScenes()
     {
-        WareHouseScene.init();
+        TruckScene.init();
         MenuScene.init(false);
     }
 

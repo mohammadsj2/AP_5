@@ -5,6 +5,7 @@ import Controller.*;
 import Model.Map.Cell;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.io.FileInputStream;
@@ -66,7 +67,7 @@ public class Item extends Entity
         {
             if (name.equals("egg"))
             {
-                image = new Image(new FileInputStream("./Textures/Products/Egg/normal_2.png"));
+                image = new Image(new FileInputStream("./Textures/Products/Egg/normal.png"));
             } else if (name.equals("horn"))
             {
                 image = new Image(new FileInputStream("./Textures/Products/Horn/normal_5.png"));
@@ -81,6 +82,8 @@ public class Item extends Entity
                 image = new Image(new FileInputStream("./Textures/Products/" + name + ".png"));
             }
             getImageView().setImage(image);
+            getImageView().setFitWidth(48);
+            getImageView().setFitHeight(48);
         } catch (FileNotFoundException e)
         {
             e.printStackTrace();

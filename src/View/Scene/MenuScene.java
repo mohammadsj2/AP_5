@@ -63,7 +63,7 @@ public class MenuScene
 
             } catch (FileNotFoundException e)
             {
-                System.out.println(InputReader.NO_SAVE_MESSAGE);
+                System.out.println(Constant.NO_SAVE_MESSAGE);
             }
         });
         addNode(loadButton.getNode());
@@ -104,7 +104,7 @@ public class MenuScene
                 InputReader.load("save");
             } catch (FileNotFoundException e)
             {
-                System.out.println(InputReader.NO_SAVE_MESSAGE);
+                System.out.println(Constant.NO_SAVE_MESSAGE);
             }
             GameScene.init();
             InputReader.setScene(GameScene.getScene());
