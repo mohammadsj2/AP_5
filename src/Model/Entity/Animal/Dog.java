@@ -21,7 +21,7 @@ public class Dog extends Animal {
         ImageView imageView=getImageView();
         Image image= null;
         try {
-            image = new Image(new FileInputStream("./Textures/Animals/Africa/Dog/down.png"));
+            image = new Image(new FileInputStream("./Textures/Animals/Dog/down.png"));
             changeImageView(image,24,4,6,cell.getPositionX(),cell.getPositionY());
         } catch (FileNotFoundException e) {
             e.printStackTrace();

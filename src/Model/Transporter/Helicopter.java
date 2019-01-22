@@ -2,6 +2,12 @@ package Model.Transporter;
 
 import Constant.Constant;
 import Exception.CantUpgradeException;
+import View.Scene.GameScene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class Helicopter extends Transporter {
 
@@ -9,6 +15,23 @@ public class Helicopter extends Transporter {
     {
         speed=Constant.HELICOPTER_SPEED;
         capacity=Constant.HELICOPTER_CAPACITY;
+    }
+    @Override
+    Image getImageByLevel(){
+        try {
+            return new Image(new FileInputStream("./Textures/Service/Helicopter/0"+(level+1)+".png"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void initView() {
+        super.initView();
+        ImageView imageView=getImageView();
+        Image image=getImageByLevel();
+        GameScene.setMiddlePosition(imageView,image.getWidth(),image.getHeight(),620,600);
     }
 
     @Override
@@ -19,6 +42,7 @@ public class Helicopter extends Transporter {
         level++;
         capacity+=Constant.HELICOPTER_CAPACITY_PER_LEVEL;
         speed+=Constant.HELICOPTER_SPEED_PER_LEVEL;
+        refreshView();
     }
 
     @Override

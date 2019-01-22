@@ -19,6 +19,7 @@ public abstract class Entity implements Viewable {
     private Cell cell;
     private boolean alive;
     private ImageView imageView=new ImageView();
+    private SpriteAnimation animation=null;
 
     public Entity(){
         if(InputReader.getCurrentController()!=null)
@@ -47,6 +48,7 @@ public abstract class Entity implements Viewable {
     @Override
     public void changeImageView(Image image, int count, int rows, int columns, double x, double y)
     {
+        System.out.println("HIR");
         ImageView imageView = getImageView();
 
         imageView.setImage(image);
@@ -55,9 +57,11 @@ public abstract class Entity implements Viewable {
         int imageHeight = (int) image.getHeight();
 
         imageView.setViewport(new Rectangle2D(0, 0, imageWidth / columns, imageHeight / rows));
-        final Animation animation = new SpriteAnimation(
+        if(animation!=null)
+            animation.stop();
+        animation= new SpriteAnimation(
                 imageView,
-                Duration.millis(700),
+                Duration.millis(1000),
                 count, columns,
                 0, 0,
                 imageWidth / columns, imageHeight / rows
