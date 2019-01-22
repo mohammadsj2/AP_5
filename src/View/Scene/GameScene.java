@@ -225,8 +225,18 @@ public class GameScene {
     }
 
     public static void setImageViewPositionOnMap(ImageView imageView, double x, double y) {
-        imageView.setX(x * 3.7 + 230.0);
-        imageView.setY(y * 2.1 + 230.0);
+        imageView.setX(modifiedX(x));
+        imageView.setY(modifiedY(y));
+    }
+
+    public static double modifiedY(double y)
+    {
+        return y * 2.1 + 230.0;
+    }
+
+    public static double modifiedX(double x)
+    {
+        return x * 3.7 + 230.0;
     }
 
     public static Scene getScene() {
