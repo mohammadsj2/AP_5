@@ -4,7 +4,7 @@ import Constant.Constant;
 import Controller.InputReader;
 import Model.Entity.Item;
 import Exception.*;
-import View.FancyButton;
+import View.Button;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -33,7 +33,7 @@ public class TruckScene {
     }
 
     private static void initClearButton() {
-        FancyButton clearButton=new FancyButton("Clear",40,90, 580,640);
+        Button clearButton=new Button("Clear",40,90, 580,640);
         addNode(clearButton.getNode());
         clearButton.getNode().setOnMouseClicked(event -> {
             InputReader.clearTruck();
@@ -41,7 +41,7 @@ public class TruckScene {
     }
 
     private static void initGoButton() {
-        FancyButton goButton=new FancyButton("Go",40,90, 440,640);
+        Button goButton=new Button("Go",40,90, 440,640);
         addNode(goButton.getNode());
         goButton.getNode().setOnMouseClicked(event -> {
             try {
@@ -55,7 +55,7 @@ public class TruckScene {
     }
 
     private static void initBackButton() {
-        FancyButton backButton=new FancyButton("Back",40,90, 300,640);
+        Button backButton=new Button("Back",40,90, 300,640);
         addNode(backButton.getNode());
         backButton.getNode().setOnMouseClicked(event -> {
             InputReader.setScene(GameScene.getScene());
@@ -69,7 +69,7 @@ public class TruckScene {
             addNode(imageView);
             imageView.setX(getItemPositionInWarehouseX(i));
             imageView.setY(getItemPositionInWarehouseY(i));
-            FancyButton addToTruckButton=new FancyButton("To truck",40,80,
+            Button addToTruckButton=new Button("To truck",40,80,
                     getItemPositionInWarehouseX(i)+160,getItemPositionInWarehouseY(i)+5);
             addNode(addToTruckButton.getNode());
             addToTruckButton.getNode().setOnMouseClicked(event -> {
