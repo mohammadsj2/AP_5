@@ -1,22 +1,25 @@
 package Model.Entity.Animal;
 
+import Constant.Constant;
+import Controller.InputReader;
+import Exception.CantUpgradeException;
+import Exception.CellDoesNotExistException;
 import Model.Entity.Animal.Pet.Chicken;
-import Model.Entity.Animal.Pet.Cow;
 import Model.Entity.Animal.Pet.Sheep;
 import Model.Entity.Animal.Wild.Bear;
 import Model.Entity.Animal.Wild.Lion;
 import Model.Entity.Entity;
 import Model.Loadable;
+import Model.Map.Cell;
 import Model.Map.Map;
 import Model.Upgradable;
-import Model.Map.Cell;
-import Constant.Constant;
-import Controller.*;
-import Exception.CantUpgradeException;
-import Exception.CellDoesNotExistException;
 import View.Scene.GameScene;
+import View.SpriteAnimation;
+import javafx.animation.Animation;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -204,13 +207,41 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
             e.printStackTrace();
         }
         System.out.println(directionName);
-        if(!directionName.equals(direction))
+        if(!directionName.equals(direction) || true)
         {
             changeImageView(image, count, rows, columns,
-                    GameScene.modifiedX(getCell().getPositionX()), GameScene.modifiedY(getCell().getPositionY()));
+                    GameScene.modifiedX(getCell().getPositionX()), GameScene.modifiedY(getCell().getPositionY()),
+                    GameScene.modifiedX(targetCell.getPositionX()) - GameScene.modifiedX(startCell.getPositionX()),
+                    GameScene.modifiedY(targetCell.getPositionY()) - GameScene.modifiedY(startCell.getPositionY()));
             direction=directionName;
         }
     }
+    public void changeImageView(Image image, int count, int rows, int columns, double x, double y, double moveX, double moveY)
+    {
+        System.out.println("HIR");
+        ImageView imageView = getImageView();
+
+        imageView.setImage(image);
+        GameScene.setImageViewPositionOnMap(imageView, x, y);
+        int imageWidth = (int) image.getWidth();
+        int imageHeight = (int) image.getHeight();
+
+        imageView.setViewport(new Rectangle2D(0, 0, imageWidth / columns, imageHeight / rows));
+        if(getAnimation()!=null)
+            getAnimation().stop();
+        Animation animation= new SpriteAnimation(
+                imageView,
+                Duration.millis(1000),
+                count, columns,
+                0, 0,
+                imageWidth / columns, imageHeight / rows
+        );
+        setAnimation(animation);
+        animation.setCycleCount(Animation.INDEFINITE);
+        animation.play();
+    }
+
+
 
     public void nextTurn() throws CellDoesNotExistException {
         this.walk();

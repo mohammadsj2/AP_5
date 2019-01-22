@@ -1,11 +1,10 @@
 package Model.Entity;
 
 import Constant.Constant;
-import Controller.*;
+import Controller.InputReader;
 import Model.Map.Cell;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.io.FileInputStream;
@@ -21,11 +20,12 @@ public class Item extends Entity
 
     public Item(String name, int volume, int cost, int creatingTurn)
     {
+        super();
         this.name = name;
         this.volume = volume;
         this.cost = cost;
         this.creatingTurn = creatingTurn;
-        initView();
+  //      initView();
         refreshView();
     }
 
@@ -37,7 +37,7 @@ public class Item extends Entity
         this.volume = volume;
         this.cost = cost;
         this.creatingTurn = creatingTurn;
-        initView();
+  //      initView();
         refreshView();
     }
 
