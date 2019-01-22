@@ -1,18 +1,24 @@
 package Model.Transporter;
 
 import Constant.Constant;
+import Controller.InputReader;
 import Exception.CantUpgradeException;
+import Model.Entity.Item;
 import View.Scene.GameScene;
+import View.Scene.HelicopterScene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class Helicopter extends Transporter {
+    ArrayList<Item> possibleItems=new ArrayList<>();
 
-    public Helicopter()
+    public Helicopter(ArrayList<Item> possibleItems)
     {
+        this.possibleItems=possibleItems;
         speed=Constant.HELICOPTER_SPEED;
         capacity=Constant.HELICOPTER_CAPACITY;
     }
@@ -26,12 +32,20 @@ public class Helicopter extends Transporter {
         return null;
     }
 
+    public ArrayList<Item> getPossibleItems() {
+        return possibleItems;
+    }
+
     @Override
     public void initView() {
         super.initView();
         ImageView imageView=getImageView();
         Image image=getImageByLevel();
         GameScene.setMiddlePosition(imageView,image.getWidth(),image.getHeight(),620,600);
+        imageView.setOnMouseClicked(event -> {
+            GameScene.getNextTurnTimer().stop();
+            InputReader.setScene(HelicopterScene.getScene());
+        });
     }
 
     @Override

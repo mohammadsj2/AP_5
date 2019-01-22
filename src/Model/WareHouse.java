@@ -57,7 +57,7 @@ public class WareHouse implements Upgradable,Viewable{
 
                 GameScene.getNextTurnTimer().stop();
                 MenuScene.init(true);
-                InputReader.setScene(TruckScene.getScene());
+                InputReader.setScene(TruckScene.refreshAndGetScene());
             }
         });
     }
@@ -114,5 +114,15 @@ public class WareHouse implements Upgradable,Viewable{
 
     public ArrayList<Item> getItems() {
         return items;
+    }
+
+    public int getNumberOfThisItem(Item item) {
+        int ans =0;
+        for(Item item1:items){
+            if(item1.equals(item)){
+                ans++;
+            }
+        }
+        return ans;
     }
 }

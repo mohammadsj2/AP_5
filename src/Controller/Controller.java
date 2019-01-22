@@ -43,12 +43,12 @@ public class Controller {
     private int catLevel=1;
 
 
-    Controller(int goalMoney, ArrayList<Entity> earnedEnitities) {
+    Controller(int goalMoney, ArrayList<Entity> earnedEnitities,ArrayList<Item> helicopterItems) {
         money = turn = 0;
         map = new Map();
         well = new Well();
         level = new Level(goalMoney, earnedEnitities);
-        helicopter = new Helicopter();
+        helicopter = new Helicopter(helicopterItems);
         truck = new Truck();
         wareHouse = new WareHouse();
     }
