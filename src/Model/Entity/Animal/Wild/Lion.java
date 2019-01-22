@@ -19,7 +19,7 @@ public class Lion extends Wild{
         ImageView imageView=getImageView();
         Image image= null;
         try {
-            image = new Image(new FileInputStream("./Textures/Animals/Africa/Lion/left.png"));
+            image = new Image(new FileInputStream("./Textures/Animals/Lion/left.png"));
             changeImageView(image,24,8,3,cell.getPositionX(),cell.getPositionY());
         } catch (FileNotFoundException e) {
             e.printStackTrace();

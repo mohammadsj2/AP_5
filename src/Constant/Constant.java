@@ -41,7 +41,7 @@ public class Constant {
     public static final int DOG_ADD_COST = 2600;
     public static final int CAT_ADD_COST = 2500;
     public static final int COW_ADD_COST = 10000;
-    public static final int SHEEP_ADD_COST = 5000;
+    public static final int SHEEP_ADD_COST = 1000;
     public static final int CHICKEN_ADD_COST = 100;
 
     public static final int CAT_UPGRADE_COST = 2000;
