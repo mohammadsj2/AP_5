@@ -61,7 +61,7 @@ public abstract class Entity implements Viewable {
             animation.stop();
         animation= new SpriteAnimation(
                 imageView,
-                Duration.millis(2000),
+                Duration.millis(1000),
                 count, columns,
                 0, 0,
                 imageWidth / columns, imageHeight / rows
