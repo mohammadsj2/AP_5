@@ -29,6 +29,10 @@ public abstract class Entity implements Viewable {
         initView();
     }
 
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
+    }
+
     public Entity(Cell cell) {
         map=InputReader.getCurrentController().getMap();
         GameScene.addNode(imageView);
@@ -50,7 +54,6 @@ public abstract class Entity implements Viewable {
     @Override
     public void changeImageView(Image image, int count, int rows, int columns, double x, double y)
     {
-        System.out.println("HIR");
         ImageView imageView = getImageView();
 
         imageView.setImage(image);

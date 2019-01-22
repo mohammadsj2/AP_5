@@ -44,10 +44,13 @@ public class Item extends Entity
     @Override
     public void initView() {
         super.initView();
-
+        if(getImageView()==null){
+            setImageView(new ImageView());
+        }
         getImageView().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                if(getCell()==null)return;
                 int x=getCell().getPositionX();
                 int y=getCell().getPositionY();
                 for(int i=Math.max(0,x-3);i<Math.max(x+3,100);i++){

@@ -3,8 +3,6 @@ package View.Scene;
 import Constant.Constant;
 import Controller.InputReader;
 import Model.Entity.Item;
-import Exception.*;
-import Model.WareHouse;
 import View.Button;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -16,18 +14,19 @@ import javafx.scene.image.ImageView;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import Exception.*;
 
-
-public class TruckScene {
+public class HelicopterScene {
+    public static final int ITEM_POSITION_INHELICOPTER_Y = 128;
+    public static final int ITEM_POSITION_INHELICOPTER_X = 55;
     private static Group root = new Group();
     private static Scene scene = new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
-    private static ArrayList<Item> items=Constant.getAllPossibleItems();
-    private static ArrayList<Node> toDeleteInRefresh =new ArrayList<>();
+    private static ArrayList<Item> items=InputReader.getCurrentController().getHelicopter().getPossibleItems();
 
     public static void init(){
         try {
             initBackground();
-            refreshItemView();
+            initItemView();
             initBackButton();
             initGoButton();
             initClearButton();
@@ -40,7 +39,7 @@ public class TruckScene {
         Button clearButton=new Button("Clear",40,90, 580,640);
         addNode(clearButton.getNode());
         clearButton.getNode().setOnMouseClicked(event -> {
-            InputReader.clearTruck();
+            InputReader.clearHelicopter();
         });
     }
 
@@ -49,11 +48,13 @@ public class TruckScene {
         addNode(goButton.getNode());
         goButton.getNode().setOnMouseClicked(event -> {
             try {
-                InputReader.startTruck();
+                InputReader.startHelicopter();
             } catch (StartBusyTransporter startBusyTransporter) {
                 System.out.println(Constant.START_BUSY_TRANSPORTER_MESSAGE);
             } catch (StartEmptyTransporter startEmptyTransporter) {
                 System.out.println(Constant.START_EMPTY_TRANSPORTER_MESSAGE);
+            } catch (NotEnoughMoneyException e) {
+                System.out.println(Constant.NOT_ENOUGH_MONEY_MESSAGE);
             }
         });
     }
@@ -62,59 +63,42 @@ public class TruckScene {
         Button backButton=new Button("Back",40,90, 300,640);
         addNode(backButton.getNode());
         backButton.getNode().setOnMouseClicked(event -> {
-
             GameScene.getNextTurnTimer().start();
             InputReader.setScene(GameScene.getScene());
         });
     }
 
-    private static void refreshItemView() {
-        root.getChildren().removeAll(toDeleteInRefresh);
-        toDeleteInRefresh.clear();
-        int j=0;
-        WareHouse wareHouse=InputReader.getCurrentController().getWareHouse();
-        for (Item item : items) {
-            item.refreshView();
-            if (!wareHouse.getItems().contains(item)) {
-                item.getImageView().setImage(null);
-                continue;
-            }
+    private static void initItemView() {
+        for (int i = 0; i < items.size(); i++) {
+            Item item = Constant.getItemByType(items.get(i).getName());
+
+            item.initView();
             ImageView imageView = item.getImageView();
             addNode(imageView);
-            imageView.setX(getItemPositionInWarehouseX(j));
-            imageView.setY(getItemPositionInWarehouseY(j));
-            Button addToTruckButton = new Button("To truck", 35, 80,
-                    getItemPositionInWarehouseX(j) + 160, getItemPositionInWarehouseY(j) + 5);
-            Label label=new Label();
-            label.relocate(getItemPositionInWarehouseX(j) + 80, getItemPositionInWarehouseY(j)+14);
-            label.setText("x"+wareHouse.getNumberOfThisItem(item));
-            addNode(label);
-            toDeleteInRefresh.add(addToTruckButton.getNode());
-            toDeleteInRefresh.add(label);
-            addNode(addToTruckButton.getNode());
-            addToTruckButton.getNode().setOnMouseClicked(event -> {
+            imageView.setX(getItemPositionInWarehouseX());
+            imageView.setY(getItemPositionInWarehouseY(i));
+            Button addToHelicopterButton = new Button("To Helicopter", 35, 120,
+                    getItemPositionInWarehouseX() + 190, getItemPositionInWarehouseY(i) + 5);
+            addNode(addToHelicopterButton.getNode());
+            addToHelicopterButton.getNode().setOnMouseClicked(event -> {
                 try {
-                    InputReader.addItemToTruck(Constant.getItemByType(item.getName()));
-                    refresh();
+                    InputReader.addItemToHelicopter(Constant.getItemByType(item.getName()));
                 } catch (NoTransporterSpaceException e) {
                     System.out.println(Constant.NOT_ENOUGH_SPACE_MESSAGE);
-                } catch (NoSuchItemInWarehouseException e) {
-                    System.out.println(Constant.NO_SUCH_ITEM_MESSAGE);
                 }
             });
-            j++;
         }
     }
 
-    private static int getItemPositionInWarehouseX(int i) {
-        return Constant.ITEM_POSITION_IN_WAREHOUSE_X[(i>=13)?1:0];
+    private static int getItemPositionInWarehouseX() {
+        return ITEM_POSITION_INHELICOPTER_X;
     }
     private static int getItemPositionInWarehouseY(int i) {
-        return Constant.ITEM_POSITION_IN_WAREHOUSE_Y+37*((i>=13)?i-13:i);
+        return ITEM_POSITION_INHELICOPTER_Y +37*i;
     }
 
     private static void initBackground() throws FileNotFoundException {
-        Image image=new Image(new FileInputStream("./Textures/TruckBackGround.png"));
+        Image image=new Image(new FileInputStream("Textures/HelicopterBack.png"));
         ImageView imageView=new ImageView(image);
         imageView.setFitWidth(Constant.GAME_SCENE_WIDTH);
         imageView.setFitHeight(Constant.GAME_SCENE_HEIGHT);
@@ -134,12 +118,11 @@ public class TruckScene {
         imageView.setY((double)y-height/2.0);
     }
 
-    public static Scene refreshAndGetScene() {
-        refresh();
+    public static Scene getScene() {
         return scene;
     }
 
     public static void refresh(){
-        refreshItemView();
+
     }
 }

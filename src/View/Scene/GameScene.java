@@ -42,10 +42,12 @@ public class GameScene {
             initTransporters();
             nextTurnTimer=new NextTurnTimer();
             nextTurnTimer.start();
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
+
 
     private static void initTransporters() throws FileNotFoundException {
         initUpgradableAndViewable(InputReader.getCurrentController().getTruck());

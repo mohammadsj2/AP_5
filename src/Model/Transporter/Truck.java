@@ -4,11 +4,9 @@ import Constant.Constant;
 import Controller.InputReader;
 import Exception.CantUpgradeException;
 
-import Model.Entity.Item;
-import Model.Upgradable;
+import View.NextTurnTimer;
 import View.Scene.GameScene;
 import View.Scene.TruckScene;
-import javafx.animation.Animation;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -44,7 +42,8 @@ public class Truck extends Transporter{
         imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                InputReader.setScene(TruckScene.getScene());
+                GameScene.getNextTurnTimer().stop();
+                InputReader.setScene(TruckScene.refreshAndGetScene());
             }
         });
     }
