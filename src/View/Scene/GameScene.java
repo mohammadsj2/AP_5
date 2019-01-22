@@ -1,26 +1,19 @@
 package View.Scene;
 
 import Constant.Constant;
-import Controller.Controller;
 import Controller.InputReader;
 import Model.*;
 import Model.Transporter.Helicopter;
 import Model.Transporter.Truck;
-import View.FancyButton;
+import View.Button;
 import View.NextTurnTimer;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -67,7 +60,7 @@ public class GameScene {
 
     private static void initButtons()
     {
-        FancyButton menuButton=new FancyButton("Menu",40,90,780,80);
+        Button menuButton=new Button("Menu",40,90,780,80);
         menuButton.getNode().setOnMouseClicked(event ->
         {
             nextTurnTimer.stop();
@@ -80,7 +73,7 @@ public class GameScene {
 
     private static void initMoney()
     {
-        FancyButton moneyLabel=new FancyButton(String.valueOf(InputReader.getCurrentController().getMoney())
+        Button moneyLabel=new Button(String.valueOf(InputReader.getCurrentController().getMoney())
                 ,40,90,780,20);
         moneyText=moneyLabel.getTextLabel();
         moneyText.setFill(Color.YELLOW);
@@ -165,7 +158,7 @@ public class GameScene {
     private static void setUpgradeButton(Upgradable upgradable,double x,double y)
     {
         ImageView imageView=((Viewable)upgradable).getImageView();
-        FancyButton upgradeButton=new FancyButton(String.valueOf(upgradable.upgradeCost())+"\uD83D\uDCB0",20,50
+        Button upgradeButton=new Button(String.valueOf(upgradable.upgradeCost())+"\uD83D\uDCB0",20,50
                 ,x,y);
         upgradeButton.getNode().setOnMouseClicked(event ->
         {
