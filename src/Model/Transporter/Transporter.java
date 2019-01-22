@@ -84,7 +84,7 @@ public abstract class Transporter implements Upgradable, Viewable {
         startTime=InputReader.getCurrentController().getTurn();
     }
     public boolean isTransportationEnds(){
-        return (startTime+Constant.TOWN_DISTANCE/speed>= InputReader.getCurrentController().getTurn());
+        return (startTime+Constant.TOWN_DISTANCE/speed<= InputReader.getCurrentController().getTurn());
     }
     public void endTransportation(){
         busy=false;

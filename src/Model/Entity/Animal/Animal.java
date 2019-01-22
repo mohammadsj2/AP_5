@@ -97,12 +97,11 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
                 directionName = "down";
             else if (targetCell.getPositionX() > startCell.getPositionX())
             {
-                directionName = "down_right";//"down_left";
-               // System.out.println(targetCell.getPositionX()+" "+startCell.getPositionX());
+                directionName = "down_right";
                 flipImage=true;
             }
             else
-                directionName = "down_left";//"down_left";
+                directionName = "down_left";
         }
         else
         {

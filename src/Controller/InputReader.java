@@ -2,6 +2,7 @@ package Controller;
 
 import Exception.*;
 import Model.Entity.Item;
+import View.Scene.HelicopterScene;
 import View.Scene.MenuScene;
 import View.Scene.TruckScene;
 import com.gilecode.yagson.YaGson;
@@ -96,17 +97,17 @@ public class InputReader extends Application
                             case "helicopter":
                                 if (input[1].equals("go")) {
                                     try {
-                                        currentController.startHelicopter();
+                                        startHelicopter();
                                     } catch (NotEnoughMoneyException e) {
                                         System.out.println(Constant.NOT_ENOUGH_MONEY_MESSAGE);
                                     }
                                 } else if (input[1].equals("clear")) {
-                                    currentController.clearHelicopter();
+                                    clearHelicopter();
                                 } else {
                                     Item item = Constant.getItemByType(input[2]);
                                     for (int i = 0; i < new Integer(input[3]); i++) {
                                         try {
-                                            currentController.addItemToHelicopter(item);
+                                            addItemToHelicopter(item);
                                         } catch (NoTransporterSpaceException e) {
                                             System.out.println(Constant.NOT_ENOUGH_SPACE_MESSAGE);
                                         }
@@ -134,6 +135,18 @@ public class InputReader extends Application
         runByLevelNumber(1);
         launch(args);
 
+    }
+
+    public static void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter, StartEmptyTransporter {
+        currentController.startHelicopter();
+    }
+
+    public static void clearHelicopter() {
+        currentController.clearHelicopter();
+    }
+
+    public static void addItemToHelicopter(Item item) throws NoTransporterSpaceException {
+        currentController.addItemToHelicopter(item);
     }
 
     public static void clearTruck() {
@@ -296,6 +309,7 @@ public class InputReader extends Application
     private void initScenes()
     {
         TruckScene.init();
+        HelicopterScene.init();
         MenuScene.init(false);
     }
 
