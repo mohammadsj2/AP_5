@@ -46,11 +46,23 @@ public class GameScene {
             nextTurnButtonForDebug();
             initMoney();
             initButtons();
+            initTransporters();
             nextTurnTimer=new NextTurnTimer();
             nextTurnTimer.start();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void initTransporters() throws FileNotFoundException {
+        initUpgradableAndViewable(InputReader.getCurrentController().getTruck());
+        initUpgradableAndViewable(InputReader.getCurrentController().getHelicopter());
+    }
+
+    private static void initUpgradableAndViewable(Upgradable upgradable) throws FileNotFoundException {
+        ((Viewable)upgradable).initView();
+        ImageView imageView=((Viewable)upgradable).getImageView();
+        setUpgradeButton(upgradable,imageView.getX(),imageView.getY()+imageView.getImage().getHeight()-23);
     }
 
     private static void initButtons()
@@ -75,13 +87,8 @@ public class GameScene {
         addNode(moneyLabel.getNode());
     }
 
-    private static void initWareHouse()
-    {
-        WareHouse wareHouse=InputReader.getCurrentController().getWareHouse();
-        wareHouse.initView();
-        ImageView wareHouseView=wareHouse.getImageView();
-        setUpgradeButton(wareHouse,wareHouseView.getX(),wareHouseView.getY()+wareHouseView.getImage().getHeight()-23);
-
+    private static void initWareHouse() throws FileNotFoundException {
+        initUpgradableAndViewable(InputReader.getCurrentController().getWareHouse());
     }
 
     private static void initWell() {
@@ -90,8 +97,6 @@ public class GameScene {
         well.refreshView();
         ImageView wellView=well.getImageView();
         setUpgradeButton(well,wellView.getX(),wellView.getY()+wellView.getImage().getHeight()/4-23);
-
-
     }
     private static void initMap() {
         InputReader.getCurrentController().getMap().initView();

@@ -308,6 +308,7 @@ public class Controller {
     }
 
     void clearTruck() {
+        //TODO bayad berizi chiz mizasho too anbar
         truck.clear();
     }
 
@@ -326,11 +327,11 @@ public class Controller {
         truck.addItem(item);
     }
 
-    void startTruck() throws StartBusyTransporter {
+    void startTruck() throws StartBusyTransporter, StartEmptyTransporter {
         truck.startTransportation();
     }
 
-    void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter {
+    void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter, StartEmptyTransporter {
         subtractMoney(helicopter.getValue());
         helicopter.startTransportation();
     }

@@ -11,7 +11,7 @@ import Exception.CantUpgradeException;
 import Exception.NoSuchItemInWarehouseException;
 import Exception.NoWarehouseSpaceException;
 import View.Scene.GameScene;
-import View.Scene.WareHouseScene;
+import View.Scene.TruckScene;
 import javafx.animation.Animation;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
@@ -28,7 +28,7 @@ public class WareHouse implements Upgradable,Viewable{
         try {
             Image image=new Image(new FileInputStream("Textures/Service/Depot/0"+(level+1)+".png"));
             imageView.setImage(image);
-            GameScene.setMiddlePosition(imageView,image.getWidth(),image.getHeight(),410,630);
+            GameScene.setMiddlePosition(imageView,image.getWidth(),image.getHeight(),430,610);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -53,7 +53,7 @@ public class WareHouse implements Upgradable,Viewable{
         imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                InputReader.setScene(WareHouseScene.getScene());
+                InputReader.setScene(TruckScene.getScene());
             }
         });
     }
