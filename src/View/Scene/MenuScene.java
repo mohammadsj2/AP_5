@@ -35,7 +35,7 @@ public class MenuScene
 
     private static void initStartButtons()
     {
-        int height=70,width=170;
+        int height=70,width=180;
         Button newGameButton=new Button("New Game",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,100);
         newGameButton.getNode().setOnMouseClicked(event ->
@@ -74,7 +74,7 @@ public class MenuScene
 
     private static void initInGameButtons()
     {
-        int height=70,width=170;
+        int height=70,width=180;
         Button resumeButton=new Button("Resume",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,100);
         resumeButton.getNode().setOnMouseClicked(event ->
