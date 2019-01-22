@@ -1,26 +1,19 @@
 package View.Scene;
 
 import Constant.Constant;
-import Controller.Controller;
 import Controller.InputReader;
 import Model.*;
 import Model.Transporter.Helicopter;
 import Model.Transporter.Truck;
-import View.FancyButton;
+import View.Button;
 import View.NextTurnTimer;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -46,6 +39,7 @@ public class GameScene {
             nextTurnButtonForDebug();
             initMoney();
             initButtons();
+            initTransporters();
             nextTurnTimer=new NextTurnTimer();
             nextTurnTimer.start();
         } catch (FileNotFoundException e) {
@@ -53,9 +47,20 @@ public class GameScene {
         }
     }
 
+    private static void initTransporters() throws FileNotFoundException {
+        initUpgradableAndViewable(InputReader.getCurrentController().getTruck());
+        initUpgradableAndViewable(InputReader.getCurrentController().getHelicopter());
+    }
+
+    private static void initUpgradableAndViewable(Upgradable upgradable) throws FileNotFoundException {
+        ((Viewable)upgradable).initView();
+        ImageView imageView=((Viewable)upgradable).getImageView();
+        setUpgradeButton(upgradable,imageView.getX(),imageView.getY()+imageView.getImage().getHeight()-23);
+    }
+
     private static void initButtons()
     {
-        FancyButton menuButton=new FancyButton("Menu",40,90,780,80);
+        Button menuButton=new Button("Menu",40,90,780,80);
         menuButton.getNode().setOnMouseClicked(event ->
         {
             nextTurnTimer.stop();
@@ -68,20 +73,15 @@ public class GameScene {
 
     private static void initMoney()
     {
-        FancyButton moneyLabel=new FancyButton(String.valueOf(InputReader.getCurrentController().getMoney())
+        Button moneyLabel=new Button(String.valueOf(InputReader.getCurrentController().getMoney())
                 ,40,90,780,20);
         moneyText=moneyLabel.getTextLabel();
         moneyText.setFill(Color.YELLOW);
         addNode(moneyLabel.getNode());
     }
 
-    private static void initWareHouse()
-    {
-        WareHouse wareHouse=InputReader.getCurrentController().getWareHouse();
-        wareHouse.initView();
-        ImageView wareHouseView=wareHouse.getImageView();
-        setUpgradeButton(wareHouse,wareHouseView.getX(),wareHouseView.getY()+wareHouseView.getImage().getHeight()-23);
-
+    private static void initWareHouse() throws FileNotFoundException {
+        initUpgradableAndViewable(InputReader.getCurrentController().getWareHouse());
     }
 
     private static void initWell() {
@@ -90,8 +90,6 @@ public class GameScene {
         well.refreshView();
         ImageView wellView=well.getImageView();
         setUpgradeButton(well,wellView.getX(),wellView.getY()+wellView.getImage().getHeight()/4-23);
-
-
     }
     private static void initMap() {
         InputReader.getCurrentController().getMap().initView();
@@ -160,7 +158,7 @@ public class GameScene {
     private static void setUpgradeButton(Upgradable upgradable,double x,double y)
     {
         ImageView imageView=((Viewable)upgradable).getImageView();
-        FancyButton upgradeButton=new FancyButton(String.valueOf(upgradable.upgradeCost())+"\uD83D\uDCB0",20,50
+        Button upgradeButton=new Button(String.valueOf(upgradable.upgradeCost())+"\uD83D\uDCB0",20,50
                 ,x,y);
         upgradeButton.getNode().setOnMouseClicked(event ->
         {
@@ -202,20 +200,26 @@ public class GameScene {
     }
 
     private static void initBackground() throws FileNotFoundException {
-        Image backgroundImage = new Image(new FileInputStream("Textures/back.png"));
+        int numberOfWorkshops=InputReader.getCurrentController().getWorkShops().size();
+        Image backgroundImage = new Image(new FileInputStream("./Textures/GameBackGround/back"+
+                numberOfWorkshops+".png"));
         ImageView backgroundView = new ImageView();
         backgroundView.setFitWidth(Constant.GAME_SCENE_WIDTH);
         backgroundView.setFitHeight(Constant.GAME_SCENE_HEIGHT);
         backgroundView.setImage(backgroundImage);
         root.getChildren().add(backgroundView);
-        backgroundView.setOnMouseClicked(event ->
-        {
-            double x = event.getSceneX();
-            double y = event.getSceneY();
-            int cellX = (int) ((x - 230) / 3.7);
-            int cellY = (int) ((y - 230) / 2.1);
-            if (cellX >= 0 && cellX < 100 && cellY >= 0 && cellY < 100) {
-                InputReader.plant(cellX, cellY);
+        backgroundView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                double x = event.getSceneX();
+                double y = event.getSceneY();
+                int cellx = (int) ((x - 230) / 3.7);
+                int celly = (int) ((y - 230) / 2.1);
+                for(int i=Math.max(0,cellx-1);i<Math.min(Constant.MAP_COLUMNS-1,cellx+1);i++){
+                    for(int j=Math.max(0,celly-1);j<Math.min(Constant.MAP_ROWS,celly+1);j++){
+                        InputReader.plant(i, j);
+                    }
+                }
             }
         });
     }

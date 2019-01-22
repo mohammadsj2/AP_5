@@ -3,7 +3,6 @@ Egg	    1	20	10
 Wool	5	200	100
 Plume	2	200	100
 Milk	10	2000	1000
-Horn	6	2000	1000
 DriedEggs	4	100	50
 Cake	5	200	100
 FlouryCake	6	400	200
@@ -22,13 +21,14 @@ Flour	2	20	10
 CheeseFerment	2	25	15
 Varnish	3	25	15
 MegaPie	20	20000	10000
-SpruceGrizzly	25	2500	7000
-SpruceLion	25	2500	7000
-SpruceBrownBear	25	2500	7000
-SpruceJaguar	25	2500	7000
-SpruceWhiteBear	25	2500	7000
+Horn	6	2000	1000
 CagedGrizzly	20	80	80
 CagedLion	20	150	150
 CagedBrownBear	20	100	100
 CagedJaguar	20	200	200
 CagedWhiteBear	20	100	100
+SpruceGrizzly	25	2500	7000
+SpruceLion	25	2500	7000
+SpruceBrownBear	25	2500	7000
+SpruceJaguar	25	2500	7000
+SpruceWhiteBear	25	2500	7000

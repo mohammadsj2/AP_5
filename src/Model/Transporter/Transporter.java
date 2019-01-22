@@ -2,21 +2,67 @@ package Model.Transporter;
 
 import Constant.Constant;
 import Controller.InputReader;
-import Exception.StartBusyTransporter;
-import Exception.NoTransporterSpaceException;
+import Exception.*;
 import Model.Entity.Entity;
 import Model.Entity.Item;
 import Model.Upgradable;
+import Model.Viewable;
+import View.Scene.GameScene;
+import View.View;
+import javafx.animation.Animation;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-public abstract class Transporter implements Upgradable {
+public abstract class Transporter implements Upgradable, Viewable {
     protected int level,capacity,speed,startTime;
     protected ArrayList<Item> items=new ArrayList<>();
     protected boolean busy=false;
+    ImageView imageView;
 
     Transporter()
     {
+
+    }
+
+    @Override
+    public ImageView getImageView() {
+        return imageView;
+    }
+    @Override
+    public void initView() {
+        imageView = new ImageView();
+        GameScene.addNode(getImageView());
+        refreshView();
+    }
+    abstract Image getImageByLevel();
+    public void refreshView() {
+        Image image=getImageByLevel();
+        if(busy){
+            image=null;
+        }
+        getImageView().setImage(image);
+    }
+    @Override
+    public Animation getAnimation() {
+        return null;
+    }
+
+    @Override
+    public void setAnimation(Animation animation) {
+
+    }
+
+    @Override
+    public void stopAnimation(int rows, int columns) {
+
+    }
+
+    @Override
+    public void startAnimation() {
 
     }
 
@@ -25,12 +71,16 @@ public abstract class Transporter implements Upgradable {
             throw new NoTransporterSpaceException();
         items.add(item);
     }
-    public void startTransportation() throws StartBusyTransporter {
+    public void startTransportation() throws StartBusyTransporter, StartEmptyTransporter {
         if(busy)
         {
             throw new StartBusyTransporter();
         }
+        if(items.isEmpty()){
+            throw new StartEmptyTransporter();
+        }
         busy=true;
+        refreshView();
         startTime=InputReader.getCurrentController().getTurn();
     }
     public boolean isTransportationEnds(){
@@ -38,6 +88,7 @@ public abstract class Transporter implements Upgradable {
     }
     public void endTransportation(){
         busy=false;
+        refreshView();
     }
     public void clear(){
         items.clear();

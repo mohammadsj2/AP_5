@@ -2,17 +2,12 @@ package View.Scene;
 
 import Constant.Constant;
 import Controller.InputReader;
-import View.FancyButton;
-import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
+import View.Button;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -41,7 +36,7 @@ public class MenuScene
     private static void initStartButtons()
     {
         int height=70,width=170;
-        FancyButton newGameButton=new FancyButton("New Game",height,width
+        Button newGameButton=new Button("New Game",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,100);
         newGameButton.getNode().setOnMouseClicked(event ->
         {
@@ -51,7 +46,7 @@ public class MenuScene
             InputReader.setScene(GameScene.getScene());
         });
         addNode(newGameButton.getNode());
-        FancyButton loadButton=new FancyButton("Load Game",height,width
+        Button loadButton=new Button("Load Game",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200);
         loadButton.getNode().setOnMouseClicked(event ->
         {
@@ -63,11 +58,11 @@ public class MenuScene
 
             } catch (FileNotFoundException e)
             {
-                System.out.println(InputReader.NO_SAVE_MESSAGE);
+                System.out.println(Constant.NO_SAVE_MESSAGE);
             }
         });
         addNode(loadButton.getNode());
-        FancyButton exitButton=new FancyButton("Exit",height,width
+        Button exitButton=new Button("Exit",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,300);
         exitButton.getNode().setOnMouseClicked(event ->
         {
@@ -80,7 +75,7 @@ public class MenuScene
     private static void initInGameButtons()
     {
         int height=70,width=170;
-        FancyButton resumeButton=new FancyButton("Resume",height,width
+        Button resumeButton=new Button("Resume",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,100);
         resumeButton.getNode().setOnMouseClicked(event ->
         {
@@ -88,14 +83,14 @@ public class MenuScene
             InputReader.setScene(GameScene.getScene());
         });
         addNode(resumeButton.getNode());
-        FancyButton saveButton=new FancyButton("Save Game",height,width
+        Button saveButton=new Button("Save Game",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200);
         saveButton.getNode().setOnMouseClicked(event ->
         {
             InputReader.save("save");
         });
         addNode(saveButton.getNode());
-        FancyButton loadButton=new FancyButton("Load Game",height,width
+        Button loadButton=new Button("Load Game",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,300);
         loadButton.getNode().setOnMouseClicked(event ->
         {
@@ -104,13 +99,13 @@ public class MenuScene
                 InputReader.load("save");
             } catch (FileNotFoundException e)
             {
-                System.out.println(InputReader.NO_SAVE_MESSAGE);
+                System.out.println(Constant.NO_SAVE_MESSAGE);
             }
             GameScene.init();
             InputReader.setScene(GameScene.getScene());
         });
         addNode(loadButton.getNode());
-        FancyButton backToMenuButton=new FancyButton("Back to Menu",height,width
+        Button backToMenuButton=new Button("Back to Menu",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,400);
         backToMenuButton.getNode().setOnMouseClicked(event ->
         {
