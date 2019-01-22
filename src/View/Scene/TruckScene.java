@@ -33,7 +33,7 @@ public class TruckScene {
     }
 
     private static void initClearButton() {
-        FancyButton clearButton=new FancyButton("Clear",40,60, 210,640);
+        FancyButton clearButton=new FancyButton("Clear",40,90, 580,640);
         addNode(clearButton.getNode());
         clearButton.getNode().setOnMouseClicked(event -> {
             InputReader.clearTruck();
@@ -41,7 +41,7 @@ public class TruckScene {
     }
 
     private static void initGoButton() {
-        FancyButton goButton=new FancyButton("Go",40,60, 130,640);
+        FancyButton goButton=new FancyButton("Go",40,90, 440,640);
         addNode(goButton.getNode());
         goButton.getNode().setOnMouseClicked(event -> {
             try {
@@ -55,7 +55,7 @@ public class TruckScene {
     }
 
     private static void initBackButton() {
-        FancyButton backButton=new FancyButton("Back",40,60, 50,640);
+        FancyButton backButton=new FancyButton("Back",40,90, 300,640);
         addNode(backButton.getNode());
         backButton.getNode().setOnMouseClicked(event -> {
             InputReader.setScene(GameScene.getScene());
