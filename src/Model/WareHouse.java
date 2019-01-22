@@ -11,6 +11,7 @@ import Exception.CantUpgradeException;
 import Exception.NoSuchItemInWarehouseException;
 import Exception.NoWarehouseSpaceException;
 import View.Scene.GameScene;
+import View.Scene.MenuScene;
 import View.Scene.TruckScene;
 import javafx.animation.Animation;
 import javafx.event.EventHandler;
@@ -53,6 +54,9 @@ public class WareHouse implements Upgradable,Viewable{
         imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+
+                GameScene.getNextTurnTimer().stop();
+                MenuScene.init(true);
                 InputReader.setScene(TruckScene.getScene());
             }
         });

@@ -58,6 +58,8 @@ public class TruckScene {
         Button backButton=new Button("Back",40,90, 300,640);
         addNode(backButton.getNode());
         backButton.getNode().setOnMouseClicked(event -> {
+
+            GameScene.getNextTurnTimer().start();
             InputReader.setScene(GameScene.getScene());
         });
     }

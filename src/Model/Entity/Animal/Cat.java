@@ -24,7 +24,7 @@ public class Cat extends Animal {
         ImageView imageView=getImageView();
         Image image= null;
         try {
-            image = new Image(new FileInputStream("./Textures/Animals/Africa/Cat/down.png"));
+            image = new Image(new FileInputStream("./Textures/Animals/Cat/down.png"));
             changeImageView(image,24,4,6,cell.getPositionX(),cell.getPositionY());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -55,15 +55,18 @@ public class Cat extends Animal {
         Map map = InputReader.getCurrentController().getMap();
 
         Cell targetCell = map.getRandomCell(getCell(), getSpeed());
-        if (InputReader.getCurrentController().getCatLevel() >= 0) {
+        if (InputReader.getCurrentController().getCatLevel() >= 0)
+        {
             targetCell = map.nearestCellWithItem(this.getCell());
-            if (targetCell == null) {
-                if(step==0 || currentCell==getCell())
-                    targetCell =currentCell= map.getRandomCell(getCell(), getSpeed());
+            if (targetCell == null)
+            {
+                if (step == 0 || currentCell == getCell())
+                    targetCell = currentCell = map.getRandomCell(getCell(), getSpeed());
                 else
-                    targetCell=currentCell;
+                    targetCell = currentCell;
             } else if (targetCell.getPositionY() == getCell().getPositionY()
-                        && targetCell.getPositionX() == getCell().getPositionX()) {
+                    && targetCell.getPositionX() == getCell().getPositionX())
+            {
                 catchItem();
             }
         }

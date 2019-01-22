@@ -17,7 +17,7 @@ public class Chicken extends Pet {
         ImageView imageView=getImageView();
         Image image= null;
         try {
-            image = new Image(new FileInputStream("./Textures/Animals/Africa/GuineaFowl/eat.png"));
+            image = new Image(new FileInputStream("./Textures/Animals/GuineaFowl/eat.png"));
             changeImageView(image,24,5,5,cell.getPositionX(),cell.getPositionY());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
