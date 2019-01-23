@@ -19,13 +19,14 @@ public abstract class Entity implements Viewable {
     private Cell cell;
     private boolean alive;
     private ImageView imageView=new ImageView();
-    private SpriteAnimation animation=null;
+    private Animation animation=null;
 
     public Entity(){
         if(InputReader.getCurrentController()!=null)
         {
             map = InputReader.getCurrentController().getMap();
         }
+        initView();
     }
 
     public void setImageView(ImageView imageView) {
@@ -38,6 +39,7 @@ public abstract class Entity implements Viewable {
         alive=true;
         this.setCell(cell);
         InputReader.getCurrentController().getMap().addEntity(cell,this);
+        initView();
     }
 
     @Override
@@ -74,13 +76,15 @@ public abstract class Entity implements Viewable {
     }
     public void setAnimation(Animation animation)
     {
-
+        this.animation = animation;
+ //       if (animation instanceof SpriteAnimation)
+   //         this.animation = (SpriteAnimation) animation;
     }
 
     @Override
     public Animation getAnimation()
     {
-        return null;
+        return animation;
     }
 
     public Map getMap() {
@@ -105,6 +109,7 @@ public abstract class Entity implements Viewable {
     }
     public void setCell(Cell x) {
         cell = x;
+        refreshView();
     }
     public void destroyFromMap() throws CellDoesNotExistException {
         if(getCell()==null){
