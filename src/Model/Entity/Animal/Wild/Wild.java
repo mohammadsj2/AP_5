@@ -6,6 +6,8 @@ import Model.Entity.Animal.Dog;
 import Model.Entity.Entity;
 import Model.Entity.Item;
 import Model.Map.Cell;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
 
@@ -48,6 +50,21 @@ public abstract class Wild extends Animal {
             this.destroy();
         }
 
+    }
+    @Override
+    public void initView() {
+        super.initView();
+        getImageView().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    System.out.println("CLICKED ALJDKASHLKFHASLFHKAS");
+                    getMap().cage(getCell().getPositionX(), getCell().getPositionY());
+                } catch (CellDoesNotExistException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public void cage() throws CellDoesNotExistException {

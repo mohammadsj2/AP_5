@@ -1,5 +1,6 @@
 package View;
 
+import Constant.Constant;
 import Controller.InputReader;
 import javafx.animation.AnimationTimer;
 
@@ -8,12 +9,12 @@ import java.util.Random;
 public class NextTurnTimer extends AnimationTimer {
     private long lastTime=0;
     private double time=0;
-    private long second=800000000;
+    private long second=100000000;
     @Override
     public void handle(long now) {
         if(lastTime==0)
             lastTime=now;
-        if(now>lastTime+(second/5))
+        if(now>lastTime+ Constant.NEXT_TURN_DURATION)
         {
             lastTime=now;
             time+=1;

@@ -1,7 +1,7 @@
 package Model.Entity;
 
 import Constant.Constant;
-import Controller.*;
+import Controller.InputReader;
 import Model.Map.Cell;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
@@ -21,11 +21,12 @@ public class Item extends Entity
 
     public Item(String name, int volume, int cost, int creatingTurn)
     {
+        super();
         this.name = name;
         this.volume = volume;
         this.cost = cost;
         this.creatingTurn = creatingTurn;
-        initView();
+  //      initView();
         refreshView();
     }
 
@@ -37,16 +38,20 @@ public class Item extends Entity
         this.volume = volume;
         this.cost = cost;
         this.creatingTurn = creatingTurn;
-        initView();
+  //      initView();
         refreshView();
     }
 
     @Override
     public void initView() {
         super.initView();
+        if(getImageView()==null){
+            setImageView(new ImageView());
+        }
         getImageView().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                if(getCell()==null)return;
                 int x=getCell().getPositionX();
                 int y=getCell().getPositionY();
                 for(int i=Math.max(0,x-3);i<Math.max(x+3,100);i++){

@@ -1,9 +1,11 @@
 package Model.Entity.Animal.Wild;
 
+import Exception.CellDoesNotExistException;
 import Constant.Constant;
 import Controller.*;
 import Model.Entity.Item;
 import Model.Map.Cell;
+import View.Scene.GameScene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -28,8 +30,16 @@ public class Lion extends Wild{
     @Override
     public Item toItem() {
         Item item=Constant.getItemByType(CAGED_LION);
+        item.initView();
         item.setCreatingTurn(InputReader.getCurrentController().getTurn());
         item.setCell(getCell());
+        try {
+            this.destroy();
+        } catch (CellDoesNotExistException e) {
+            e.printStackTrace();
+        }
+        GameScene.addNode(item.getImageView());
+        item.changeImageView(item.getImageView().getImage(),1,1,1, getCell().getPositionX(),getCell().getPositionY());
         return item;
     }
 
