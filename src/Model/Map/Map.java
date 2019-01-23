@@ -153,6 +153,13 @@ public class Map {
         GameScene.addNode(entity.getImageView());
         cell.addEntity(entity);
     }
+    public void destroyWalkAnimal(Cell cell, Animal animal){
+        cell.destroyEntity(animal);
+    }
+    public void addWalkAnimal(Cell cell, Animal animal){
+        cell.addEntity(animal);
+    }
+
 
 
     private void wildsToItems(ArrayList<Wild> wilds) {
