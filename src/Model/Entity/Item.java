@@ -5,6 +5,7 @@ import Controller.InputReader;
 import Model.Map.Cell;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.io.FileInputStream;

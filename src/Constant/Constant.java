@@ -25,7 +25,7 @@ public class Constant {
     public static final int MAP_COLUMNS = 101;
     public static final int WORKSHOP_MAX_LEVEL = 4;
     public static final int WORKSHOP_UPGRADE_COST_PER_LEVEL = 500;
-    public static final int ANIMAL_SPEED = 4;
+    public static final int ANIMAL_SPEED = 10;
     public static final int INIT_HEALTH=100;
 
     public static final String BEAR_NAME = "bear";
@@ -87,6 +87,8 @@ public class Constant {
     public static final String NOT_ENOUGH_SPACE_MESSAGE = "**** Error: Not enough space! ****";
     public static final String NOT_ENOUGH_ITEM_MESSAGE = "**** Error: Not enough item! ****";
     public static final String NO_SAVE_MESSAGE = "**** Error: There is no save! ****";
+
+    public static final long NEXT_TURN_DURATION = 200000000L;
 
     public static Item getItemByType(String type){
         type=type.toLowerCase();
