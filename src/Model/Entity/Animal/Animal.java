@@ -185,7 +185,6 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        System.out.println(getImageView().getX());
         if (!(directionName.equals(direction) && flipImage==isFlipDirection )) {
             changeImageView(image, count, rows, columns,
                     GameScene.modifiedX(getCell().getPositionX()), GameScene.modifiedY(getCell().getPositionY()),
@@ -195,7 +194,6 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
             direction = directionName;
             isFlipDirection=flipImage;
         }
-        System.out.println(getImageView().getX());
         walkAnimation(startCell,targetCell);
     }
 
@@ -206,7 +204,6 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
         imageView.setY(GameScene.modifiedY(startCell.getPositionY()));
         int targetX=(int)GameScene.modifiedX(targetCell.getPositionX());
         int targetY=(int)GameScene.modifiedY(targetCell.getPositionY());
-        System.out.println(imageView.getX()+" "+targetX);
         xKeyValue = new KeyValue(imageView.xProperty(),targetX);
         yKeyValue = new KeyValue(imageView.yProperty(),targetY);
 

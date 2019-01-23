@@ -30,6 +30,8 @@ public class GameScene {
 
     public static void init() {
         try {
+            TruckScene.init();
+            HelicopterScene.init();
             initBackground();
             initWorkShops();
             initWell();

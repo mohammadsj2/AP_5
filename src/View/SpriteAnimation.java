@@ -8,13 +8,14 @@ import javafx.util.Duration;
 
 public class SpriteAnimation extends Transition
 {
-    private final ImageView imageView;
+    private ImageView imageView;
     private final int count;
     private final int columns;
     private final int offsetX;
     private final int offsetY;
     private final int width;
     private final int height;
+  //  private final boolean flip;
 
     private int lastIndex;
 
@@ -44,7 +45,9 @@ public class SpriteAnimation extends Transition
         {
             final int x = (index % columns) * width + offsetX;
             final int y = (index / columns) * height + offsetY;
-            imageView.setViewport(new Rectangle2D(x, y, width, height));
+
+            imageView.setViewport(new Rectangle2D(x, y,width, height));
+          //  if(flip)imageView.setScaleX(-1);
             lastIndex = index;
         }
     }

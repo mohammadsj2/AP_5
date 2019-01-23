@@ -21,7 +21,8 @@ public class NextTurnTimer extends AnimationTimer {
             Random random = new Random();
             if (random.nextInt(130) == 1) {
                 String wildName = (random.nextInt(2) == 0 ? "bear" : "lion");
-                for (int j = 0; j < 2; ++j)
+                int count=random.nextInt(3)+1;
+                for (int j = 0; j < count; ++j)
                     InputReader.buy(wildName);
             }
             InputReader.nextTurn(1);

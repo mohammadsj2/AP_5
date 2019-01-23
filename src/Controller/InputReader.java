@@ -21,8 +21,7 @@ public class InputReader extends Application
 {
 
     static Controller currentController = null;
-    static ArrayList<Controller> loadedLevelsControllers = new ArrayList<>();
-    static ArrayList<Integer> indexOfLevel = new ArrayList<>();
+    static int indexOfLevel;
     public static Stage primaryStage;
 
 
@@ -43,11 +42,10 @@ public class InputReader extends Application
                                 }
                                 break;
                             case "load":
-                                if (input[1].equals("game")) {
-                                    load(input[2]);
-                                } else {
+                                if(input[1].equals("level"))
                                     loadLevel(new Integer(input[2]));
-                                }
+                                else if(input[1].equals("save"))
+                                    loadSave(new Integer(input[2]));
                                 break;
                             case "buy":
                                 buy(input[1]);
@@ -69,9 +67,6 @@ public class InputReader extends Application
                                 break;
                             case "upgrade":
                                 upgrade(input[1]);
-                                break;
-                            case "run":
-                                runByLevelNumber(new Integer(input[1]));
                                 break;
                             case "turn":
                                 nextTurn(new Integer(input[1]));
@@ -130,9 +125,7 @@ public class InputReader extends Application
             }
         });
         thread.start();
-        
-        loadLevel(1);
-        runByLevelNumber(1);
+
         launch(args);
 
     }
@@ -173,23 +166,26 @@ public class InputReader extends Application
 
     }
 
-    public static void load(String saveName) throws FileNotFoundException
+
+    public static void loadLevel(int levelIndex) throws FileNotFoundException
     {
+        indexOfLevel=levelIndex;
         YaGson yaGson = new YaGson();
-            currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/" + saveName + ".json")), Controller.class);
+        currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Levels/level" +indexOfLevel + ".json")),
+                Controller.class);
 
     }
 
-    public static void loadLevel(int levelNumber) {
+
+    public static void loadSave(int levelIndex) throws FileNotFoundException
+    {
+        indexOfLevel=levelIndex;
         YaGson yaGson = new YaGson();
-        try {
-            loadedLevelsControllers.add(yaGson.fromJson(
-                    new FileReader(("./ResourcesRoot/Levels/level" + levelNumber + ".json")), Controller.class));
-            indexOfLevel.add(levelNumber);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+            currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/save" +indexOfLevel + ".json")),
+                    Controller.class);
+
     }
+
 
     public static void buy(String type) {
         try {
@@ -265,18 +261,6 @@ public class InputReader extends Application
         }
     }
 
-    public static void runByLevelNumber(int id) {
-        for (int i = 0; i < loadedLevelsControllers.size(); i++) {
-            Controller controller = loadedLevelsControllers.get(i);
-            int index = indexOfLevel.get(i);
-            if (index == id) {
-                currentController = controller;
-                return;
-            }
-        }
-        System.out.println(Constant.THIS_LEVEL_NOT_LOADED_MESSAGE);
-    }
-
     public static void nextTurn(int id) {
         for (int i = 0; i < id; i++) {
             try {
@@ -298,19 +282,12 @@ public class InputReader extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-        initScenes();
+        MenuScene.init(false);
         this.primaryStage=primaryStage;
         primaryStage.setX(300);
         primaryStage.setY(100);
         primaryStage.show();
         setScene(MenuScene.getScene());
-    }
-
-    private void initScenes()
-    {
-        TruckScene.init();
-        HelicopterScene.init();
-        MenuScene.init(false);
     }
 
     public static void setScene(Scene scene)
