@@ -50,6 +50,8 @@ public class TruckScene {
         goButton.getNode().setOnMouseClicked(event -> {
             try {
                 InputReader.startTruck();
+                GameScene.getNextTurnTimer().start();
+                InputReader.setScene(GameScene.getScene());
             } catch (StartBusyTransporter startBusyTransporter) {
                 System.out.println(Constant.START_BUSY_TRANSPORTER_MESSAGE);
             } catch (StartEmptyTransporter startEmptyTransporter) {

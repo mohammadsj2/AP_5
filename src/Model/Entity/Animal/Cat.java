@@ -44,6 +44,7 @@ public class Cat extends Animal {
 
     @Override
     public void nextTurn() throws CellDoesNotExistException {
+        if(!isAlive())return ;
         walk();
         step++;
         step%=15;
