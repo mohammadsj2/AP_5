@@ -31,7 +31,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
     private int level;
     private int speed = Constant.ANIMAL_SPEED;
     private int step = 0;
-    private Cell currentCell;
+    protected Cell currentCell;
     String direction = null;
     Boolean isFlipDirection=false;
 
@@ -119,13 +119,8 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
 
 
         if (this instanceof Cat) {
-            if (directionName.equals("left")) {
-                rows = 6;
-                columns = 4;
-            } else {
-                rows = 4;
-                columns = 6;
-            }
+            rows=columns=5;
+            count=24;
             animalName = "Cat";
         } else if (this instanceof Dog) {
             if (directionName.equals("up_left") || directionName.equals("down_left")) {
