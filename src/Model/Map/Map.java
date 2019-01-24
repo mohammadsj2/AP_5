@@ -80,14 +80,14 @@ public class Map {
         return true;
 
     }
+    public void refreshView() {
+        for (Cell cell : cells) {
+            //      cell.refreshView();
+        }
+    }
     public void initView() {
         for (Cell cell : cells) {
             cell.initView();
-        }
-    }
-    public void refreshView() {
-        for (Cell cell : cells) {
-      //      cell.refreshView();
         }
     }
     private int distance2(Cell cell1, Cell cell2) {

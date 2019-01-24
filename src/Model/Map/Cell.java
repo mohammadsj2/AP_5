@@ -45,8 +45,7 @@ public class Cell implements Viewable {
 
     }
 
-    Cell(int x,int y) {
-        initView();
+    public Cell(int x, int y) {
         positionX = x;
         positionY = y;
     }
