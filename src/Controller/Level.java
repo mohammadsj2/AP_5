@@ -8,9 +8,9 @@ import java.util.HashMap;
 
 public class Level {
     private int goalMoney;
-    private HashMap<String,Integer> goalEntities;
+    private ArrayList<String> goalEntities;
 
-    Level(int goalMoney,HashMap<String,Integer> goalEntities){
+    Level(int goalMoney,ArrayList<String> goalEntities){
         this.goalMoney=goalMoney;
         this.goalEntities=goalEntities;
     }
@@ -20,30 +20,21 @@ public class Level {
         if(earnedMoney<goalMoney){
             return false;
         }
-        HashMap<String,Integer> earnedEntities=new HashMap<>();
+        ArrayList<String> goalEntitiesCopy = new ArrayList<>(goalEntities);
         for(Item item:InputReader.getCurrentController().getWareHouse().getItems())
         {
-            if(!earnedEntities.containsKey(item.getName()))
-                earnedEntities.put(item.getName(),1);
-            earnedEntities.put(item.getName(),earnedEntities.get(item.getName())+1);
+            if(goalEntitiesCopy.contains(item.getName()))
+                goalEntitiesCopy.remove(item.getName());
         }
         for(Entity entity:InputReader.getCurrentController().getMap().getEntities())
         {
-            if(!earnedEntities.containsKey(entity.getName()))
-                earnedEntities.put(entity.getName(),1);
-            earnedEntities.put(entity.getName(),earnedEntities.get(entity.getName())+1);
+            if(goalEntitiesCopy.contains(entity.getName()))
+                goalEntitiesCopy.remove(entity.getName());
         }
-        for(String name:goalEntities.keySet())
-        {
-            if(!earnedEntities.containsKey(name) || earnedEntities.get(name)<goalEntities.get(name))
-            {
-                return false;
-            }
-        }
-        return true;
+        return goalEntitiesCopy.size()==0;
     }
 
-    public HashMap<String, Integer> getGoalEntities() {
+    public ArrayList<String> getGoalEntities() {
         return goalEntities;
     }
 }

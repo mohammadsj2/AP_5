@@ -128,7 +128,7 @@ public class InputReader extends Application
         });
         thread.start();
 
-        launch(args);
+    //    launch(args);
    /*     YaGson yaGson=new YaGson();
         HashMap<String,Integer> goalEntities=new HashMap<>();
         goalEntities.put("egg",5);
@@ -139,8 +139,8 @@ public class InputReader extends Application
         controller.setMoney(10000);
         currentController=controller;
         save("level1");*/
-       // Controller controller=new Controller(0,new HashMap<>(),new ArrayList<>());
-      //  System.out.println(new YaGson().toJson(controller));
+        Controller controller=new Controller(0,new ArrayList<>(),new ArrayList<>());
+        System.out.println(new YaGson().toJson(controller));
     }
 
     public static void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter, StartEmptyTransporter {
