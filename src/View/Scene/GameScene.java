@@ -45,6 +45,7 @@ public class GameScene {
             initTransporters();
             initMoney();
             initButtons();
+
             nextTurnTimer=new NextTurnTimer();
             nextTurnTimer.start();
 
@@ -102,7 +103,6 @@ public class GameScene {
     private static void initWell() {
         Well well=InputReader.getCurrentController().getWell();
         well.initView();
-        well.refreshView();
         ImageView wellView=well.getImageView();
         setUpgradeButton(well,wellView.getX(),wellView.getY()+wellView.getImage().getHeight()/4-23);
     }
