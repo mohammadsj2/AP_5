@@ -30,8 +30,10 @@ import Exception.NotEnoughItemException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Controller {
+public class Controller
+{
     private int money, turn;
     private ArrayList<WorkShop> workShops = new ArrayList<>();
     private Map map;
@@ -40,74 +42,91 @@ public class Controller {
     private Level level;
     private Helicopter helicopter;
     private Truck truck;
-    private int catLevel=1;
+    private int catLevel = 1;
 
 
-    Controller(int goalMoney, ArrayList<Entity> earnedEnitities,ArrayList<Item> helicopterItems) {
+    Controller(int goalMoney, HashMap<String, Integer> goalEntities, ArrayList<Item> helicopterItems)
+    {
         money = turn = 0;
         map = new Map();
         well = new Well();
-        level = new Level(goalMoney, earnedEnitities);
+        level = new Level(goalMoney, goalEntities);
         helicopter = new Helicopter(helicopterItems);
         truck = new Truck();
         wareHouse = new WareHouse();
     }
 
-    public int getMoney() {
+    public int getMoney()
+    {
         return money;
     }
 
-    public int getTurn() {
+    public int getTurn()
+    {
         return turn;
     }
 
-    void subtractMoney(int money2) throws NotEnoughMoneyException {
+    void subtractMoney(int money2) throws NotEnoughMoneyException
+    {
         if (money < money2)
             throw new NotEnoughMoneyException();
         money -= money2;
         GameScene.updateMoney();
     }
 
-    void setMoney(int money) {
+    void setMoney(int money)
+    {
         this.money = money;
         GameScene.updateMoney();
     }
 
-    void increaseMoney(int money2) {
+    void increaseMoney(int money2)
+    {
         money += money2;
         GameScene.updateMoney();
     }
 
-    public void addItemToWareHouse(Item item) throws NoWarehouseSpaceException{
+    public void addItemToWareHouse(Item item) throws NoWarehouseSpaceException
+    {
         //TODO level.entityEarned(item);
         wareHouse.addItem(item);
         item.setInWareHouse(true);
-        try {
-            if(item.getCell()!=null){
+        try
+        {
+            if (item.getCell() != null)
+            {
                 item.destroyFromMap();
             }
-        } catch (CellDoesNotExistException e) {
+        } catch (CellDoesNotExistException e)
+        {
             e.printStackTrace();
         }
     }
-    void plant(int x, int y) throws NoWaterException, CellDoesNotExistException {
-        if (well.getWaterRemaining() == 0) {
+
+    void plant(int x, int y) throws NoWaterException, CellDoesNotExistException
+    {
+        if (well.getWaterRemaining() == 0)
+        {
             throw new NoWaterException();
         }
         if (map.plant(x, y)) well.liftWater();
     }
 
-    private String getInfoOfObject(Object object) {
-        if(object instanceof Map){
-            return ((Map)object).printInfo();
+    private String getInfoOfObject(Object object)
+    {
+        if (object instanceof Map)
+        {
+            return ((Map) object).printInfo();
         }
-        YaGson yaGson=new YaGson();
+        YaGson yaGson = new YaGson();
         return yaGson.toJson(object);
     }
 
-    String getInfo(String string)throws IOException{
-        if(string.equals("info")){
-            StringBuilder stringBuilder=new StringBuilder("");
+    String getInfo(String string) throws IOException
+    {
+        if (string.equals("info"))
+        {
+            StringBuilder stringBuilder = new StringBuilder("");
 
             stringBuilder.append("Money:");
             stringBuilder.append(getMoney());
@@ -120,7 +139,8 @@ public class Controller {
             stringBuilder.append(getInfoOfObject(level));
             return stringBuilder.toString();
         }
-        if(string.equals("workshops")){
+        if (string.equals("workshops"))
+        {
             return getInfoOfObject(workShops);
         }
         return getInfoOfObject(getObject(string));
@@ -133,130 +153,158 @@ public class Controller {
         if (index >= workShops.size()) throw new WorkshopDoesntExistException();
         WorkShop workShop = workShops.get(index);
         int usedLevel = workShop.maxLevelCanDoWithItems(wareHouse.getItems());
-        if(usedLevel==-1)throw new NotEnoughItemException();
+        if (usedLevel == -1) throw new NotEnoughItemException();
         workShop.startByLevel(usedLevel);
         ArrayList<Item> neededItems = workShop.getInputItemsByUsedLevel();
-        for (Item item : neededItems) {
-            try {
+        for (Item item : neededItems)
+        {
+            try
+            {
                 wareHouse.eraseItem(item);
-            } catch (NoSuchItemInWarehouseException e) {
+            } catch (NoSuchItemInWarehouseException e)
+            {
                 System.out.println("This Shouldn't Happen!");
                 e.printStackTrace();
             }
         }
     }
 
-    public void createWorkshops() throws IOException {
-        for (int workshopNumber = 0; workshopNumber < 6; workshopNumber++) {
+    public void createWorkshops() throws IOException
+    {
+        for (int workshopNumber = 0; workshopNumber < 6; workshopNumber++)
+        {
             YaGson yaGson = new YaGson();
             WorkShop workshop = yaGson.fromJson(new FileReader("../../workshop" + workshopNumber + ".json"), WorkShop.class);
             workShops.add(workshop);
         }
     }
-    public void addWorkshop(WorkShop workShop){
+
+    public void addWorkshop(WorkShop workShop)
+    {
         workShops.add(workShop);
     }
 
-    void nextTurn() throws WinningMessage {
+    void nextTurn()
+    {
         turn++;
         map.nextTurn();
-        if (helicopter.isTransportationEnds()) {
+        if (helicopter.isTransportationEnds())
+        {
             distributeItems(helicopter.getItems());
             helicopter.endTransportation();
             helicopter.clear();
         }
-        if (truck.isTransportationEnds()) {
+        if (truck.isTransportationEnds())
+        {
             increaseMoney(truck.getValue());
             truck.endTransportation();
             truck.clear();
         }
 
-        for (WorkShop workShop : workShops) {
-            if (workShop.haveProduct()) {
-                try {
+        for (WorkShop workShop : workShops)
+        {
+            if (workShop.haveProduct())
+            {
+                try
+                {
                     distributeItems(workShop.getOutputItemsByUsedLevel());
                     workShop.endProduction();
-                } catch (WorkShopNotUsedException e) {
+                } catch (WorkShopNotUsedException e)
+                {
                     e.printStackTrace();
                 }
             }
         }
-        ArrayList <Entity> everyThing=new ArrayList<>();
-        everyThing.addAll(wareHouse.getItems());
-        everyThing.addAll(map.getEntities());
-        for(Entity entity:level.getGoalEntities())
-            if(everyThing.contains(entity))
-                level.entityEarned(entity);
-        if(level.checkLevel())
+        if (level.checkLevel())
         {
-            throw new WinningMessage();
+            setWinningMessage();
         }
     }
 
-    public Truck getTruck() {
+    private void setWinningMessage()
+    {
+
+    }
+
+    public Truck getTruck()
+    {
         return truck;
     }
 
-    public Helicopter getHelicopter() {
+    public Helicopter getHelicopter()
+    {
         return helicopter;
     }
 
-    private void distributeItems(ArrayList<Item> items) {
-        for (Item item : items) {
+    private void distributeItems(ArrayList<Item> items)
+    {
+        for (Item item : items)
+        {
             Cell randomCell = map.getRandomCell();
             item.setCell(randomCell);
-            getMap().addEntity(randomCell,item);
+            getMap().addEntity(randomCell, item);
         }
     }
 
-    private Object getObject(String type) throws IOException {
-         // if(type.equals("cat"))return cat;
-         // if(type.equals("dog"))return dog;
+    private Object getObject(String type) throws IOException
+    {
+        // if(type.equals("cat"))return cat;
+        // if(type.equals("dog"))return dog;
         if (type.equals("well")) return well;
         if (type.equals("helicopter")) return helicopter;
         if (type.equals("truck")) return truck;
         if (type.equals("warehouse")) return wareHouse;
-        if(type.equals("map"))return map;
-        if(type.equals("level"))return level;
+        if (type.equals("map")) return map;
+        if (type.equals("level")) return level;
 
-        if (type.startsWith("workshop")) {
+        if (type.startsWith("workshop"))
+        {
             int workshopNumber = type.charAt(type.length() - 1) - '0';
             return workShops.get(workshopNumber);
         }
         throw new IOException();
     }
 
-    public int getCatLevel() {
+    public int getCatLevel()
+    {
         return catLevel;
     }
 
-    void upgrade(String type) throws IOException, CantUpgradeException, NotEnoughMoneyException {
-        if(type.equals("cat")){
-            if(catLevel==1)
+    void upgrade(String type) throws IOException, CantUpgradeException, NotEnoughMoneyException
+    {
+        if (type.equals("cat"))
+        {
+            if (catLevel == 1)
                 throw new CantUpgradeException();
             subtractMoney(Constant.CAT_UPGRADE_COST);
-            catLevel=1;
-            return ;
+            catLevel = 1;
+            return;
         }
-        Object object=getObject(type);
-        if (!(object instanceof Upgradable)) {
+        Object object = getObject(type);
+        if (!(object instanceof Upgradable))
+        {
             throw new IOException();
         }
-        Upgradable upgradable=(Upgradable)object;
-        if(!upgradable.canUpgrade()){
+        Upgradable upgradable = (Upgradable) object;
+        if (!upgradable.canUpgrade())
+        {
             throw new CantUpgradeException();
         }
         subtractMoney(upgradable.upgradeCost());
-        try{
+        try
+        {
             upgradable.upgrade();
-        }catch (CantUpgradeException e){
+        } catch (CantUpgradeException e)
+        {
             increaseMoney(upgradable.upgradeCost());
         }
     }
 
-    void addAnimal(String type) throws IOException, NotEnoughMoneyException {
+    void addAnimal(String type) throws IOException, NotEnoughMoneyException
+    {
         type = type.toLowerCase();
-        switch (type) {
+        switch (type)
+        {
             case Constant.DOG_NAME:
                 subtractMoney(Constant.DOG_ADD_COST);
                 new Dog(map.getRandomCell());
@@ -289,25 +337,31 @@ public class Controller {
 
     }
 
-    void pickup(int x, int y) throws CellDoesNotExistException{
+    void pickup(int x, int y) throws CellDoesNotExistException
+    {
         ArrayList<Item> items = map.getItems(x, y);
-        for (Item item : items) {
-            try{
+        for (Item item : items)
+        {
+            try
+            {
                 wareHouse.addItem(item);
                 map.destroyEntity(x, y, item);
-            }catch(NoWarehouseSpaceException ignored) {
+            } catch (NoWarehouseSpaceException ignored)
+            {
 
             }
         }
     }
 
-    void fillWell() throws NotEnoughMoneyException {
-        if(well.getWaterRemaining()==well.getMaxWater())return ;
+    void fillWell() throws NotEnoughMoneyException
+    {
+        if (well.getWaterRemaining() == well.getMaxWater()) return;
         subtractMoney(Constant.WELL_FILL_COST + well.getLevel() * Constant.WELL_FILL_COST_PER_LEVEL);
         well.fill();
     }
 
-    void cage(int x, int y) throws CellDoesNotExistException {
+    void cage(int x, int y) throws CellDoesNotExistException
+    {
         map.cage(x, y);
     }
 
@@ -323,26 +377,31 @@ public class Controller {
         truck.clear();
     }
 
-    void clearHelicopter() {
+    void clearHelicopter()
+    {
         helicopter.clear();
     }
 
-    void addItemToHelicopter(Item item) throws NoTransporterSpaceException {
+    void addItemToHelicopter(Item item) throws NoTransporterSpaceException
+    {
         helicopter.addItem(item);
     }
 
-    void addItemToTruck(Item item) throws NoTransporterSpaceException, NoSuchItemInWarehouseException {
-        if(!truck.canAddItem(item))
+    void addItemToTruck(Item item) throws NoTransporterSpaceException, NoSuchItemInWarehouseException
+    {
+        if (!truck.canAddItem(item))
             throw new NoTransporterSpaceException();
         wareHouse.eraseItem(item);
         truck.addItem(item);
     }
 
-    void startTruck() throws StartBusyTransporter, StartEmptyTransporter {
+    void startTruck() throws StartBusyTransporter, StartEmptyTransporter
+    {
         truck.startTransportation();
     }
 
-    void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter, StartEmptyTransporter {
+    void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter, StartEmptyTransporter
+    {
         subtractMoney(helicopter.getValue());
         helicopter.startTransportation();
     }
