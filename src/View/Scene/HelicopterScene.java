@@ -64,6 +64,7 @@ public class HelicopterScene {
         BlueButton backButton=new BlueButton("Back",40,90, 300,640);
         addNode(backButton.getNode());
         backButton.getNode().setOnMouseClicked(event -> {
+            InputReader.clearHelicopter();
             GameScene.getNextTurnTimer().start();
             InputReader.setScene(GameScene.getScene());
         });

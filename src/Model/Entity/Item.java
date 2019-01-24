@@ -48,16 +48,13 @@ public class Item extends Entity
         if(getImageView()==null){
             setImageView(new ImageView());
         }
-        getImageView().setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if(getCell()==null)return;
-                int x=getCell().getPositionX();
-                int y=getCell().getPositionY();
-                for(int i=Math.max(0,x-3);i<Math.max(x+3,100);i++){
-                    for(int j=Math.max(0,y-3);j<Math.max(y+3,100);j++){
-                        InputReader.pickup(i,j);
-                    }
+        getImageView().setOnMouseClicked(event -> {
+            if(getCell()==null)return;
+            int x=getCell().getPositionX();
+            int y=getCell().getPositionY();
+            for(int i=Math.max(0,x-3);i<Math.min(x+3,100);i++){
+                for(int j=Math.max(0,y-3);j<Math.min(y+3,100);j++){
+                    InputReader.pickup(i,j);
                 }
             }
         });

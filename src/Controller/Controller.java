@@ -312,7 +312,14 @@ public class Controller {
     }
 
     void clearTruck() {
-        //TODO bayad berizi chiz mizasho too anbar
+        ArrayList<Item> items=truck.getItems();
+        for(Item item:items){
+            try {
+                wareHouse.addItem(item);
+            } catch (NoWarehouseSpaceException e) {
+                e.printStackTrace();
+            }
+        }
         truck.clear();
     }
 
