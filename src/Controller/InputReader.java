@@ -29,7 +29,7 @@ public class InputReader extends Application
 
     public static void main(String[] args) throws StartBusyTransporter, IOException {
 
-        /*Thread thread=new Thread(new Runnable() {
+        Thread thread=new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -128,8 +128,8 @@ public class InputReader extends Application
         });
         thread.start();
 
-        launch(args);*/
-        YaGson yaGson=new YaGson();
+        launch(args);
+   /*     YaGson yaGson=new YaGson();
         HashMap<String,Integer> goalEntities=new HashMap<>();
         goalEntities.put("egg",5);
         Controller controller=new Controller(0,goalEntities,new ArrayList<>());
@@ -138,7 +138,9 @@ public class InputReader extends Application
         controller.addWorkshop(workShop);
         controller.setMoney(10000);
         currentController=controller;
-        save("level1");
+        save("level1");*/
+       // Controller controller=new Controller(0,new HashMap<>(),new ArrayList<>());
+      //  System.out.println(new YaGson().toJson(controller));
     }
 
     public static void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter, StartEmptyTransporter {
