@@ -11,8 +11,10 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.io.FileInputStream;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 
 public class Helicopter extends Transporter {
     ArrayList<Item> possibleItems = new ArrayList<>();
+
 
     public Helicopter(ArrayList<Item> possibleItems) {
         this.possibleItems = possibleItems;
@@ -69,6 +72,17 @@ public class Helicopter extends Transporter {
             GameScene.getNextTurnTimer().stop();
             InputReader.setScene(HelicopterScene.getScene());
         });
+
+        HelicopterScene.addNode(valueLabel);
+        valueLabel.relocate(158,540);
+
+        refreshView();
+    }
+
+    @Override
+    public void refreshView() {
+        super.refreshView();
+
     }
 
     @Override
