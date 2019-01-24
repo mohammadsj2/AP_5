@@ -247,7 +247,11 @@ public class Controller {
             throw new CantUpgradeException();
         }
         subtractMoney(upgradable.upgradeCost());
-        upgradable.upgrade();
+        try{
+            upgradable.upgrade();
+        }catch (CantUpgradeException e){
+            increaseMoney(upgradable.upgradeCost());
+        }
     }
 
     void addAnimal(String type) throws IOException, NotEnoughMoneyException {

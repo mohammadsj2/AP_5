@@ -10,12 +10,10 @@ import javafx.util.Duration;
 
 import java.io.FileNotFoundException;
 
-public interface Viewable
-{
+public interface Viewable {
     ImageView getImageView();
 
-    default public void initView() throws FileNotFoundException
-    {
+    default public void initView() throws FileNotFoundException {
         ImageView imageView = new ImageView();
         GameScene.addNode(getImageView());
     }
@@ -26,8 +24,7 @@ public interface Viewable
 
     void setAnimation(Animation animation);
 
-    default public void changeImageView(Image image, int count, int rows, int columns, double x, double y)
-    {
+    default public void changeImageView(Image image, int count, int rows, int columns, double x, double y) {
         ImageView imageView = getImageView();
         imageView.setImage(image);
         int imageWidth = (int) image.getWidth();
@@ -48,8 +45,7 @@ public interface Viewable
     }
 
 
-    default public void stopAnimation(int rows, int columns)
-    {
+    default public void stopAnimation(int rows, int columns) {
         getAnimation().stop();
         ImageView imageView = getImageView();
         Image image = imageView.getImage();
@@ -58,8 +54,7 @@ public interface Viewable
         imageView.setViewport(new Rectangle2D(0, 0, imageWidth / columns, imageHeight / rows));
     }
 
-    default public void startAnimation()
-    {
+    default public void startAnimation() {
         getAnimation().play();
     }
 }
