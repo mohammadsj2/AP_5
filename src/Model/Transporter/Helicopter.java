@@ -69,6 +69,7 @@ public class Helicopter extends Transporter {
         Image image = getImageByLevel();
         GameScene.setMiddlePosition(imageView, image.getWidth(), image.getHeight(), 620, 600);
         imageView.setOnMouseClicked(event -> {
+            if(InputReader.getCurrentController().isGameFinished())return;
             GameScene.getNextTurnTimer().stop();
             InputReader.setScene(HelicopterScene.getScene());
         });
