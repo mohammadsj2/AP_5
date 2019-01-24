@@ -23,10 +23,14 @@ public class Level {
         HashMap<String,Integer> earnedEntities=new HashMap<>();
         for(Item item:InputReader.getCurrentController().getWareHouse().getItems())
         {
+            if(!earnedEntities.containsKey(item.getName()))
+                earnedEntities.put(item.getName(),1);
             earnedEntities.put(item.getName(),earnedEntities.get(item.getName())+1);
         }
         for(Entity entity:InputReader.getCurrentController().getMap().getEntities())
         {
+            if(!earnedEntities.containsKey(entity.getName()))
+                earnedEntities.put(entity.getName(),1);
             earnedEntities.put(entity.getName(),earnedEntities.get(entity.getName())+1);
         }
         for(String name:goalEntities.keySet())
