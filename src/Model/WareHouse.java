@@ -50,7 +50,7 @@ public class WareHouse implements Upgradable,Viewable{
 
     public void initView(){
         imageView=new ImageView();
-        progressBar=new ProgressBar(330,480);
+        progressBar=new ProgressBar(330,470);
         progressBar.getNode().setScaleY(1.5);
 
         GameScene.addNode(progressBar.getNode());
