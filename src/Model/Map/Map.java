@@ -146,13 +146,22 @@ public class Map {
     }
     public void destroyEntity(Cell cell, Entity entity){
         cell.destroyEntity(entity);
+        entity.getImageView().setVisible(false);
         GameScene.deleteNode(entity.getImageView());
+        entity.getImageView().setVisible(true);
     }
     public void addEntity(Cell cell, Entity entity){
         GameScene.setImageViewPositionOnMap(entity.getImageView(),cell.getPositionX(),cell.getPositionY());
         GameScene.addNode(entity.getImageView());
         cell.addEntity(entity);
     }
+    public void destroyWalkAnimal(Cell cell, Animal animal){
+        cell.destroyEntity(animal);
+    }
+    public void addWalkAnimal(Cell cell, Animal animal){
+        cell.addEntity(animal);
+    }
+
 
 
     private void wildsToItems(ArrayList<Wild> wilds) {

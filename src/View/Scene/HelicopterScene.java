@@ -3,11 +3,10 @@ package View.Scene;
 import Constant.Constant;
 import Controller.InputReader;
 import Model.Entity.Item;
-import View.Button;
+import View.Button.BlueButton;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -36,7 +35,7 @@ public class HelicopterScene {
     }
 
     private static void initClearButton() {
-        Button clearButton=new Button("Clear",40,90, 580,640);
+        BlueButton clearButton=new BlueButton("Clear",40,90, 580,640);
         addNode(clearButton.getNode());
         clearButton.getNode().setOnMouseClicked(event -> {
             InputReader.clearHelicopter();
@@ -44,11 +43,13 @@ public class HelicopterScene {
     }
 
     private static void initGoButton() {
-        Button goButton=new Button("Go",40,90, 440,640);
+        BlueButton goButton=new BlueButton("Go",40,90, 440,640);
         addNode(goButton.getNode());
         goButton.getNode().setOnMouseClicked(event -> {
             try {
                 InputReader.startHelicopter();
+                GameScene.getNextTurnTimer().start();
+                InputReader.setScene(GameScene.getScene());
             } catch (StartBusyTransporter startBusyTransporter) {
                 System.out.println(Constant.START_BUSY_TRANSPORTER_MESSAGE);
             } catch (StartEmptyTransporter startEmptyTransporter) {
@@ -60,9 +61,10 @@ public class HelicopterScene {
     }
 
     private static void initBackButton() {
-        Button backButton=new Button("Back",40,90, 300,640);
+        BlueButton backButton=new BlueButton("Back",40,90, 300,640);
         addNode(backButton.getNode());
         backButton.getNode().setOnMouseClicked(event -> {
+            InputReader.clearHelicopter();
             GameScene.getNextTurnTimer().start();
             InputReader.setScene(GameScene.getScene());
         });
@@ -77,7 +79,7 @@ public class HelicopterScene {
             addNode(imageView);
             imageView.setX(getItemPositionInWarehouseX());
             imageView.setY(getItemPositionInWarehouseY(i));
-            Button addToHelicopterButton = new Button("To Helicopter", 35, 120,
+            BlueButton addToHelicopterButton = new BlueButton("To Helicopter", 35, 120,
                     getItemPositionInWarehouseX() + 190, getItemPositionInWarehouseY(i) + 5);
             addNode(addToHelicopterButton.getNode());
             addToHelicopterButton.getNode().setOnMouseClicked(event -> {

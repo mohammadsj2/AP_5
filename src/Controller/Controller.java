@@ -247,7 +247,11 @@ public class Controller {
             throw new CantUpgradeException();
         }
         subtractMoney(upgradable.upgradeCost());
-        upgradable.upgrade();
+        try{
+            upgradable.upgrade();
+        }catch (CantUpgradeException e){
+            increaseMoney(upgradable.upgradeCost());
+        }
     }
 
     void addAnimal(String type) throws IOException, NotEnoughMoneyException {
@@ -308,7 +312,14 @@ public class Controller {
     }
 
     void clearTruck() {
-        //TODO bayad berizi chiz mizasho too anbar
+        ArrayList<Item> items=truck.getItems();
+        for(Item item:items){
+            try {
+                wareHouse.addItem(item);
+            } catch (NoWarehouseSpaceException e) {
+                e.printStackTrace();
+            }
+        }
         truck.clear();
     }
 

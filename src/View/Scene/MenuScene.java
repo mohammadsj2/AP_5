@@ -2,7 +2,7 @@ package View.Scene;
 
 import Constant.Constant;
 import Controller.InputReader;
-import View.Button;
+import View.Button.BlueButton;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -36,17 +36,21 @@ public class MenuScene
     private static void initStartButtons()
     {
         int height=70,width=180;
-        Button newGameButton=new Button("New Game",height,width
+        BlueButton playButton=new BlueButton("Play",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,100);
-        newGameButton.getNode().setOnMouseClicked(event ->
+        playButton.getNode().setOnMouseClicked(event ->
         {
+            levelSelectScene.init();
+            InputReader.setScene(levelSelectScene.getScene());
+            /*
             InputReader.loadLevel(1);
             InputReader.runByLevelNumber(1);
             GameScene.init();
-            InputReader.setScene(GameScene.getScene());
+            InputReader.setScene(GameScene.getScene());*/
         });
-        addNode(newGameButton.getNode());
-        Button loadButton=new Button("Load Game",height,width
+        addNode(playButton.getNode());
+        /*
+        BlueButton loadButton=new BlueButton("Load Game",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200);
         loadButton.getNode().setOnMouseClicked(event ->
         {
@@ -61,9 +65,9 @@ public class MenuScene
                 System.out.println(Constant.NO_SAVE_MESSAGE);
             }
         });
-        addNode(loadButton.getNode());
-        Button exitButton=new Button("Exit",height,width
-                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,300);
+        addNode(loadButton.getNode());*/
+        BlueButton exitButton=new BlueButton("Exit",height,width
+                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200);
         exitButton.getNode().setOnMouseClicked(event ->
         {
             InputReader.primaryStage.close();
@@ -75,7 +79,7 @@ public class MenuScene
     private static void initInGameButtons()
     {
         int height=70,width=180;
-        Button resumeButton=new Button("Resume",height,width
+        BlueButton resumeButton=new BlueButton("Resume",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,100);
         resumeButton.getNode().setOnMouseClicked(event ->
         {
@@ -83,14 +87,15 @@ public class MenuScene
             InputReader.setScene(GameScene.getScene());
         });
         addNode(resumeButton.getNode());
-        Button saveButton=new Button("Save Game",height,width
+        BlueButton saveButton=new BlueButton("Save Game",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200);
         saveButton.getNode().setOnMouseClicked(event ->
         {
             InputReader.save("save");
         });
         addNode(saveButton.getNode());
-        Button loadButton=new Button("Load Game",height,width
+        /*
+        BlueButton loadButton=new BlueButton("Load Game",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,300);
         loadButton.getNode().setOnMouseClicked(event ->
         {
@@ -104,9 +109,9 @@ public class MenuScene
             GameScene.init();
             InputReader.setScene(GameScene.getScene());
         });
-        addNode(loadButton.getNode());
-        Button backToMenuButton=new Button("Back to Menu",height,width
-                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,400);
+        addNode(loadButton.getNode());*/
+        BlueButton backToMenuButton=new BlueButton("Back to Menu",height,width
+                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,300);
         backToMenuButton.getNode().setOnMouseClicked(event ->
         {
             MenuScene.init(false);

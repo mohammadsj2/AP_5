@@ -18,8 +18,7 @@ public class Lion extends Wild{
 
     public Lion(Cell cell) {
         super(cell);
-        ImageView imageView=getImageView();
-        Image image= null;
+        Image image;
         try {
             image = new Image(new FileInputStream("./Textures/Animals/Lion/left.png"));
             changeImageView(image,24,8,3,cell.getPositionX(),cell.getPositionY());

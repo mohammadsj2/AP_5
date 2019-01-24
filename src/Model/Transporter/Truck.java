@@ -15,18 +15,32 @@ import javafx.scene.input.MouseEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class Truck extends Transporter{
+public class Truck extends Transporter {
 
-    public Truck()
-    {
-        speed=Constant.TRUCK_SPEED;
-        capacity=Constant.TRUCK_CAPACITY;
+    public Truck() {
+        speed = Constant.TRUCK_SPEED;
+        capacity = Constant.TRUCK_CAPACITY;
+    }
+
+
+    public void refreshLittleImageView() {
+        if (!busy) {
+            littleImageView.setImage(null);
+            return;
+        }
+        try {
+            changeLittleImageView(new Image(new FileInputStream("Textures/UI/Truck/0" + (level + 1) + "_mini.png")),
+                    2, 1, 2, 710, 45);
+            goAndBackLittleImageAnimation();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    Image getImageByLevel(){
+    Image getImageByLevel() {
         try {
-            return new Image(new FileInputStream("./Textures/Service/Truck/0"+(level+1)+".png"));
+            return new Image(new FileInputStream("./Textures/Service/Truck/0" + (level + 1) + ".png"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -36,36 +50,41 @@ public class Truck extends Transporter{
     @Override
     public void initView() {
         super.initView();
-        ImageView imageView=getImageView();
-        Image image=getImageByLevel();
-        GameScene.setMiddlePosition(imageView,image.getWidth(),image.getHeight(),240,620);
-        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                GameScene.getNextTurnTimer().stop();
-                InputReader.setScene(TruckScene.refreshAndGetScene());
-            }
+        ImageView imageView = getImageView();
+        Image image = getImageByLevel();
+        GameScene.setMiddlePosition(imageView, image.getWidth(), image.getHeight(), 240, 620);
+        imageView.setOnMouseClicked(event -> {
+            GameScene.getNextTurnTimer().stop();
+            InputReader.setScene(TruckScene.refreshAndGetScene());
         });
     }
 
     @Override
+    public void refreshView() {
+        super.refreshView();
+        if (busy) {
+
+        }
+    }
+
+    @Override
     public void upgrade() throws CantUpgradeException {
-        if(level>= Constant.TRUCK_MAX_LEVEL){
+        if (busy || level >= Constant.TRUCK_MAX_LEVEL) {
             throw new CantUpgradeException();
         }
         level++;
         refreshView();
-        capacity+=Constant.TRUCK_CAPACITY_PER_LEVEL;
-        speed+=Constant.TRUCK_SPEED_PER_LEVEL;
+        capacity += Constant.TRUCK_CAPACITY_PER_LEVEL;
+        speed += Constant.TRUCK_SPEED_PER_LEVEL;
     }
 
     @Override
-    public int upgradeCost(){
-        return (level+1)*Constant.TRUCK_UPGRADE_COST_PER_LEVEL;
+    public int upgradeCost() {
+        return (level + 1) * Constant.TRUCK_UPGRADE_COST_PER_LEVEL;
     }
 
     @Override
     public boolean canUpgrade() {
-        return level<Constant.TRUCK_MAX_LEVEL;
+        return level < Constant.TRUCK_MAX_LEVEL;
     }
 }

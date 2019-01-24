@@ -125,6 +125,12 @@ public class Cell implements Viewable {
         return animals;
     }
 
-
-
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Cell)){
+            return false;
+        }
+        Cell cell=(Cell)obj;
+        return (cell.getPositionX()==getPositionX() && cell.getPositionY()==getPositionY());
+    }
 }

@@ -54,15 +54,11 @@ public abstract class Wild extends Animal {
     @Override
     public void initView() {
         super.initView();
-        getImageView().setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                try {
-                    System.out.println("CLICKED ALJDKASHLKFHASLFHKAS");
-                    getMap().cage(getCell().getPositionX(), getCell().getPositionY());
-                } catch (CellDoesNotExistException e) {
-                    e.printStackTrace();
-                }
+        getImageView().setOnMouseClicked(event -> {
+            try {
+                getMap().cage(getCell().getPositionX(), getCell().getPositionY());
+            } catch (CellDoesNotExistException e) {
+                e.printStackTrace();
             }
         });
     }
