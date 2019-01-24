@@ -14,6 +14,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
+import java.util.Objects;
+
 public abstract class Entity implements Viewable {
     private Map map;
     private Cell cell;
@@ -87,6 +89,8 @@ public abstract class Entity implements Viewable {
         return animation;
     }
 
+    public abstract String getName();
+
     public Map getMap() {
         return map;
     }
@@ -121,5 +125,6 @@ public abstract class Entity implements Viewable {
         this.destroyFromMap();
         setAlive(false);
     }
+
 
 }

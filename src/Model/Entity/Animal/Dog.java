@@ -56,4 +56,10 @@ public class Dog extends Animal {
     public int upgradeCost() {
         return 0;
     }
+
+
+    public String getName()
+    {
+        return "Dog";
+    }
 }

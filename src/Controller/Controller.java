@@ -181,12 +181,14 @@ public class Controller {
                 }
             }
         }
-        ArrayList <Entity> everyThing=new ArrayList<>();
-        everyThing.addAll(wareHouse.getItems());
-        everyThing.addAll(map.getEntities());
+        ArrayList <String> everyThing=new ArrayList<>();
+        for(Item item:wareHouse.getItems())
+            everyThing.add(item.getName());
+        for(Entity entity:map.getEntities())
+            everyThing.add(entity.getName());
         for(Entity entity:level.getGoalEntities())
             if(everyThing.contains(entity))
-                level.entityEarned(entity);
+        level.entityEarned(entity);
         if(level.checkLevel())
         {
             throw new WinningMessage();
