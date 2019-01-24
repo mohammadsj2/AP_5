@@ -146,7 +146,9 @@ public class Map {
     }
     public void destroyEntity(Cell cell, Entity entity){
         cell.destroyEntity(entity);
+        entity.getImageView().setVisible(false);
         GameScene.deleteNode(entity.getImageView());
+        entity.getImageView().setVisible(true);
     }
     public void addEntity(Cell cell, Entity entity){
         GameScene.setImageViewPositionOnMap(entity.getImageView(),cell.getPositionX(),cell.getPositionY());

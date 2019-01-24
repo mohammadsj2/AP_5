@@ -5,7 +5,7 @@ import Controller.InputReader;
 import Model.Entity.Item;
 import Exception.*;
 import Model.WareHouse;
-import View.Button;
+import View.Button.BlueButton;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -37,7 +37,7 @@ public class TruckScene {
     }
 
     private static void initClearButton() {
-        Button clearButton=new Button("Clear",40,90, 580,640);
+        BlueButton clearButton=new BlueButton("Clear",40,90, 580,640);
         addNode(clearButton.getNode());
         clearButton.getNode().setOnMouseClicked(event -> {
             InputReader.clearTruck();
@@ -45,7 +45,7 @@ public class TruckScene {
     }
 
     private static void initGoButton() {
-        Button goButton=new Button("Go",40,90, 440,640);
+        BlueButton goButton=new BlueButton("Go",40,90, 440,640);
         addNode(goButton.getNode());
         goButton.getNode().setOnMouseClicked(event -> {
             try {
@@ -61,7 +61,7 @@ public class TruckScene {
     }
 
     private static void initBackButton() {
-        Button backButton=new Button("Back",40,90, 300,640);
+        BlueButton backButton=new BlueButton("Back",40,90, 300,640);
         addNode(backButton.getNode());
         backButton.getNode().setOnMouseClicked(event -> {
 
@@ -85,7 +85,7 @@ public class TruckScene {
             addNode(imageView);
             imageView.setX(getItemPositionInWarehouseX(j));
             imageView.setY(getItemPositionInWarehouseY(j));
-            Button addToTruckButton = new Button("To truck", 35, 80,
+            BlueButton addToTruckButton = new BlueButton("To truck", 35, 80,
                     getItemPositionInWarehouseX(j) + 160, getItemPositionInWarehouseY(j) + 5);
             Label label=new Label();
             label.relocate(getItemPositionInWarehouseX(j) + 80, getItemPositionInWarehouseY(j)+14);

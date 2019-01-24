@@ -23,6 +23,21 @@ public class Truck extends Transporter{
         capacity=Constant.TRUCK_CAPACITY;
     }
 
+
+    public void refreshLittleImageView() {
+        if(!busy){
+            littleImageView.setImage(null);
+            return;
+        }
+        try {
+            changeLittleImageView(new Image(new FileInputStream("Textures/UI/Truck/0"+(level+1)+"_mini.png")),
+                    2,1,2,710,45);
+            goAndBackLittleImageAnimation();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     Image getImageByLevel(){
         try {
@@ -39,13 +54,18 @@ public class Truck extends Transporter{
         ImageView imageView=getImageView();
         Image image=getImageByLevel();
         GameScene.setMiddlePosition(imageView,image.getWidth(),image.getHeight(),240,620);
-        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                GameScene.getNextTurnTimer().stop();
-                InputReader.setScene(TruckScene.refreshAndGetScene());
-            }
+        imageView.setOnMouseClicked(event -> {
+            GameScene.getNextTurnTimer().stop();
+            InputReader.setScene(TruckScene.refreshAndGetScene());
         });
+    }
+
+    @Override
+    public void refreshView() {
+        super.refreshView();
+        if(busy){
+
+        }
     }
 
     @Override

@@ -88,7 +88,7 @@ public class Constant {
     public static final String NOT_ENOUGH_ITEM_MESSAGE = "**** Error: Not enough item! ****";
     public static final String NO_SAVE_MESSAGE = "**** Error: There is no save! ****";
 
-    public static final long NEXT_TURN_DURATION = 200000000L;
+    public static final long NEXT_TURN_DURATION = 400000000L;
 
     public static Item getItemByType(String type){
         type=type.toLowerCase();

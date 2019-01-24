@@ -5,7 +5,7 @@ import Controller.InputReader;
 import Model.*;
 import Model.Transporter.Helicopter;
 import Model.Transporter.Truck;
-import View.Button;
+import View.Button.BlueButton;
 import View.NextTurnTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -20,6 +20,8 @@ import javafx.scene.text.Text;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Random;
 
 
 public class GameScene {
@@ -32,6 +34,7 @@ public class GameScene {
         try {
             TruckScene.init();
             HelicopterScene.init();
+
             initBackground();
             initWorkShops();
             initWell();
@@ -39,9 +42,9 @@ public class GameScene {
             initMap();
             initAddAnimalButtons();
             nextTurnButtonForDebug();
+            initTransporters();
             initMoney();
             initButtons();
-            initTransporters();
             nextTurnTimer=new NextTurnTimer();
             nextTurnTimer.start();
 
@@ -52,6 +55,14 @@ public class GameScene {
 
 
     private static void initTransporters() throws FileNotFoundException {
+        Date date=new Date();
+        Random random=new Random(date.toString().hashCode());
+        Image image=new Image(new FileInputStream("Textures/UI/Panels/road_"+(random.nextInt(100)%4+1)+".png"));
+        ImageView imageView=new ImageView(image);
+        addNode(imageView);
+        imageView.setY(3);
+        imageView.setX(600);
+
         initUpgradableAndViewable(InputReader.getCurrentController().getTruck());
         initUpgradableAndViewable(InputReader.getCurrentController().getHelicopter());
     }
@@ -64,7 +75,7 @@ public class GameScene {
 
     private static void initButtons()
     {
-        Button menuButton=new Button("Menu",40,90,780,80);
+        BlueButton menuButton=new BlueButton("Menu",40,90,20,630);
         menuButton.getNode().setOnMouseClicked(event ->
         {
             nextTurnTimer.stop();
@@ -74,11 +85,11 @@ public class GameScene {
         addNode(menuButton.getNode());
 
     }
-
     private static void initMoney()
     {
-        Button moneyLabel=new Button(String.valueOf(InputReader.getCurrentController().getMoney())
-                ,40,90,780,20);
+        BlueButton moneyLabel=new BlueButton(String.valueOf(InputReader.getCurrentController().getMoney())
+                ,40,90,615,20);
+        moneyLabel.onlyShowTextOfButton();
         moneyText=moneyLabel.getTextLabel();
         moneyText.setFill(Color.YELLOW);
         addNode(moneyLabel.getNode());
@@ -162,7 +173,7 @@ public class GameScene {
     private static void setUpgradeButton(Upgradable upgradable,double x,double y)
     {
         ImageView imageView=((Viewable)upgradable).getImageView();
-        Button upgradeButton=new Button(String.valueOf(upgradable.upgradeCost())+"\uD83D\uDCB0",20,50
+        BlueButton upgradeButton=new BlueButton(String.valueOf(upgradable.upgradeCost())+"\uD83D\uDCB0",20,50
                 ,x,y);
         upgradeButton.getNode().setOnMouseClicked(event ->
         {
