@@ -41,6 +41,6 @@ public class Cow extends Pet{
 
     public String getName()
     {
-        return "Cow";
+        return "cow";
     }
 }

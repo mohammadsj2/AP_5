@@ -87,6 +87,6 @@ public class Cat extends Animal {
 
     public String getName()
     {
-        return "Cat";
+        return "cat";
     }
 }

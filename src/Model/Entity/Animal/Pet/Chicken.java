@@ -43,6 +43,6 @@ public class Chicken extends Pet {
 
     public String getName()
     {
-        return "Chicken";
+        return "chicken";
     }
 }
