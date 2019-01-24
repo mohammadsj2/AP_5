@@ -153,6 +153,7 @@ public class InputReader extends Application
 
   //      Cell x=new Cell(1,2);
 //        System.out.println(yaGson.toJson(x));
+
     }
 
     public static void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter, StartEmptyTransporter {

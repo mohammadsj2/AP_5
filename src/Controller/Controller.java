@@ -45,7 +45,7 @@ public class Controller
     private int catLevel = 1;
 
 
-    Controller(int goalMoney, HashMap<String, Integer> goalEntities, ArrayList<Item> helicopterItems)
+    Controller(int goalMoney, ArrayList<String> goalEntities, ArrayList<Item> helicopterItems)
     {
         money = turn = 0;
         map = new Map();
