@@ -40,4 +40,8 @@ public abstract class Button {
     {
         insideText.setText(text);
     }
+
+    public void onlyShowTextOfButton(){
+        imageView.setVisible(false);
+    }
 }

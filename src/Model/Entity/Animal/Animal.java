@@ -89,7 +89,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
     }
 
     protected void setWalkAnimation(Cell startCell, Cell targetCell) {
-        int stableDistance = 1;
+        int stableDistance = Constant.ANIMAL_SPEED/5+1;
         String directionName, animalName;
         int count = 23, rows = 0, columns = 0;
         boolean flipImage = false;

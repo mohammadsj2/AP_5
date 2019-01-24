@@ -20,6 +20,8 @@ import javafx.scene.text.Text;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Random;
 
 
 public class GameScene {
@@ -40,9 +42,9 @@ public class GameScene {
             initMap();
             initAddAnimalButtons();
             nextTurnButtonForDebug();
+            initTransporters();
             initMoney();
             initButtons();
-            initTransporters();
             nextTurnTimer=new NextTurnTimer();
             nextTurnTimer.start();
 
@@ -53,6 +55,14 @@ public class GameScene {
 
 
     private static void initTransporters() throws FileNotFoundException {
+        Date date=new Date();
+        Random random=new Random(date.toString().hashCode());
+        Image image=new Image(new FileInputStream("Textures/UI/Panels/road_"+(random.nextInt(100)%4+1)+".png"));
+        ImageView imageView=new ImageView(image);
+        addNode(imageView);
+        imageView.setY(3);
+        imageView.setX(600);
+
         initUpgradableAndViewable(InputReader.getCurrentController().getTruck());
         initUpgradableAndViewable(InputReader.getCurrentController().getHelicopter());
     }
@@ -65,7 +75,7 @@ public class GameScene {
 
     private static void initButtons()
     {
-        BlueButton menuButton=new BlueButton("Menu",40,90,780,80);
+        BlueButton menuButton=new BlueButton("Menu",40,90,20,630);
         menuButton.getNode().setOnMouseClicked(event ->
         {
             nextTurnTimer.stop();
@@ -75,11 +85,11 @@ public class GameScene {
         addNode(menuButton.getNode());
 
     }
-
     private static void initMoney()
     {
         BlueButton moneyLabel=new BlueButton(String.valueOf(InputReader.getCurrentController().getMoney())
-                ,40,90,780,20);
+                ,40,90,615,20);
+        moneyLabel.onlyShowTextOfButton();
         moneyText=moneyLabel.getTextLabel();
         moneyText.setFill(Color.YELLOW);
         addNode(moneyLabel.getNode());

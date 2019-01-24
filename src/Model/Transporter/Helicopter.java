@@ -6,8 +6,14 @@ import Exception.CantUpgradeException;
 import Model.Entity.Item;
 import View.Scene.GameScene;
 import View.Scene.HelicopterScene;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,6 +37,24 @@ public class Helicopter extends Transporter {
         }
         return null;
     }
+
+    @Override
+    void refreshLittleImageView() {
+        if(!busy){
+            littleImageView.setImage(null);
+            return;
+        }
+        try {
+            changeLittleImageView(new Image(new FileInputStream("Textures/UI/Helicopter/0"+(level+1)+"_mini.png")),
+                    6,2,3,710,10);
+            goAndBackLittleImageAnimation();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public ArrayList<Item> getPossibleItems() {
         return possibleItems;
