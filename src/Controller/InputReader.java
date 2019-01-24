@@ -2,6 +2,9 @@ package Controller;
 
 import Exception.*;
 import Model.Entity.Item;
+import Model.Map.Cell;
+import Model.Map.Map;
+import Model.Well;
 import Model.WorkShop;
 import View.Scene.HelicopterScene;
 import View.Scene.MenuScene;
@@ -9,6 +12,7 @@ import View.Scene.TruckScene;
 import com.gilecode.yagson.YaGson;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -128,9 +132,9 @@ public class InputReader extends Application
         });
         thread.start();
 
-    //    launch(args);
-   /*     YaGson yaGson=new YaGson();
-        HashMap<String,Integer> goalEntities=new HashMap<>();
+        launch(args);
+        //YaGson yaGson=new YaGson();
+        /*HashMap<String,Integer> goalEntities=new HashMap<>();
         goalEntities.put("egg",5);
         Controller controller=new Controller(0,goalEntities,new ArrayList<>());
         WorkShop workShop=yaGson.fromJson(new FileReader("./ResourcesRoot/WorkShops/EggPowderPlant.json"),WorkShop.class);
@@ -139,8 +143,17 @@ public class InputReader extends Application
         controller.setMoney(10000);
         currentController=controller;
         save("level1");*/
-        Controller controller=new Controller(0,new ArrayList<>(),new ArrayList<>());
-        System.out.println(new YaGson().toJson(controller));
+        //Controller controller=new Controller(0,new HashMap<>(),new ArrayList<>());
+        //System.out.println(new YaGson().toJson(controller));
+
+        /*HashMap<String,Integer> map=new HashMap<>();
+        map.put("Salam",132);
+        System.out.println(yaGson.toJson(map));
+        Double a=234.234234;*/
+
+  //      Cell x=new Cell(1,2);
+//        System.out.println(yaGson.toJson(x));
+
     }
 
     public static void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter, StartEmptyTransporter {
