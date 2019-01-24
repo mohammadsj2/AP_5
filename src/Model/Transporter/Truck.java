@@ -8,6 +8,7 @@ import View.NextTurnTimer;
 import View.Scene.GameScene;
 import View.Scene.TruckScene;
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -16,7 +17,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class Truck extends Transporter {
-
     public Truck() {
         speed = Constant.TRUCK_SPEED;
         capacity = Constant.TRUCK_CAPACITY;
@@ -57,14 +57,9 @@ public class Truck extends Transporter {
             GameScene.getNextTurnTimer().stop();
             InputReader.setScene(TruckScene.refreshAndGetScene());
         });
-    }
-
-    @Override
-    public void refreshView() {
-        super.refreshView();
-        if (busy) {
-
-        }
+        TruckScene.addNode(valueLabel);
+        valueLabel.relocate(690,573);
+        refreshView();
     }
 
     @Override

@@ -6,6 +6,7 @@ import Model.*;
 import Model.Transporter.Helicopter;
 import Model.Transporter.Truck;
 import View.Button.BlueButton;
+import View.CoinView;
 import View.NextTurnTimer;
 import View.SpriteAnimation;
 import javafx.animation.Animation;
@@ -40,12 +41,13 @@ public class GameScene {
             HelicopterScene.init();
 
             initBackground();
-            initWorkShops();
             initWell();
             initWareHouse();
+            initWorkShops();
+
             initMap();
             initAddAnimalButtons();
-            nextTurnButtonForDebug();
+            //nextTurnButtonForDebug();
             initTransporters();
             initMoney();
             initButtons();
@@ -99,29 +101,8 @@ public class GameScene {
         moneyText.setFill(Color.YELLOW);
         addNode(moneyLabel.getNode());
 
-        ImageView coinView;
-        try {
-            Image image=new Image(new FileInputStream("Textures/UI/Icons/Money/coin_32_anim.png"));
-            coinView = new ImageView(image);
-            int imageWidth = (int) image.getWidth();
-            int imageHeight = (int) image.getHeight();
-            int columns=4,rows=4,x=660,y=28,count=16;
-            GameScene.setMiddlePosition(coinView, imageWidth / columns, imageHeight / rows, x, y);
-            coinView.setViewport(new Rectangle2D(0, 0, imageWidth / columns, imageHeight / rows));
-            Animation animation = new SpriteAnimation(
-                    coinView,
-                    Duration.millis(1200),
-                    count, columns,
-                    0, 0,
-                    imageWidth / columns, imageHeight / rows
-            );
-            animation.setCycleCount(Animation.INDEFINITE);
-            animation.play();
-            addNode(coinView);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
+        CoinView coinView=new CoinView(660,28);
+        addNode(coinView.getNode());
     }
 
     private static void initWareHouse() throws FileNotFoundException {

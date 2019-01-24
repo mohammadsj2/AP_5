@@ -92,6 +92,12 @@ public class Constant {
 
     public static final long NEXT_TURN_DURATION = 400000000L;
 
+    public static final int CHANGE_PET_HEALTH_PER_TURN = -3;
+    public static final int INCREASE_PET_HEALTH_AFTER_EAT_GRASS = 70;
+    public static final int PET_HUNGRY_HEALTH = 30;
+    public static final int ANIMAL_PRODUCT_TURN = 50;
+    public static final int PET_MAX_HEALTH = 100;
+
 
     public static Item getItemByType(String type){
         type=type.toLowerCase();

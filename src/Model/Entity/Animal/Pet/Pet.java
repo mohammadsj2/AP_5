@@ -13,17 +13,12 @@ import Model.Producer;
 import java.util.ArrayList;
 
 public abstract class Pet extends Animal implements Producer {
-    public static final int CHANGE_PET_HEALTH_PER_TURN = -1;
-    public static final int INCREASE_PET_HEALTH_AFTER_EAT_GRASS = 70;
-    public static final int PET_HUNGRY_HEALTH = 30;
-    public static final int ANIMAL_PRODUCT_TURN = 70;
     private int health;
-    private static final int PET_MAX_HEALTH = 100;
     private int lastProductTurn=0;
 
     @Override
     public boolean haveProduct() {
-        return InputReader.getCurrentController().getTurn()>=lastProductTurn+ ANIMAL_PRODUCT_TURN;
+        return InputReader.getCurrentController().getTurn()>=lastProductTurn+ Constant.ANIMAL_PRODUCT_TURN;
     }
 
     @Override
@@ -65,12 +60,12 @@ public abstract class Pet extends Animal implements Producer {
     }
 
     public boolean isHungry() {
-        return this.getHealth() <= PET_HUNGRY_HEALTH;
+        return this.getHealth() <= Constant.PET_HUNGRY_HEALTH;
     }
     @Override
     public void nextTurn() throws CellDoesNotExistException {
         super.nextTurn();
-        this.updateHealth(CHANGE_PET_HEALTH_PER_TURN);
+        this.updateHealth(Constant.CHANGE_PET_HEALTH_PER_TURN);
         if(haveProduct()){
             if(getOutputItems()!=null) {
                 for (Item item : getOutputItems()) {
@@ -89,7 +84,7 @@ public abstract class Pet extends Animal implements Producer {
                 changeCell(map.getBestCellBySpeed(getCell(),cur,Constant.ANIMAL_SPEED));
             } else {
                 eatGrass();
-                updateHealth(INCREASE_PET_HEALTH_AFTER_EAT_GRASS);
+                updateHealth(Constant.INCREASE_PET_HEALTH_AFTER_EAT_GRASS);
             }
         } else {
             super.walk();
@@ -104,8 +99,8 @@ public abstract class Pet extends Animal implements Producer {
         if (getHealth() <= 0) {
             destroy();
         }
-        if (getHealth() > PET_MAX_HEALTH) {
-            setHealth(PET_MAX_HEALTH);
+        if (getHealth() > Constant.PET_MAX_HEALTH) {
+            setHealth(Constant.PET_MAX_HEALTH);
         }
     }
 

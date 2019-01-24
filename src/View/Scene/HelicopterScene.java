@@ -4,9 +4,11 @@ import Constant.Constant;
 import Controller.InputReader;
 import Model.Entity.Item;
 import View.Button.BlueButton;
+import View.CoinView;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -15,12 +17,15 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import Exception.*;
 
+import javax.swing.text.LabelView;
+
 public class HelicopterScene {
     public static final int ITEM_POSITION_INHELICOPTER_Y = 128;
     public static final int ITEM_POSITION_INHELICOPTER_X = 55;
     private static Group root = new Group();
     private static Scene scene = new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
     private static ArrayList<Item> items=InputReader.getCurrentController().getHelicopter().getPossibleItems();
+    private static ArrayList<Label> inHelicopterCounterLabel=new ArrayList<>();
 
     public static void init(){
         try {
@@ -29,9 +34,15 @@ public class HelicopterScene {
             initBackButton();
             initGoButton();
             initClearButton();
+            initCoinView();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void initCoinView() {
+        CoinView coinView=new CoinView(120,556,1);
+        addNode(coinView.getNode());
     }
 
     private static void initClearButton() {
@@ -39,6 +50,7 @@ public class HelicopterScene {
         addNode(clearButton.getNode());
         clearButton.getNode().setOnMouseClicked(event -> {
             InputReader.clearHelicopter();
+            refresh();
         });
     }
 
@@ -66,6 +78,7 @@ public class HelicopterScene {
         backButton.getNode().setOnMouseClicked(event -> {
             InputReader.clearHelicopter();
             GameScene.getNextTurnTimer().start();
+            refresh();
             InputReader.setScene(GameScene.getScene());
         });
     }
@@ -76,6 +89,12 @@ public class HelicopterScene {
 
             item.initView();
             ImageView imageView = item.getImageView();
+            Label label=new Label("x0");
+            label.setStyle("-fx-font-size: 20;");
+            label.relocate(getItemPositionInWarehouseX()+90,getItemPositionInWarehouseY(i)+10);
+            inHelicopterCounterLabel.add(label);
+            addNode(label);
+
             addNode(imageView);
             imageView.setX(getItemPositionInWarehouseX());
             imageView.setY(getItemPositionInWarehouseY(i));
@@ -85,12 +104,14 @@ public class HelicopterScene {
             addToHelicopterButton.getNode().setOnMouseClicked(event -> {
                 try {
                     InputReader.addItemToHelicopter(Constant.getItemByType(item.getName()));
+                    refresh();
                 } catch (NoTransporterSpaceException e) {
                     System.out.println(Constant.NOT_ENOUGH_SPACE_MESSAGE);
                 }
             });
         }
     }
+
 
     private static int getItemPositionInWarehouseX() {
         return ITEM_POSITION_INHELICOPTER_X;
@@ -125,6 +146,14 @@ public class HelicopterScene {
     }
 
     public static void refresh(){
+        refreshLabels();
+    }
 
+    private static void refreshLabels() {
+        for(int i=0;i<inHelicopterCounterLabel.size();i++){
+            Label label=inHelicopterCounterLabel.get(i);
+            Item item=items.get(i);
+            label.setText("x"+InputReader.getCurrentController().getHelicopter().getNumberOfThisItem(item));
+        }
     }
 }
