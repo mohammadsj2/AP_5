@@ -35,7 +35,7 @@ public class HelicopterScene {
     }
 
     private static void initClearButton() {
-        BlueButton clearButton=new BlueButton("Clear",40,90, 580,640);
+        BlueButton clearButton=new BlueButton("Clear",40,90, 279,610);
         addNode(clearButton.getNode());
         clearButton.getNode().setOnMouseClicked(event -> {
             InputReader.clearHelicopter();
@@ -43,7 +43,7 @@ public class HelicopterScene {
     }
 
     private static void initGoButton() {
-        BlueButton goButton=new BlueButton("Go",40,90, 440,640);
+        BlueButton goButton=new BlueButton("Go",40,90, 158,610);
         addNode(goButton.getNode());
         goButton.getNode().setOnMouseClicked(event -> {
             try {
@@ -61,7 +61,7 @@ public class HelicopterScene {
     }
 
     private static void initBackButton() {
-        BlueButton backButton=new BlueButton("Back",40,90, 300,640);
+        BlueButton backButton=new BlueButton("Back",40,90, 38,610);
         addNode(backButton.getNode());
         backButton.getNode().setOnMouseClicked(event -> {
             InputReader.clearHelicopter();

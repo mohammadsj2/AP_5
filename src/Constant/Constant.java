@@ -26,6 +26,8 @@ public class Constant {
     public static final int WORKSHOP_MAX_LEVEL = 4;
     public static final int WORKSHOP_UPGRADE_COST_PER_LEVEL = 500;
     public static final int ANIMAL_SPEED = 10;
+    public static final int CAT_SPEED = 15;
+    public static final int DOG_SPEED = 15;
     public static final int INIT_HEALTH=100;
 
     public static final String BEAR_NAME = "bear";
@@ -89,6 +91,7 @@ public class Constant {
     public static final String NO_SAVE_MESSAGE = "**** Error: There is no save! ****";
 
     public static final long NEXT_TURN_DURATION = 400000000L;
+
 
     public static Item getItemByType(String type){
         type=type.toLowerCase();

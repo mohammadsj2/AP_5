@@ -29,8 +29,8 @@ public interface Viewable {
         imageView.setImage(image);
         int imageWidth = (int) image.getWidth();
         int imageHeight = (int) image.getHeight();
-        GameScene.setMiddlePosition(imageView, imageWidth / 4.0
-                , imageHeight / 4.0, x, y);
+        GameScene.setMiddlePosition(imageView, imageWidth / columns
+                , imageHeight / rows, x, y);
         imageView.setViewport(new Rectangle2D(0, 0, imageWidth / columns, imageHeight / rows));
         Animation animation = new SpriteAnimation(
                 imageView,
