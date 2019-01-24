@@ -2,14 +2,13 @@ package View.Scene;
 
 import Constant.Constant;
 import Controller.InputReader;
-import View.Button;
-import javafx.event.EventHandler;
+import View.Button.BlueButton;
+import View.Button.CircleButton;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,8 +17,8 @@ public class levelSelectScene
 {
     private static Group root = new Group();
     private static Scene scene = new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
-    private static Button newGameButton=new Button("",70,190,600,270);
-    private static Button loadGameButton=new Button("",70,190,600,360);
+    private static BlueButton newGameButton=new BlueButton("",70,190,600,270);
+    private static BlueButton loadGameButton=new BlueButton("",70,190,600,360);
 
     public static Scene getScene()
     {
@@ -45,7 +44,7 @@ public class levelSelectScene
         int[] positionY = {635, 610, 635, 610, 635, 570, 525, 465, 395, 365};
         for (int i = 0; i < levelCount; i++)
         {
-            Button button = new Button(String.valueOf(i + 1), 60, 60, positionX[i], positionY[i]);
+            CircleButton button = new CircleButton(String.valueOf(i + 1), 60, 60, positionX[i], positionY[i]);
             int finalI = i;
             button.getNode().setOnMouseClicked(event ->
             {

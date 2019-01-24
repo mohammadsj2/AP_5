@@ -5,7 +5,7 @@ import Controller.InputReader;
 import Model.*;
 import Model.Transporter.Helicopter;
 import Model.Transporter.Truck;
-import View.Button;
+import View.Button.BlueButton;
 import View.NextTurnTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -32,6 +32,7 @@ public class GameScene {
         try {
             TruckScene.init();
             HelicopterScene.init();
+
             initBackground();
             initWorkShops();
             initWell();
@@ -64,7 +65,7 @@ public class GameScene {
 
     private static void initButtons()
     {
-        Button menuButton=new Button("Menu",40,90,780,80);
+        BlueButton menuButton=new BlueButton("Menu",40,90,780,80);
         menuButton.getNode().setOnMouseClicked(event ->
         {
             nextTurnTimer.stop();
@@ -77,7 +78,7 @@ public class GameScene {
 
     private static void initMoney()
     {
-        Button moneyLabel=new Button(String.valueOf(InputReader.getCurrentController().getMoney())
+        BlueButton moneyLabel=new BlueButton(String.valueOf(InputReader.getCurrentController().getMoney())
                 ,40,90,780,20);
         moneyText=moneyLabel.getTextLabel();
         moneyText.setFill(Color.YELLOW);
@@ -162,7 +163,7 @@ public class GameScene {
     private static void setUpgradeButton(Upgradable upgradable,double x,double y)
     {
         ImageView imageView=((Viewable)upgradable).getImageView();
-        Button upgradeButton=new Button(String.valueOf(upgradable.upgradeCost())+"\uD83D\uDCB0",20,50
+        BlueButton upgradeButton=new BlueButton(String.valueOf(upgradable.upgradeCost())+"\uD83D\uDCB0",20,50
                 ,x,y);
         upgradeButton.getNode().setOnMouseClicked(event ->
         {
