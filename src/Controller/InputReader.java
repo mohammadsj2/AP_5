@@ -2,6 +2,7 @@ package Controller;
 
 import Exception.*;
 import Model.Entity.Item;
+import Model.WorkShop;
 import View.Scene.HelicopterScene;
 import View.Scene.MenuScene;
 import View.Scene.TruckScene;
@@ -13,6 +14,7 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import Constant.Constant;
@@ -26,7 +28,7 @@ public class InputReader extends Application
 
 
     public static void main(String[] args) throws StartBusyTransporter, IOException {
-        
+
         Thread thread=new Thread(new Runnable() {
             @Override
             public void run() {
@@ -127,7 +129,18 @@ public class InputReader extends Application
         thread.start();
 
         launch(args);
-
+   /*     YaGson yaGson=new YaGson();
+        HashMap<String,Integer> goalEntities=new HashMap<>();
+        goalEntities.put("egg",5);
+        Controller controller=new Controller(0,goalEntities,new ArrayList<>());
+        WorkShop workShop=yaGson.fromJson(new FileReader("./ResourcesRoot/WorkShops/EggPowderPlant.json"),WorkShop.class);
+        workShop.setLocation(0);
+        controller.addWorkshop(workShop);
+        controller.setMoney(10000);
+        currentController=controller;
+        save("level1");*/
+       // Controller controller=new Controller(0,new HashMap<>(),new ArrayList<>());
+      //  System.out.println(new YaGson().toJson(controller));
     }
 
     public static void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter, StartEmptyTransporter {

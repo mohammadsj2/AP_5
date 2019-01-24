@@ -42,4 +42,9 @@ public class Lion extends Wild{
         return item;
     }
 
+    @Override
+    public String getName()
+    {
+        return "lion";
+    }
 }

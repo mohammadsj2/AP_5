@@ -37,4 +37,10 @@ public class Cow extends Pet{
     public int upgradeCost() {
         return 0;
     }
+
+
+    public String getName()
+    {
+        return "cow";
+    }
 }

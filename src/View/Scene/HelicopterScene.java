@@ -62,6 +62,8 @@ public class HelicopterScene {
                 InputReader.startHelicopter();
                 GameScene.getNextTurnTimer().start();
                 InputReader.setScene(GameScene.getScene());
+                InputReader.clearHelicopter();
+                refresh();
             } catch (StartBusyTransporter startBusyTransporter) {
                 System.out.println(Constant.START_BUSY_TRANSPORTER_MESSAGE);
             } catch (StartEmptyTransporter startEmptyTransporter) {
@@ -80,6 +82,8 @@ public class HelicopterScene {
             GameScene.getNextTurnTimer().start();
             refresh();
             InputReader.setScene(GameScene.getScene());
+            InputReader.clearHelicopter();
+            refresh();
         });
     }
 

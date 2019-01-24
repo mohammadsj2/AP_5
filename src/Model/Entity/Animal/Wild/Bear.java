@@ -44,4 +44,10 @@ public class Bear extends Wild{
         return item;
     }
 
+    @Override
+    public String getName()
+    {
+        return "bear";
+    }
+
 }
