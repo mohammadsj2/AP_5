@@ -365,9 +365,15 @@ public class Controller
         map.cage(x, y);
     }
 
-    void clearTruck()
-    {
-        //TODO bayad berizi chiz mizasho too anbar
+    void clearTruck() {
+        ArrayList<Item> items=truck.getItems();
+        for(Item item:items){
+            try {
+                wareHouse.addItem(item);
+            } catch (NoWarehouseSpaceException e) {
+                e.printStackTrace();
+            }
+        }
         truck.clear();
     }
 

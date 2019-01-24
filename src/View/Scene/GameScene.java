@@ -6,8 +6,12 @@ import Model.*;
 import Model.Transporter.Helicopter;
 import Model.Transporter.Truck;
 import View.Button.BlueButton;
+import View.CoinView;
 import View.NextTurnTimer;
+import View.SpriteAnimation;
+import javafx.animation.Animation;
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -16,6 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,15 +41,17 @@ public class GameScene {
             HelicopterScene.init();
 
             initBackground();
-            initWorkShops();
             initWell();
             initWareHouse();
+            initWorkShops();
+
             initMap();
             initAddAnimalButtons();
-            nextTurnButtonForDebug();
+            //nextTurnButtonForDebug();
             initTransporters();
             initMoney();
             initButtons();
+
             nextTurnTimer=new NextTurnTimer();
             nextTurnTimer.start();
 
@@ -88,11 +95,14 @@ public class GameScene {
     private static void initMoney()
     {
         BlueButton moneyLabel=new BlueButton(String.valueOf(InputReader.getCurrentController().getMoney())
-                ,40,90,615,20);
+                ,40,90,615,35);
         moneyLabel.onlyShowTextOfButton();
         moneyText=moneyLabel.getTextLabel();
         moneyText.setFill(Color.YELLOW);
         addNode(moneyLabel.getNode());
+
+        CoinView coinView=new CoinView(660,28);
+        addNode(coinView.getNode());
     }
 
     private static void initWareHouse() throws FileNotFoundException {
@@ -102,7 +112,6 @@ public class GameScene {
     private static void initWell() {
         Well well=InputReader.getCurrentController().getWell();
         well.initView();
-        well.refreshView();
         ImageView wellView=well.getImageView();
         setUpgradeButton(well,wellView.getX(),wellView.getY()+wellView.getImage().getHeight()/4-23);
     }

@@ -41,6 +41,7 @@ public class TruckScene {
         addNode(clearButton.getNode());
         clearButton.getNode().setOnMouseClicked(event -> {
             InputReader.clearTruck();
+            refresh();
         });
     }
 
@@ -64,7 +65,8 @@ public class TruckScene {
         BlueButton backButton=new BlueButton("Back",40,90, 300,640);
         addNode(backButton.getNode());
         backButton.getNode().setOnMouseClicked(event -> {
-
+            InputReader.clearTruck();
+            refresh();
             GameScene.getNextTurnTimer().start();
             InputReader.setScene(GameScene.getScene());
         });

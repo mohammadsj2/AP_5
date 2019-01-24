@@ -1,5 +1,6 @@
 package Model.Entity.Animal;
 
+import Constant.Constant;
 import Controller.InputReader;
 import Exception.CellDoesNotExistException;
 import Exception.NoWarehouseSpaceException;
@@ -16,8 +17,6 @@ import java.util.ArrayList;
 public class Cat extends Animal {
 
     private int step=0;
-    private Cell currentCell;
-    public static final int CAT_SPEED = 4;
 
     public Cat(Cell cell) {
         super(cell);
@@ -25,7 +24,7 @@ public class Cat extends Animal {
         Image image= null;
         try {
             image = new Image(new FileInputStream("./Textures/Animals/Cat/down.png"));
-            changeImageView(image,24,4,6,cell.getPositionX(),cell.getPositionY());
+            changeImageView(image,24,5,5,cell.getPositionX(),cell.getPositionY());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -39,7 +38,7 @@ public class Cat extends Animal {
 
     @Override
     public int getSpeed() {
-        return CAT_SPEED;
+        return Constant.CAT_SPEED;
     }
 
     @Override
@@ -56,12 +55,12 @@ public class Cat extends Animal {
         Map map = InputReader.getCurrentController().getMap();
 
         Cell targetCell = map.getRandomCell(getCell(), getSpeed());
-        if (InputReader.getCurrentController().getCatLevel() >= 0 || true)
+        if (InputReader.getCurrentController().getCatLevel() >= 0)
         {
             targetCell = map.nearestCellWithItem(this.getCell());
             if (targetCell == null)
             {
-                if (step == 0 || currentCell == getCell())
+                if (step == 0 || currentCell==null || currentCell == getCell())
                     targetCell = currentCell = map.getRandomCell(getCell(), getSpeed());
                 else
                     targetCell = currentCell;

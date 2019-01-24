@@ -14,8 +14,10 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 public abstract class Transporter implements Upgradable, Viewable {
     int level, capacity, speed, startTime;
     ArrayList<Item> items = new ArrayList<>();
+    Label valueLabel;
     boolean busy = false;
 
     ImageView imageView, littleImageView;
@@ -41,8 +44,21 @@ public abstract class Transporter implements Upgradable, Viewable {
         imageView = new ImageView();
         GameScene.addNode(getImageView());
         initLittleImageView();
-        refreshView();
+        valueLabel=new Label();
+        valueLabel.setTextFill(Color.WHITE);
+        valueLabel.setStyle("-fx-font-size: 25;");
     }
+    @Override
+    public void refreshView() {
+        Image image = getImageByLevel();
+        if (busy) {
+            image = null;
+        }
+        valueLabel.setText(getValue().toString());
+        getImageView().setImage(image);
+        refreshLittleImageView();
+    }
+
 
     public void initLittleImageView() {
         littleImageView = new ImageView();
@@ -74,14 +90,6 @@ public abstract class Transporter implements Upgradable, Viewable {
 
     abstract Image getImageByLevel();
 
-    public void refreshView() {
-        Image image = getImageByLevel();
-        if (busy) {
-            image = null;
-        }
-        getImageView().setImage(image);
-        refreshLittleImageView();
-    }
 
     @Override
     public Animation getAnimation() {
@@ -107,6 +115,7 @@ public abstract class Transporter implements Upgradable, Viewable {
         if (!canAddItem(item))
             throw new NoTransporterSpaceException();
         items.add(item);
+        refreshView();
     }
 
     public void startTransportation() throws StartBusyTransporter, StartEmptyTransporter {
@@ -153,6 +162,7 @@ public abstract class Transporter implements Upgradable, Viewable {
 
     public void clear() {
         items.clear();
+        refreshView();
     }
 
     public ArrayList<Item> getItems() {
@@ -167,7 +177,7 @@ public abstract class Transporter implements Upgradable, Viewable {
         return filledVolume;
     }
 
-    public int getValue() {
+    public Integer getValue() {
         int value = 0;
         for (Item item : items) {
             value += item.getCost();
@@ -176,6 +186,15 @@ public abstract class Transporter implements Upgradable, Viewable {
     }
 
     public boolean canAddItem(Item item) {
-        return (getFilledVolume() + item.getVolume() <= capacity);
+        return !busy && (getFilledVolume() + item.getVolume() <= capacity);
+    }
+    public int getNumberOfThisItem(Item item) {
+        int ans =0;
+        for(Item item1:items){
+            if(item1.equals(item)){
+                ans++;
+            }
+        }
+        return ans;
     }
 }

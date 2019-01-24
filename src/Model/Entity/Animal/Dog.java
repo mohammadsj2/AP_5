@@ -1,5 +1,6 @@
 package Model.Entity.Animal;
 
+import Constant.Constant;
 import Controller.*;
 import Model.Map.Cell;
 import Model.Entity.Animal.Wild.Wild;
@@ -13,8 +14,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class Dog extends Animal {
-
-    public static final int DOG_SPEED = 4;
 
     public Dog(Cell cell) {
         super(cell);
@@ -42,7 +41,7 @@ public class Dog extends Animal {
         if (cur.equals(getCell())) {
             kill();
         } else {
-            changeCell(map.getBestCellBySpeed(getCell(),cur, DOG_SPEED));
+            changeCell(map.getBestCellBySpeed(getCell(),cur, Constant.DOG_SPEED));
         }
     }
     public void kill() throws CellDoesNotExistException {
