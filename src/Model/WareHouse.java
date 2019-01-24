@@ -58,6 +58,7 @@ public class WareHouse implements Upgradable,Viewable{
 
 
         imageView.setOnMouseClicked(event -> {
+            if(InputReader.getCurrentController().isGameFinished())return;
             GameScene.getNextTurnTimer().stop();
             MenuScene.init(true);
             InputReader.setScene(TruckScene.refreshAndGetScene());

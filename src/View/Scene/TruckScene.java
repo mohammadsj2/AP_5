@@ -37,7 +37,7 @@ public class TruckScene {
     }
 
     private static void initClearButton() {
-        BlueButton clearButton=new BlueButton("Clear",40,90, 580,640);
+        BlueButton clearButton=new BlueButton("Clear",40,90, 580,640,false);
         addNode(clearButton.getNode());
         clearButton.getNode().setOnMouseClicked(event -> {
             InputReader.clearTruck();
@@ -46,7 +46,7 @@ public class TruckScene {
     }
 
     private static void initGoButton() {
-        BlueButton goButton=new BlueButton("Go",40,90, 440,640);
+        BlueButton goButton=new BlueButton("Go",40,90, 440,640,false);
         addNode(goButton.getNode());
         goButton.getNode().setOnMouseClicked(event -> {
             try {
@@ -62,7 +62,7 @@ public class TruckScene {
     }
 
     private static void initBackButton() {
-        BlueButton backButton=new BlueButton("Back",40,90, 300,640);
+        BlueButton backButton=new BlueButton("Back",40,90, 300,640,false);
         addNode(backButton.getNode());
         backButton.getNode().setOnMouseClicked(event -> {
             InputReader.clearTruck();
@@ -88,7 +88,7 @@ public class TruckScene {
             imageView.setX(getItemPositionInWarehouseX(j));
             imageView.setY(getItemPositionInWarehouseY(j));
             BlueButton addToTruckButton = new BlueButton("To truck", 35, 80,
-                    getItemPositionInWarehouseX(j) + 160, getItemPositionInWarehouseY(j) + 5);
+                    getItemPositionInWarehouseX(j) + 160, getItemPositionInWarehouseY(j) + 5,false);
             Label label=new Label();
             label.relocate(getItemPositionInWarehouseX(j) + 80, getItemPositionInWarehouseY(j)+14);
             label.setText("x"+wareHouse.getNumberOfThisItem(item));

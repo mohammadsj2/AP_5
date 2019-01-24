@@ -43,7 +43,7 @@ public class Controller
     private Helicopter helicopter;
     private Truck truck;
     private int catLevel = 1;
-
+    private boolean isGameFinished=false;
 
     Controller(int goalMoney, ArrayList<String> goalEntities, ArrayList<Item> helicopterItems)
     {
@@ -217,14 +217,10 @@ public class Controller
         }
         if (level.checkLevel())
         {
-            setWinningMessage();
+            GameScene.setWinningMessage();
         }
     }
 
-    private void setWinningMessage()
-    {
-
-    }
 
     public Truck getTruck()
     {
@@ -429,5 +425,15 @@ public class Controller
     public Level getLevel()
     {
         return level;
+    }
+
+    public void finishGame()
+    {
+        isGameFinished=true;
+    }
+
+    public boolean isGameFinished()
+    {
+        return isGameFinished;
     }
 }
