@@ -9,6 +9,7 @@ import Model.Upgradable;
 import Model.Viewable;
 import View.Scene.GameScene;
 import View.*;
+import View.Scene.HelicopterScene;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -163,6 +164,7 @@ public abstract class Transporter implements Upgradable, Viewable {
     public void clear() {
         items.clear();
         refreshView();
+        HelicopterScene.refresh();
     }
 
     public ArrayList<Item> getItems() {

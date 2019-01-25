@@ -7,9 +7,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class CircleButton extends Button{
-    public CircleButton(String text, int height, int width, double x, double y)
+    public CircleButton(String text, int height, int width, double x, double y,boolean isInGameScene)
     {
-        super(text,height,width,x,y);
+        super(text,height,width,x,y,isInGameScene);
         insideText.setFill(Color.BLACK);
     }
 

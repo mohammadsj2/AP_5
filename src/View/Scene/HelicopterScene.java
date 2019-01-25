@@ -17,8 +17,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import Exception.*;
 
-import javax.swing.text.LabelView;
-
 public class HelicopterScene {
     public static final int ITEM_POSITION_INHELICOPTER_Y = 128;
     public static final int ITEM_POSITION_INHELICOPTER_X = 55;
@@ -46,7 +44,7 @@ public class HelicopterScene {
     }
 
     private static void initClearButton() {
-        BlueButton clearButton=new BlueButton("Clear",40,90, 279,610);
+        BlueButton clearButton=new BlueButton("Clear",40,90, 279,610,false);
         addNode(clearButton.getNode());
         clearButton.getNode().setOnMouseClicked(event -> {
             InputReader.clearHelicopter();
@@ -55,14 +53,13 @@ public class HelicopterScene {
     }
 
     private static void initGoButton() {
-        BlueButton goButton=new BlueButton("Go",40,90, 158,610);
+        BlueButton goButton=new BlueButton("Go",40,90, 158,610,false);
         addNode(goButton.getNode());
         goButton.getNode().setOnMouseClicked(event -> {
             try {
                 InputReader.startHelicopter();
                 GameScene.getNextTurnTimer().start();
                 InputReader.setScene(GameScene.getScene());
-                InputReader.clearHelicopter();
                 refresh();
             } catch (StartBusyTransporter startBusyTransporter) {
                 System.out.println(Constant.START_BUSY_TRANSPORTER_MESSAGE);
@@ -75,7 +72,7 @@ public class HelicopterScene {
     }
 
     private static void initBackButton() {
-        BlueButton backButton=new BlueButton("Back",40,90, 38,610);
+        BlueButton backButton=new BlueButton("Back",40,90, 38,610,false);
         addNode(backButton.getNode());
         backButton.getNode().setOnMouseClicked(event -> {
             InputReader.clearHelicopter();
@@ -103,7 +100,7 @@ public class HelicopterScene {
             imageView.setX(getItemPositionInWarehouseX());
             imageView.setY(getItemPositionInWarehouseY(i));
             BlueButton addToHelicopterButton = new BlueButton("To Helicopter", 35, 120,
-                    getItemPositionInWarehouseX() + 190, getItemPositionInWarehouseY(i) + 5);
+                    getItemPositionInWarehouseX() + 190, getItemPositionInWarehouseY(i) + 5,false);
             addNode(addToHelicopterButton.getNode());
             addToHelicopterButton.getNode().setOnMouseClicked(event -> {
                 try {
@@ -156,8 +153,7 @@ public class HelicopterScene {
     private static void refreshLabels() {
         for(int i=0;i<inHelicopterCounterLabel.size();i++){
             Label label=inHelicopterCounterLabel.get(i);
-            Item item=items.get(i);
-            label.setText("x"+InputReader.getCurrentController().getHelicopter().getNumberOfThisItem(item));
+            label.setText("x"+InputReader.getCurrentController().getHelicopter().getNumberOfThisItem(items.get(i)));
         }
     }
 }
