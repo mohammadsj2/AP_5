@@ -4,12 +4,14 @@ import Exception.*;
 import Model.Entity.Item;
 import Model.Map.Cell;
 import Model.Map.Map;
+import YaGson.*;
 import Model.Well;
 import Model.WorkShop;
 import View.Scene.HelicopterScene;
 import View.Scene.MenuScene;
 import View.Scene.TruckScene;
 import com.gilecode.yagson.YaGson;
+import com.gilecode.yagson.YaGsonBuilder;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -150,57 +152,83 @@ public class InputReader extends Application
                 }
             }
         });
+        createAllLevels();
         thread.start();
 
         launch(args);
-     /*   YaGson yaGson = new YaGson();
-        ArrayList<String> goalEntities = new ArrayList<>();
-        for (int i = 0; i < 20; i++)
-        {
-            goalEntities.add("flourycake");
+    }
+
+    private static void createAllLevels() {
+        createLevel3();
+    }
+
+    private static void createLevel3() {
+        try {
+            ArrayList<String> goalEntities = new ArrayList<>();
+            for (int i = 0; i < 20; i++) {
+                goalEntities.add("flourycake");
+            }
+            WorkShop workShop = getWorkShop("EggPowderPlant");
+            WorkShop workShop2 = getWorkShop("CookieBakery");
+            WorkShop workShop3 = getWorkShop("CakeBakery");
+            WorkShop workShop4 = getWorkShop("Spinnery");
+            WorkShop workShop5 = getWorkShop("WeavingFactory");
+            WorkShop workShop6 = getWorkShop("SewingFactory");
+            workShop.setLocation(0);
+            workShop2.setLocation(1);
+            workShop3.setLocation(2);
+            workShop4.setLocation(3);
+            workShop5.setLocation(4);
+            workShop6.setLocation(5);
+            ArrayList<Item> helicopterItems = new ArrayList<>();
+            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
+            helicopterItems.add(Constant.getItemByType("egg"));
+            helicopterItems.add(Constant.getItemByType("flour"));
+            helicopterItems.add(Constant.getItemByType("cake"));
+            helicopterItems.add(Constant.getItemByType("flourycake"));
+            helicopterItems.add(Constant.getItemByType("sewing"));
+            helicopterItems.add(Constant.getItemByType("fabric"));
+            helicopterItems.add(Constant.getItemByType("adornment"));
+            Controller controller = new Controller(0, goalEntities, helicopterItems);
+            controller.addWorkshop(workShop);
+            controller.addWorkshop(workShop2);
+            controller.addWorkshop(workShop3);
+            controller.addWorkshop(workShop4);
+            controller.addWorkshop(workShop5);
+            controller.addWorkshop(workShop6);
+
+            controller.setMoney(99999);
+            indexOfLevel = 3;
+            createLevel(3,controller);
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        WorkShop workShop=yaGson.fromJson(new FileReader("./ResourcesRoot/WorkShops/EggPowderPlant.json"),WorkShop.class);
-        WorkShop workShop2=yaGson.fromJson(new FileReader("./ResourcesRoot/WorkShops/CookieBakery.json"),WorkShop.class);
-        WorkShop workShop3=yaGson.fromJson(new FileReader("./ResourcesRoot/WorkShops/CakeBakery.json"),WorkShop.class);
-        WorkShop workShop4=yaGson.fromJson(new FileReader("./ResourcesRoot/WorkShops/Spinnery.json"),WorkShop.class);
-        WorkShop workShop5=yaGson.fromJson(new FileReader("./ResourcesRoot/WorkShops/WeavingFactory.json"),WorkShop.class);
-        WorkShop workShop6=yaGson.fromJson(new FileReader("./ResourcesRoot/WorkShops/SewingFactory.json"),WorkShop.class);
-        workShop.setLocation(0);
-        workShop2.setLocation(1);
-        workShop3.setLocation(2);
-        workShop4.setLocation(3);
-        workShop5.setLocation(4);
-        workShop6.setLocation(5);
-        ArrayList<Item> helicopterItems=new ArrayList<>();
-        //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
-        helicopterItems.add(Constant.getItemByTypeForLevel("egg"));
-        helicopterItems.add(Constant.getItemByTypeForLevel("flour"));
-        helicopterItems.add(Constant.getItemByTypeForLevel("cake"));
-        helicopterItems.add(Constant.getItemByTypeForLevel("flourycake"));
-        helicopterItems.add(Constant.getItemByTypeForLevel("sewing"));
-        helicopterItems.add(Constant.getItemByTypeForLevel("fabric"));
-        helicopterItems.add(Constant.getItemByTypeForLevel("adornment"));
-        Controller controller = new Controller(0, goalEntities,helicopterItems);
-        controller.addWorkshop(workShop);
-        controller.addWorkshop(workShop2);
-        controller.addWorkshop(workShop3);
-        controller.addWorkshop(workShop4);
-        controller.addWorkshop(workShop5);
-        controller.addWorkshop(workShop6);
-
-        controller.setMoney(99999);
-        currentController = controller;
-        indexOfLevel=3;
-        save();*/
-        /*HashMap<String,Integer> map=new HashMap<>();
-        map.put("Salam",132);
-        System.out.println(yaGson.toJson(map));
-        Double a=234.234234;*/
-
-        //      Cell x=new Cell(1,2);
-//        System.out.println(yaGson.toJson(x));
 
     }
+
+    private static WorkShop getWorkShop(String s) throws FileNotFoundException {
+        YaGson yaGson=new YaGsonBuilder().setExclusionStrategies(new YaGsonExclusionStrategy()).create();
+        return yaGson.fromJson(new FileReader("./ResourcesRoot/WorkShops/"+s+".json"), WorkShop.class);
+    }
+
+    static void createLevel(int indexOfLevel, Controller controller){
+        try {
+            YaGson yaGson=new YaGsonBuilder().setExclusionStrategies(new YaGsonExclusionStrategy()).create();
+            OutputStream outputStream = new FileOutputStream(("./ResourcesRoot/Levels/level" + indexOfLevel + ".json"));
+            Formatter formatter = new Formatter(outputStream);
+            formatter.format(yaGson.toJson(controller));
+            formatter.flush();
+            formatter.close();
+            outputStream.close();
+
+            System.out.println("level " + indexOfLevel + " Created!");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter, StartEmptyTransporter
     {

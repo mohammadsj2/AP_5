@@ -26,6 +26,7 @@ import Exception.NoTransporterSpaceException;
 import Exception.NoSuchItemInWarehouseException;
 import Exception.NoWarehouseSpaceException;
 import Exception.NotEnoughItemException;
+import com.gilecode.yagson.com.google.gson.annotations.Expose;
 
 import java.io.FileReader;
 import java.io.IOException;
