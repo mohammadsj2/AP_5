@@ -1,5 +1,6 @@
 package Constant;
 
+import Controller.Controller;
 import Controller.InputReader;
 import Model.Entity.Item;
 
@@ -112,28 +113,8 @@ public class Constant {
                 if(!input[0].equals(type)){
                     continue;
                 }
-                return new Item(input[0],new Integer(input[1]),new Integer(input[2]), InputReader.getCurrentController().getTurn());
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static Item getItemByTypeForLevel(String type){
-        type=type.toLowerCase();
-        try {
-            InputStream inputStream= new FileInputStream("./src/Constant/Items.txt");
-
-            Scanner scanner=new Scanner(inputStream);
-            scanner.nextLine();
-            String[] input;
-            while(scanner.hasNextLine()){
-                input=scanner.nextLine().toLowerCase().trim().replaceAll("\\s+", " ").split(" ");
-                if(!input[0].equals(type)){
-                    continue;
-                }
-                return new Item(input[0],new Integer(input[1]),new Integer(input[2]), 0);
+                Controller controller=InputReader.getCurrentController();
+                return new Item(input[0],new Integer(input[1]),new Integer(input[2]), (controller!=null)?controller.getTurn():0);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
