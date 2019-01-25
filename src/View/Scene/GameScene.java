@@ -310,7 +310,7 @@ public class GameScene
     {
         nextTurnTimer.stop();
         InputReader.getCurrentController().finishGame();
-        int width=400,height=300;
+        int width=400,height=500;
         Group winRoot=new Group();
        // Scene winScene=new Scene(winRoot,width,height);
         winRoot.relocate((double)(Constant.GAME_SCENE_WIDTH-width)/2, (double)(Constant.GAME_SCENE_HEIGHT-height)/2);
@@ -328,18 +328,26 @@ public class GameScene
         imageView.setFitHeight(height);
         winRoot.getChildren().add(imageView);
         Label label=new Label("You Won!");
-        label.setTextFill(Color.YELLOWGREEN);
+        label.setTextFill(Color.BLACK);
         label.setStyle("-fx-font-family: 'Comic Sans MS';-fx-font-size: 50");
-        label.relocate(90,100);
+        label.relocate(90,270);
         winRoot.getChildren().add(label);
         BlueButton backToLevelSelectButton=new BlueButton("Continue",50,100
-                ,(double)(width-100)/2,220,false);
+                ,(double)(width-100)/2,390,false);
         backToLevelSelectButton.getNode().setOnMouseClicked(event ->
         {
             levelSelectScene.init();
             InputReader.setScene(levelSelectScene.getScene());
         });
-        winRoot.getChildren().add(backToLevelSelectButton.getNode());
+        try {
+            image=new Image(new FileInputStream("Textures/prize_gold.png"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        imageView=new ImageView(image);
+        imageView.setX((double)(width-160)/2);
+        imageView.setY(100);
+        winRoot.getChildren().addAll(backToLevelSelectButton.getNode(),imageView);
         root.getChildren().add(winRoot);
 
     }
