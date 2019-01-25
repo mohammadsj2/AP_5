@@ -21,10 +21,11 @@ import java.util.ArrayList;
 public class TruckScene {
     private static Group root = new Group();
     private static Scene scene = new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
-    private static ArrayList<Item> items=Constant.getAllPossibleItems();
+    private static ArrayList<Item> items;
     private static ArrayList<Node> toDeleteInRefresh =new ArrayList<>();
 
     public static void init(){
+        items=Constant.getAllPossibleItems();
         try {
             initBackground();
             refreshItemView();
