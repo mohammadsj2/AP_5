@@ -37,7 +37,7 @@ public class MenuScene
     {
         int height=70,width=180;
         BlueButton playButton=new BlueButton("Play",height,width
-                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,100);
+                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,100,false);
         playButton.getNode().setOnMouseClicked(event ->
         {
             levelSelectScene.init();
@@ -67,7 +67,7 @@ public class MenuScene
         });
         addNode(loadButton.getNode());*/
         BlueButton exitButton=new BlueButton("Exit",height,width
-                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200);
+                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200,false);
         exitButton.getNode().setOnMouseClicked(event ->
         {
             InputReader.primaryStage.close();
@@ -80,7 +80,7 @@ public class MenuScene
     {
         int height=70,width=180;
         BlueButton resumeButton=new BlueButton("Resume",height,width
-                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,100);
+                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,100,false);
         resumeButton.getNode().setOnMouseClicked(event ->
         {
             GameScene.getNextTurnTimer().start();
@@ -88,10 +88,10 @@ public class MenuScene
         });
         addNode(resumeButton.getNode());
         BlueButton saveButton=new BlueButton("Save Game",height,width
-                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200);
+                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200,false);
         saveButton.getNode().setOnMouseClicked(event ->
         {
-            InputReader.save("save");
+            InputReader.save();
         });
         addNode(saveButton.getNode());
         /*
@@ -111,7 +111,7 @@ public class MenuScene
         });
         addNode(loadButton.getNode());*/
         BlueButton backToMenuButton=new BlueButton("Back to Menu",height,width
-                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,300);
+                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,300,false);
         backToMenuButton.getNode().setOnMouseClicked(event ->
         {
             MenuScene.init(false);

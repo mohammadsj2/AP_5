@@ -49,6 +49,7 @@ public class Item extends Entity
             setImageView(new ImageView());
         }
         getImageView().setOnMouseClicked(event -> {
+            if(InputReader.getCurrentController().isGameFinished())return;
             if(getCell()==null)return;
             int x=getCell().getPositionX();
             int y=getCell().getPositionY();
@@ -130,6 +131,7 @@ public class Item extends Entity
         return volume;
     }
 
+    @Override
     public String getName()
     {
         return name;

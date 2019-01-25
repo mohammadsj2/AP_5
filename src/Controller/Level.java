@@ -1,34 +1,40 @@
 package Controller;
 
 import Model.Entity.Entity;
+import Model.Entity.Item;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 
 public class Level {
-    int goalMoney;
-    private ArrayList<Entity> earnedEnitities,goalEntities=new ArrayList<>();
+    private int goalMoney;
+    private ArrayList<String> goalEntities;
 
-    Level(int goalMoney,ArrayList<Entity> earnedEnitities){
+    Level(int goalMoney,ArrayList<String> goalEntities){
         this.goalMoney=goalMoney;
-        this.earnedEnitities=earnedEnitities;
+        this.goalEntities=goalEntities;
     }
 
-    void entityEarned(Entity entity){
-        if(!goalEntities.contains(entity))return;
-        if(!earnedEnitities.contains(entity))
-            earnedEnitities.add(entity);
-    }
     public boolean checkLevel(){
         int earnedMoney= InputReader.getCurrentController().getMoney();
         if(earnedMoney<goalMoney){
             return false;
         }
-        return (earnedEnitities.size()==goalEntities.size());
+        ArrayList<String> goalEntitiesCopy = new ArrayList<>(goalEntities);
+        for(Item item:InputReader.getCurrentController().getWareHouse().getItems())
+        {
+            if(goalEntitiesCopy.contains(item.getName()))
+                goalEntitiesCopy.remove(item.getName());
+        }
+        for(Entity entity:InputReader.getCurrentController().getMap().getEntities())
+        {
+            if(goalEntitiesCopy.contains(entity.getName()))
+                goalEntitiesCopy.remove(entity.getName());
+        }
+        return goalEntitiesCopy.size()==0;
     }
 
-    public ArrayList<Entity> getGoalEntities() {
+    public ArrayList<String> getGoalEntities() {
         return goalEntities;
     }
 }

@@ -54,6 +54,7 @@ public class Truck extends Transporter {
         Image image = getImageByLevel();
         GameScene.setMiddlePosition(imageView, image.getWidth(), image.getHeight(), 240, 620);
         imageView.setOnMouseClicked(event -> {
+            if(InputReader.getCurrentController().isGameFinished())return;
             GameScene.getNextTurnTimer().stop();
             InputReader.setScene(TruckScene.refreshAndGetScene());
         });

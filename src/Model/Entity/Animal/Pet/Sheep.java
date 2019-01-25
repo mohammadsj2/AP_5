@@ -38,4 +38,10 @@ public class Sheep extends Pet{
     public int upgradeCost() {
         return 0;
     }
+
+
+    public String getName()
+    {
+        return "sheep";
+    }
 }

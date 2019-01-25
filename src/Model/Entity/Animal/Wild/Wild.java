@@ -1,5 +1,6 @@
 package Model.Entity.Animal.Wild;
 
+import Controller.InputReader;
 import Exception.CellDoesNotExistException;
 import Model.Entity.Animal.Animal;
 import Model.Entity.Animal.Dog;
@@ -55,6 +56,7 @@ public abstract class Wild extends Animal {
     public void initView() {
         super.initView();
         getImageView().setOnMouseClicked(event -> {
+            if(InputReader.getCurrentController().isGameFinished())return;
             try {
                 getMap().cage(getCell().getPositionX(), getCell().getPositionY());
             } catch (CellDoesNotExistException e) {

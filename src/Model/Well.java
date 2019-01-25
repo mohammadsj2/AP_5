@@ -51,7 +51,11 @@ public class Well implements Upgradable, Loadable, Viewable {
 
     public void initView() {
         setImageView(new ImageView());
-        getImageView().setOnMouseClicked(event -> InputReader.fillWell());
+        getImageView().setOnMouseClicked(event ->
+        {
+            if(InputReader.getCurrentController().isGameFinished())return;
+            InputReader.fillWell();
+        });
         progressBar=new BlueProgressBar(520,115);
         GameScene.addNode(progressBar.getNode());
         GameScene.addNode(getImageView());

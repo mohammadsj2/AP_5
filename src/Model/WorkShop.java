@@ -40,6 +40,7 @@ public class WorkShop implements Producer, Upgradable, Viewable
         imageView = new ImageView();
         imageView.setOnMouseClicked(event ->
         {
+            if(InputReader.getCurrentController().isGameFinished())return;
             InputReader.startWorkshop(location);
             if (this.busy)
                 startAnimation();

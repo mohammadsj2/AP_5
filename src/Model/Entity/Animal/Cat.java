@@ -83,4 +83,9 @@ public class Cat extends Animal {
             }
         }
     }
+
+    public String getName()
+    {
+        return "cat";
+    }
 }

@@ -1,5 +1,6 @@
 package Constant;
 
+import Controller.Controller;
 import Controller.InputReader;
 import Model.Entity.Item;
 
@@ -112,13 +113,15 @@ public class Constant {
                 if(!input[0].equals(type)){
                     continue;
                 }
-                return new Item(input[0],new Integer(input[1]),new Integer(input[2]), InputReader.getCurrentController().getTurn());
+                Controller controller=InputReader.getCurrentController();
+                return new Item(input[0],new Integer(input[1]),new Integer(input[2]), (controller!=null)?controller.getTurn():0);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return null;
     }
+
     public static ArrayList<Item> getAllPossibleItems(){
         ArrayList<Item> items=new ArrayList<>();
         try {
