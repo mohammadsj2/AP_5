@@ -189,7 +189,7 @@ public class InputReader extends Application
             helicopterItems.add(Constant.getItemByType("sewing"));
             helicopterItems.add(Constant.getItemByType("fabric"));
             helicopterItems.add(Constant.getItemByType("adornment"));
-            Controller controller = new Controller(0, goalEntities, helicopterItems);
+            Controller controller = new Controller(35000, goalEntities, helicopterItems);
             controller.addWorkshop(workShop);
             controller.addWorkshop(workShop2);
             controller.addWorkshop(workShop3);

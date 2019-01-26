@@ -16,9 +16,6 @@ public abstract class Wild extends Animal {
     protected Wild(Cell cell) {
         super(cell);
     }
-    protected Wild(Cell cell, int level) {
-        super(cell, level);
-    }
     public boolean kill(Cell cell) throws CellDoesNotExistException {
         Entity[] entities = cell.getEntities().toArray(new Entity[0]);
         boolean dog_near = false;
