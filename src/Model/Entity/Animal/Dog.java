@@ -26,10 +26,6 @@ public class Dog extends Animal {
             e.printStackTrace();
         }
     }
-    public Dog(Cell cell, int level) {
-        super(cell, level);
-    }
-
     @Override
     public void walk() throws CellDoesNotExistException {
         Map map=InputReader.getCurrentController().getMap();

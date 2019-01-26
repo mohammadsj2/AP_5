@@ -1,14 +1,16 @@
 package View.Scene;
 
 import Constant.Constant;
-import Controller.InputReader;
+import Controller.*;
 import Model.*;
+import Model.Entity.Item;
 import Model.Transporter.Helicopter;
 import Model.Transporter.Truck;
 import View.Button.BlueButton;
 import View.CoinView;
 import View.NextTurnTimer;
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -51,14 +53,67 @@ public class GameScene
             initTransporters();
             initMoney();
             initButtons();
+            initAimsOfLevel();
 
             nextTurnTimer = new NextTurnTimer();
             nextTurnTimer.start();
 
-        } catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void initAimsOfLevel() throws FileNotFoundException {
+        initBackGroundOfAims();
+        ArrayList<Item> items= Constant.getAllPossibleItems();
+        int j=0;
+        int y=660;
+        Level level=InputReader.getCurrentController().getLevel();
+
+        for (Item item : items) {
+            item.refreshView();
+            if(level.getNumberOfThisItem(item.getName())==0){
+                continue;
+            }
+            ImageView imageView = item.getImageView();
+            Label label = new Label(Integer.toString(level.getNumberOfThisItem(item.getName())));
+            label.setTextFill(Color.WHITE);
+            label.setStyle("-fx-font-size: 19;");
+            label.relocate(getItemPositionInAimsX(j)+15, y);
+            addNode(label);
+
+            addNode(imageView);
+            imageView.setX(getItemPositionInAimsX(j));
+            imageView.setY(y-60);
+            j++;
+        }
+        if(level.getGoalMoney()==0)
+            return;
+        Label label = new Label(Integer.toString(level.getGoalMoney()));
+        label.setTextFill(Color.WHITE);
+        label.setStyle("-fx-font-size: 14;");
+        label.relocate(getItemPositionInAimsX(j)+5, y+5);
+        addNode(label);
+        Image image=new Image(new FileInputStream("Textures/UI/Icons/Money/coin_48.png"));
+        ImageView imageView=new ImageView(image);
+        addNode(imageView);
+        imageView.setX(getItemPositionInAimsX(j));
+        imageView.setY(y-60);
+    }
+
+    private static double getItemPositionInAimsX(int i) {
+        return 698+47*i;
+    }
+
+    private static void initBackGroundOfAims() throws FileNotFoundException {
+        Image backGroundImage=new Image(new FileInputStream("Textures/aim.png"));
+        ImageView backView=new ImageView(backGroundImage);
+        backView.setViewport(new Rectangle2D(0,0,backGroundImage.getWidth(),backGroundImage.getHeight()/3));
+        backView.setX(710);
+        backView.setY(600);
+        backView.setScaleX(1.2);
+        backView.setScaleY(1.2);
+        addNode(backView);
     }
 
 
@@ -310,7 +365,7 @@ public class GameScene
     {
         nextTurnTimer.stop();
         InputReader.getCurrentController().finishGame();
-        int width=400,height=300;
+        int width=400,height=500;
         Group winRoot=new Group();
        // Scene winScene=new Scene(winRoot,width,height);
         winRoot.relocate((double)(Constant.GAME_SCENE_WIDTH-width)/2, (double)(Constant.GAME_SCENE_HEIGHT-height)/2);
@@ -328,18 +383,26 @@ public class GameScene
         imageView.setFitHeight(height);
         winRoot.getChildren().add(imageView);
         Label label=new Label("You Won!");
-        label.setTextFill(Color.YELLOWGREEN);
+        label.setTextFill(Color.BLACK);
         label.setStyle("-fx-font-family: 'Comic Sans MS';-fx-font-size: 50");
-        label.relocate(90,100);
+        label.relocate(90,270);
         winRoot.getChildren().add(label);
         BlueButton backToLevelSelectButton=new BlueButton("Continue",50,100
-                ,(double)(width-100)/2,220,false);
+                ,(double)(width-100)/2,390,false);
         backToLevelSelectButton.getNode().setOnMouseClicked(event ->
         {
             levelSelectScene.init();
             InputReader.setScene(levelSelectScene.getScene());
         });
-        winRoot.getChildren().add(backToLevelSelectButton.getNode());
+        try {
+            image=new Image(new FileInputStream("Textures/prize_gold.png"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        imageView=new ImageView(image);
+        imageView.setX((double)(width-160)/2);
+        imageView.setY(100);
+        winRoot.getChildren().addAll(backToLevelSelectButton.getNode(),imageView);
         root.getChildren().add(winRoot);
 
     }
