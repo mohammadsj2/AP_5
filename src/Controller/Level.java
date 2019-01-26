@@ -37,4 +37,17 @@ public class Level {
     public ArrayList<String> getGoalEntities() {
         return goalEntities;
     }
+    public int getNumberOfThisItem(String name){
+        int ans=0;
+        for(String item:goalEntities){
+            if(item.equals(name)){
+                ans++;
+            }
+        }
+        return ans;
+    }
+
+    public int getGoalMoney() {
+        return goalMoney;
+    }
 }

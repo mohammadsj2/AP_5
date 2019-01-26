@@ -31,11 +31,6 @@ public class Cat extends Animal {
 
     }
 
-    public Cat(Cell cell, int level) {
-        this(cell);
-        setLevel(level);
-    }
-
     @Override
     public int getSpeed() {
         return Constant.CAT_SPEED;

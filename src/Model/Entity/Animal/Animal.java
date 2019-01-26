@@ -40,11 +40,6 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
         super(cell);
     }
 
-    protected Animal(Cell cell, int level) {
-        super(cell);
-        setLevel(level);
-    }
-
     public int getSpeed() {
         return speed;
     }

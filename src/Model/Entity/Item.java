@@ -30,18 +30,6 @@ public class Item extends Entity
         refreshView();
     }
 
-
-    public Item(String name, int volume, int cost, int creatingTurn, Cell cell)
-    {
-        super(cell);
-        this.name = name;
-        this.volume = volume;
-        this.cost = cost;
-        this.creatingTurn = creatingTurn;
-  //      initView();
-        refreshView();
-    }
-
     @Override
     public void initView() {
         super.initView();

@@ -46,11 +46,6 @@ public abstract class Pet extends Animal implements Producer {
         this.health=Constant.INIT_HEALTH;
         this.lastProductTurn=InputReader.getCurrentController().getTurn();
     }
-    protected Pet(Cell cell, int level) {
-        super(cell, level);
-        this.health=Constant.INIT_HEALTH;
-        this.lastProductTurn=InputReader.getCurrentController().getTurn();
-    }
     public int getHealth() {
         return health;
     }
