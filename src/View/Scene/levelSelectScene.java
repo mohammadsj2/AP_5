@@ -59,11 +59,14 @@ public class levelSelectScene
         for (int i = 0; i < levelCount; i++)
         {
             CircleButton button = new CircleButton(String.valueOf(i + 1), 60, 60
-                    , positionX[i], positionY[i],false);
+                    , positionX[i], positionY[i],false,i>=3);
             int finalI = i;
             button.getNode().setOnMouseClicked(event ->
             {
-                refreshButtons(finalI+1);
+                if(finalI+1<=3)
+                {
+                    refreshButtons(finalI + 1);
+                }
             });
             root.getChildren().add(button.getNode());
         }
