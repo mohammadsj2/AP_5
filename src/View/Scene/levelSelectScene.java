@@ -96,7 +96,7 @@ public class levelSelectScene
             {
                 e.printStackTrace();
             }
-            GameScene.init();
+            GameScene.loadInit();
             InputReader.setScene(GameScene.getScene());
         });
         addNode(newGameButton.getNode());
