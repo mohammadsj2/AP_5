@@ -46,14 +46,14 @@ public abstract class Entity implements Viewable {
 
     @Override
     public void refreshView() {
-    }//TODO
+    }
 
     @Override
     public void initView() {
         if(getImageView()==null){
             setImageView(new ImageView());
         }
-    }//TODO
+    }
 
     @Override
     public void changeImageView(Image image, int count, int rows, int columns, double x, double y)
