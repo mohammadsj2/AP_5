@@ -437,4 +437,11 @@ public class Controller
     {
         return isGameFinished;
     }
+
+    public void initLoad() {
+        ArrayList<Entity> entities=getMap().getEntities();
+        for(Entity entity:entities){
+            entity.initLoad();
+        }
+    }
 }

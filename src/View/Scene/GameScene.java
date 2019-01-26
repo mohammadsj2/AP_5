@@ -406,4 +406,9 @@ public class GameScene
         root.getChildren().add(winRoot);
 
     }
+
+    public static void loadInit() {
+        init();
+        InputReader.getCurrentController().initLoad();
+    }
 }

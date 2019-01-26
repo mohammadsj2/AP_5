@@ -16,6 +16,12 @@ public abstract class Pet extends Animal implements Producer {
     private int health;
     private int lastProductTurn=0;
 
+    protected Pet(Cell cell) {
+        super(cell);
+        this.health=Constant.INIT_HEALTH;
+        this.lastProductTurn=InputReader.getCurrentController().getTurn();
+    }
+
     @Override
     public boolean haveProduct() {
         return InputReader.getCurrentController().getTurn()>=lastProductTurn+ Constant.ANIMAL_PRODUCT_TURN;
@@ -41,11 +47,7 @@ public abstract class Pet extends Animal implements Producer {
         lastProductTurn= InputReader.getCurrentController().getTurn();
     }
 
-    protected Pet(Cell cell) {
-        super(cell);
-        this.health=Constant.INIT_HEALTH;
-        this.lastProductTurn=InputReader.getCurrentController().getTurn();
-    }
+
     public int getHealth() {
         return health;
     }

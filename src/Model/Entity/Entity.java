@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public abstract class Entity implements Viewable {
     private Map map;
-    private Cell cell;
+    protected Cell cell;
     private boolean alive;
     private ImageView imageView=new ImageView();
     private Animation animation=null;
@@ -50,7 +50,9 @@ public abstract class Entity implements Viewable {
 
     @Override
     public void initView() {
-
+        if(getImageView()==null){
+            setImageView(new ImageView());
+        }
     }//TODO
 
     @Override
@@ -127,4 +129,8 @@ public abstract class Entity implements Viewable {
     }
 
 
+    public void initLoad(){
+        initView();
+        GameScene.addNode(getImageView());
+    }
 }
