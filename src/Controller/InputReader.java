@@ -289,7 +289,6 @@ public class InputReader extends Application
         indexOfLevel = levelIndex;
         currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/save" + indexOfLevel + ".json")),
                 Controller.class);
-
     }
 
 

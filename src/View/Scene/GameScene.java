@@ -373,7 +373,7 @@ public class GameScene
         Image image = null;
         try
         {
-            image = new Image(new FileInputStream("./Textures/win-back.png"));// TODO Change Background
+            image = new Image(new FileInputStream("./Textures/win-back.png"));
         } catch (FileNotFoundException e)
         {
             e.printStackTrace();
@@ -405,5 +405,10 @@ public class GameScene
         winRoot.getChildren().addAll(backToLevelSelectButton.getNode(),imageView);
         root.getChildren().add(winRoot);
 
+    }
+
+    public static void loadInit() {
+        init();
+        InputReader.getCurrentController().initLoad();
     }
 }

@@ -18,14 +18,20 @@ public class Lion extends Wild{
 
     public Lion(Cell cell) {
         super(cell);
+    }
+
+    @Override
+    public void initView() {
+        super.initView();
         Image image;
         try {
             image = new Image(new FileInputStream("./Textures/Animals/Lion/left.png"));
-            changeImageView(image,24,8,3,cell.getPositionX(),cell.getPositionY());
+            changeImageView(image,24,8,3,getCell().getPositionX(),getCell().getPositionY());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
+
     @Override
     public Item toItem() {
         Item item=Constant.getItemByType(CAGED_LION);

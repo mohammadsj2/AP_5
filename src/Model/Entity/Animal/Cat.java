@@ -20,15 +20,20 @@ public class Cat extends Animal {
 
     public Cat(Cell cell) {
         super(cell);
-        ImageView imageView=getImageView();
+
+
+    }
+
+    @Override
+    public void initView() {
+        super.initView();
         Image image= null;
         try {
             image = new Image(new FileInputStream("./Textures/Animals/Cat/down.png"));
-            changeImageView(image,24,5,5,cell.getPositionX(),cell.getPositionY());
+            changeImageView(image,24,5,5,getCell().getPositionX(),getCell().getPositionY());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

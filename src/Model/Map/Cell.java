@@ -24,6 +24,9 @@ public class Cell implements Viewable {
 
     public void initView() {
         imageView = new ImageView();
+        if(grass){
+            showGrass();
+        }
         GameScene.addNode(getImageView());
     }
 
@@ -51,16 +54,20 @@ public class Cell implements Viewable {
     }
 
     void plantGrass(){
-        Image image = null;
+        showGrass();
+        grass = true;
+    }
+
+    private void showGrass(){
+        Image image;
         try {
             image = new Image(new FileInputStream("./Textures/Grass/grass1.png"));
-            changeImageView(image, 1, 4, 4, (230 + 3.7 * getPositionX()), (230 + 2.1 * getPositionY()));
-            grass = true;
+            changeImageView(image, 1, 4, 4, GameScene.modifiedX(positionX), GameScene.modifiedY(positionY));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
     }
+
     void destroyGrass(){
         getImageView().setImage(null);
         grass = false;

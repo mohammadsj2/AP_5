@@ -89,7 +89,6 @@ public class Controller
 
     public void addItemToWareHouse(Item item) throws NoWarehouseSpaceException
     {
-        //TODO level.entityEarned(item);
         wareHouse.addItem(item);
         item.setInWareHouse(true);
         try
@@ -436,5 +435,12 @@ public class Controller
     public boolean isGameFinished()
     {
         return isGameFinished;
+    }
+
+    public void initLoad() {
+        ArrayList<Entity> entities=getMap().getEntities();
+        for(Entity entity:entities){
+            entity.initLoad();
+        }
     }
 }

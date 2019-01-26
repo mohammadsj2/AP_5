@@ -3,6 +3,7 @@ package Model.Entity;
 import Constant.Constant;
 import Controller.InputReader;
 import Model.Map.Cell;
+import View.Scene.GameScene;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -79,6 +80,10 @@ public class Item extends Entity
         {
             e.printStackTrace();
         }
+        if(getCell()!=null){
+            getImageView().setX(GameScene.modifiedX(getCell().getPositionX()));
+            getImageView().setY(GameScene.modifiedY(getCell().getPositionY()));
+        }
 
     }
 
@@ -130,5 +135,12 @@ public class Item extends Entity
     {
         if (!(obj instanceof Item)) return false;
         return ((Item) obj).getName().equals(getName());
+    }
+
+    @Override
+    public void initLoad() {
+        //Only for map items
+        super.initLoad();
+        refreshView();
     }
 }

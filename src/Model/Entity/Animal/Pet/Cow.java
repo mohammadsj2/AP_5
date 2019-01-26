@@ -14,7 +14,13 @@ import java.util.ArrayList;
 public class Cow extends Pet{
     public Cow(Cell cell) {
         super(cell);
-        ImageView imageView=getImageView();
+
+
+    }
+
+    @Override
+    public void initView() {
+        super.initView();
         Image image= null;
         try {
             image = new Image(new FileInputStream("./Textures/Animals/Cow/eat.png"));
@@ -22,8 +28,8 @@ public class Cow extends Pet{
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
     }
+
     @Override
     public ArrayList<Item> getOutputItems() {
         ArrayList<Item> items=new ArrayList<>();
