@@ -64,7 +64,7 @@ public class Map {
     public void destroyGrass(Cell cell){
         cell.destroyGrass();
     }
-    private Cell getCell(int x, int y) throws CellDoesNotExistException {
+    public Cell getCell(int x, int y) throws CellDoesNotExistException {
         for (Cell cell : cells) {
             if (cell.getPositionX() == x && cell.getPositionY() == y) {
                 return cell;

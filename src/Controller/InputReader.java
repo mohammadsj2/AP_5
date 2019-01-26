@@ -31,6 +31,8 @@ public class InputReader extends Application
     static Controller currentController = null;
     static int indexOfLevel;
     public static Stage primaryStage;
+    static YaGson yaGson=new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategy()).create();
+
 
 
     public static void main(String[] args) throws StartBusyTransporter, IOException
@@ -207,13 +209,11 @@ public class InputReader extends Application
     }
 
     private static WorkShop getWorkShop(String s) throws FileNotFoundException {
-        YaGson yaGson=new YaGsonBuilder().setExclusionStrategies(new YaGsonExclusionStrategy()).create();
         return yaGson.fromJson(new FileReader("./ResourcesRoot/WorkShops/"+s+".json"), WorkShop.class);
     }
 
     static void createLevel(int indexOfLevel, Controller controller){
         try {
-            YaGson yaGson=new YaGsonBuilder().setExclusionStrategies(new YaGsonExclusionStrategy()).create();
             OutputStream outputStream = new FileOutputStream(("./ResourcesRoot/Levels/level" + indexOfLevel + ".json"));
             Formatter formatter = new Formatter(outputStream);
             formatter.format(yaGson.toJson(controller));
@@ -257,16 +257,16 @@ public class InputReader extends Application
 
     public static void save()
     {
-        YaGson yaGson = new YaGson();
         try
         {
+            System.out.println("to Save....");
             OutputStream outputStream = new FileOutputStream(("./ResourcesRoot/Save/save" + indexOfLevel + ".json"));
             Formatter formatter = new Formatter(outputStream);
             formatter.format(yaGson.toJson(currentController));
-
             formatter.flush();
             formatter.close();
             outputStream.close();
+            System.out.println("saved!");
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -278,7 +278,6 @@ public class InputReader extends Application
     public static void loadLevel(int levelIndex) throws FileNotFoundException
     {
         indexOfLevel = levelIndex;
-        YaGson yaGson = new YaGson();
         currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Levels/level" + indexOfLevel + ".json")),
                 Controller.class);
 
@@ -288,7 +287,6 @@ public class InputReader extends Application
     public static void loadSave(int levelIndex) throws FileNotFoundException
     {
         indexOfLevel = levelIndex;
-        YaGson yaGson = new YaGson();
         currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/save" + indexOfLevel + ".json")),
                 Controller.class);
 

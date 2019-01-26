@@ -62,11 +62,9 @@ public class Well implements Upgradable, Loadable, Viewable {
         refreshView();
     }
     public Well() {
-        this(0);
+        this.level=0;
     }
-    public Well(int level) {
 
-    }
 
     public void setLevel(int level) {
         this.level = level;
