@@ -17,10 +17,12 @@ public abstract class Button
     Text insideText = new Text();
     ImageView imageView;
     boolean isInGameScene;
+    boolean locked;
 
-    public Button(String text, int height, int width, double x, double y, boolean isInGameScene)
+    public Button(String text, int height, int width, double x, double y, boolean isInGameScene,boolean locked)
     {
         this.isInGameScene = isInGameScene;
+        this.locked=locked;
         Image image = getRelaxImage();
         imageView = new ImageView(image);
         imageView.setFitHeight(height);
