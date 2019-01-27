@@ -115,6 +115,7 @@ public class MenuScene
         backToMenuButton.getNode().setOnMouseClicked(event ->
         {
             MenuScene.init(false);
+            GameScene.clear();
             InputReader.setScene(MenuScene.getScene());
         });
         addNode(backToMenuButton.getNode());
