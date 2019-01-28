@@ -6,10 +6,11 @@ import javafx.scene.paint.Color;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class CircleButton extends Button{
-    public CircleButton(String text, int height, int width, double x, double y,boolean isInGameScene)
+public class CircleButton extends Button
+{
+    public CircleButton(String text, int height, int width, double x, double y,boolean isInGameScene,boolean locked)
     {
-        super(text,height,width,x,y,isInGameScene);
+        super(text,height,width,x,y,isInGameScene,locked);
         insideText.setFill(Color.BLACK);
     }
 
@@ -18,7 +19,8 @@ public class CircleButton extends Button{
         Image image=null;
         try
         {
-            image = new Image(new FileInputStream("Textures/Button/CircleButton/CircleButton.png"));
+            if(locked) image = new Image(new FileInputStream("Textures/Button/CircleButton/CircleButtonLocked.png"));
+            else image = new Image(new FileInputStream("Textures/Button/CircleButton/CircleButton.png"));
         } catch (FileNotFoundException e)
         {
             e.printStackTrace();
@@ -30,7 +32,8 @@ public class CircleButton extends Button{
         Image image=null;
         try
         {
-            image = new Image(new FileInputStream("Textures/Button/CircleButton/CircleButtonPushed.png"));
+            if(locked) image = new Image(new FileInputStream("Textures/Button/CircleButton/CircleButtonLocked.png"));
+            else image = new Image(new FileInputStream("Textures/Button/CircleButton/CircleButtonPushed.png"));
         } catch (FileNotFoundException e)
         {
             e.printStackTrace();

@@ -154,6 +154,7 @@ public class InputReader extends Application
                 }
             }
         });
+
         createAllLevels();
         thread.start();
 
@@ -161,7 +162,57 @@ public class InputReader extends Application
     }
 
     private static void createAllLevels() {
+        createLevel1();
+        createLevel2();
         createLevel3();
+    }
+
+    private static void createLevel1()
+    {
+        try {
+            ArrayList<String> goalEntities = new ArrayList<>();
+            for (int i = 0; i < 5; i++) {
+                goalEntities.add("egg");
+            }
+            WorkShop workShop = getWorkShop("EggPowderPlant");
+            workShop.setLocation(0);
+            ArrayList<Item> helicopterItems = new ArrayList<>();
+            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
+            Controller controller = new Controller(200, goalEntities, helicopterItems);
+            controller.addWorkshop(workShop);
+
+            controller.setMoney(120);
+            indexOfLevel = 1;
+            createLevel(1,controller);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private static void createLevel2()
+    {
+        try {
+            ArrayList<String> goalEntities = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                goalEntities.add("cake");
+            }
+            WorkShop workShop = getWorkShop("EggPowderPlant");
+            WorkShop workShop2 = getWorkShop("CookieBakery");
+            workShop.setLocation(0);
+            workShop2.setLocation(1);
+            ArrayList<Item> helicopterItems = new ArrayList<>();
+            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
+            helicopterItems.add(Constant.getItemByType("egg"));
+            Controller controller = new Controller(500, goalEntities, helicopterItems);
+            controller.addWorkshop(workShop);
+            controller.addWorkshop(workShop2);
+
+            controller.setMoney(120);
+            indexOfLevel = 2;
+            createLevel(2,controller);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private static void createLevel3() {

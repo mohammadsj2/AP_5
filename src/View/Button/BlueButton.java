@@ -11,7 +11,7 @@ public class BlueButton extends Button
 
     public BlueButton(String text, int height, int width, double x, double y,boolean isInGameScene)
     {
-        super(text,height,width,x,y,isInGameScene);
+        super(text,height,width,x,y,isInGameScene,false);
     }
 
     @Override
