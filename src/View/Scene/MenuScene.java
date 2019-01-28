@@ -53,8 +53,8 @@ public class MenuScene
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200,false);
         multiPlayerButton.getNode().setOnMouseClicked(event ->
         {
-            ConnectScene.init();
-            InputReader.setScene(ConnectScene.getScene());
+            MultiPlayerScene.init();
+            InputReader.setScene(MultiPlayerScene.getScene());
             /*
             InputReader.loadLevel(1);
             InputReader.runByLevelNumber(1);
