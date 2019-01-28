@@ -39,7 +39,7 @@ public class UsernameGetterScene {
         BlueButton playButton=new BlueButton("Login!",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200,false);
 
-        TextField textField=new TextField();
+        TextField textField=new TextField("username");
         textField.setMinWidth(textWidth);
         textField.relocate(((double)Constant.GAME_SCENE_WIDTH-textWidth)/2,100);
         textField.setStyle("-fx-font-size: 25;");

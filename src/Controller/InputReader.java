@@ -5,13 +5,10 @@ import Model.Entity.Item;
 import Model.Map.Cell;
 import Model.Map.Map;
 import Network.Client.Client;
-import View.Scene.UsernameGetterScene;
+import View.Scene.*;
 import YaGson.*;
 import Model.Well;
 import Model.WorkShop;
-import View.Scene.HelicopterScene;
-import View.Scene.MenuScene;
-import View.Scene.TruckScene;
 import com.gilecode.yagson.YaGson;
 import com.gilecode.yagson.YaGsonBuilder;
 import javafx.application.Application;
@@ -359,13 +356,24 @@ public class InputReader extends Application
         primaryStage.setX(300);
         primaryStage.setY(100);
         primaryStage.show();
-        UsernameGetterScene.init();
-        setScene(UsernameGetterScene.getScene());
+        //UsernameGetterScene.init();
+        //setScene(UsernameGetterScene.getScene());
+        //TODO
+        MultiPlayerScene.init();
+        setScene(MultiPlayerScene.getScene());
     }
 
     public static void setScene(Scene scene)
     {
         primaryStage.setScene(scene);
+    }
+
+    public static Client getClient() {
+        return client;
+    }
+
+    public static YaGson getYaGson() {
+        return yaGson;
     }
 
     public static void setClient(Client client) {

@@ -1,23 +1,100 @@
 package Network.Client;
 
+import Controller.InputReader;
 import Network.Address;
+import Network.Chatroom;
 import Network.Server.Server;
+import com.gilecode.yagson.YaGson;
 import javafx.scene.image.Image;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Formatter;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class Client {
+    //server request to client on port
+    //client request to server on port+1
     private String name;
-    private Server server;
+    private String serverIP=null;
     private int level;
     private int imageIndex;
     private Address address;
     private boolean isInGame=false;
-
+    private int port;
+    private Socket socket;
+    private Scanner scanner;
+    private Formatter formatter;
 
     public Client(String name) {
         this.name = name;
         level=0;
+    }
+    public void connectToServer(String ip){
+        serverIP=ip;
+        try {
+            Socket socket=new Socket(serverIP,8060);
+            OutputStream outputStream=socket.getOutputStream();
+            InputStream inputStream=socket.getInputStream();
+            Scanner scanner=new Scanner(inputStream);
+            Formatter formatter=new Formatter(outputStream);
+
+            port=scanner.nextInt();
+            listenToServer(port);
+            formatter.format(address.getIp()+"\n");
+            formatter.flush();
+            socket.close();
+
+            this.socket=new Socket(serverIP,port+1);
+            this.scanner = new Scanner(this.socket.getInputStream());
+            this.formatter = new Formatter(this.socket.getOutputStream());
+
+            updateClient();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void listenToServer(int port) {
+        new Thread(() -> {
+            try {
+                ServerSocket serverSocket=new ServerSocket(port);
+                Socket socket=serverSocket.accept();
+                InputStream inputStream=socket.getInputStream();
+                OutputStream outputStream=socket.getOutputStream();
+                Scanner scanner=new Scanner(inputStream);
+                Formatter formatter=new Formatter(outputStream);
+
+                while(true){
+                    String input=scanner.nextLine();
+                    switch (input){
+                        //TODO
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+    }
+
+    public boolean isOnline(){
+        return serverIP!=null;
+    }
+
+    public void setServerIP(String serverIP) {
+        this.serverIP = serverIP;
+    }
+
+    private void updateClient() {
+        YaGson yaGson= InputReader.getYaGson();
+        formatter.format("updateClient\n");
+        formatter.format(yaGson.toJson(this));
+        formatter.flush();
     }
 
     public boolean isInGame() {
@@ -29,9 +106,6 @@ public class Client {
     }
 
 
-    public void setServer(Server server) {
-        this.server = server;
-    }
 
     public void setLevel(int level) {
         this.level = level;
@@ -45,9 +119,6 @@ public class Client {
         return name;
     }
 
-    public Server getServer() {
-        return server;
-    }
 
     public int getLevel() {
         return level;
@@ -63,6 +134,18 @@ public class Client {
         if (o == null || getClass() != o.getClass()) return false;
         Client client = (Client) o;
         return Objects.equals(name, client.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
+
+    public Chatroom getGlobalChatroom(){
+        YaGson yaGson= InputReader.getYaGson();
+        formatter.format("getGlobalChatroom\n");
+        formatter.flush();
+        return yaGson.fromJson(scanner.nextLine(),Chatroom.class);
     }
 
 }
