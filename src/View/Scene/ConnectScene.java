@@ -50,7 +50,9 @@ public class ConnectScene
         {
             /*TODO*/// go to multiPlayerScene
             InputReader.setServer(new Server(address));
-            addClient();
+            MultiPlayerScene.init();
+            InputReader.setScene(MultiPlayerScene.getScene());
+          //  addClient(address.getIp());
         });
         root.getChildren().add(hostButton.getNode());
         root.getChildren().add(portLabel.getNode());
@@ -65,22 +67,27 @@ public class ConnectScene
         {
             if(event.getCode().equals(KeyCode.ENTER))
             {
-                addClient();
+                addClient(hostIpTextField.getText());
+                MultiPlayerScene.init();
+                InputReader.setScene(MultiPlayerScene.getScene());
             }
         });
         BlueButton joinButton=new BlueButton("Join",45,200,450,360,false);
         joinButton.getNode().setOnMouseClicked(event ->
         {
-            addClient();
+            addClient(hostIpTextField.getText());
+            MultiPlayerScene.init();
+            InputReader.setScene(MultiPlayerScene.getScene());
         });
         root.getChildren().add(hostIpLabel.getNode());
         root.getChildren().add(hostIpTextField);
         root.getChildren().add(joinButton.getNode());
     }
 
-    private static void addClient()
+    private static void addClient(String ip)
     {
         /*TODO*/// call Client's connectToServer
+        InputReader.getClient().connectToServer(ip);
     }
 
 

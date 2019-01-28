@@ -8,6 +8,7 @@ import Exception.*;
 import Network.Message;
 import com.gilecode.yagson.YaGson;
 import com.gilecode.yagson.com.google.gson.reflect.TypeToken;
+import javafx.concurrent.Task;
 import org.junit.experimental.theories.Theories;
 
 import java.io.IOException;
@@ -32,39 +33,44 @@ public class Server {
         this.address=address;
         currentPort=address.getPort()+1;
         globalChatroom=new Chatroom();
-        new Thread(() ->
+        Task task=new Task<Void>()
         {
-            ServerSocket serverSocket=null;
-            try
+            @Override
+            protected Void call() throws Exception
             {
-                serverSocket=new ServerSocket(address.getPort());
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            while(true)
-            {
+                ServerSocket serverSocket=null;
                 try
                 {
-                    Socket socket=serverSocket.accept();
-                    InputStream inputStream=socket.getInputStream();
-                    OutputStream outputStream=socket.getOutputStream();
-                    Formatter formatter=new Formatter(outputStream);
-                    listenToClient(currentPort);
-                    formatter.format(String.valueOf(currentPort)+"\n");
-                    formatter.flush();
-                    Scanner scanner=new Scanner(inputStream);
-                    String clientIp=scanner.nextLine();
-                    socket.close();
-                    setRequestStreams(clientIp,currentPort);currentPort+=2;
+                    serverSocket=new ServerSocket(address.getPort());
                 } catch (IOException e)
                 {
                     e.printStackTrace();
                 }
+                while(true)
+                {
+                    try
+                    {
+                        Socket socket=serverSocket.accept();
+                        InputStream inputStream=socket.getInputStream();
+                        OutputStream outputStream=socket.getOutputStream();
+                        Formatter formatter=new Formatter(outputStream);
+                        listenToClient(currentPort);
+                        formatter.format(String.valueOf(currentPort)+"\n");
+                        formatter.flush();
+                        Scanner scanner=new Scanner(inputStream);
+                        String clientIp=scanner.nextLine();
+                        socket.close();
+                        setRequestStreams(clientIp,currentPort);currentPort+=2;
+                    } catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
 
 
+                }
             }
-        }).start();
+        };
+        new Thread(task).start();
     }
 
     private void listenToClient(int port)
