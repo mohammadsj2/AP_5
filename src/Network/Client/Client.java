@@ -29,7 +29,6 @@ public class Client
     private int imageIndex;
     private Address address;
     private boolean isInGame = false;
-    private int port;
     private Socket socket;
     private Scanner scanner;
     private Formatter formatter;
@@ -47,17 +46,20 @@ public class Client
         {
             Socket socket = new Socket(serverIP, 8060);
             OutputStream outputStream = socket.getOutputStream();
+       //     System.out.println(outputStream);
             InputStream inputStream = socket.getInputStream();
             Scanner scanner = new Scanner(inputStream);
             Formatter formatter = new Formatter(outputStream);
-
-            port = scanner.nextInt();
-            listenToServer(port);
+      //      System.out.println(formatter);
+            int listenPort = scanner.nextInt();
+            address=new Address(listenPort,"localhost");
+            listenToServer(address.getPort());
+      //      System.out.println(port);
+      //      listenToServer(port);
             formatter.format(address.getIp() + "\n");
             formatter.flush();
             socket.close();
-
-            this.socket = new Socket(serverIP, port + 1);
+            this.socket = new Socket(serverIP, listenPort + 1);
             this.scanner = new Scanner(this.socket.getInputStream());
             this.formatter = new Formatter(this.socket.getOutputStream());
 
