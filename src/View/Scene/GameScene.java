@@ -391,8 +391,8 @@ public class GameScene
                 ,(double)(width-100)/2,390,false);
         backToLevelSelectButton.getNode().setOnMouseClicked(event ->
         {
-            levelSelectScene.init();
-            InputReader.setScene(levelSelectScene.getScene());
+            LevelSelectScene.init();
+            InputReader.setScene(LevelSelectScene.getScene());
         });
         try {
             image=new Image(new FileInputStream("Textures/prize_gold.png"));
