@@ -411,4 +411,11 @@ public class GameScene
         init();
         InputReader.getCurrentController().initLoad();
     }
+
+    public static void clear() {
+        moneyText=null;
+        root.getChildren().clear();
+        TruckScene.clear();
+        HelicopterScene.clear();
+    }
 }
