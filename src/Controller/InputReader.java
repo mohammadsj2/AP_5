@@ -378,4 +378,9 @@ public class InputReader extends Application
     public static void setClient(Client client) {
         InputReader.client = client;
     }
+
+    public static YaGson getYaGson()
+    {
+        return yaGson;
+    }
 }
