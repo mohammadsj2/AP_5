@@ -13,6 +13,7 @@ import View.Scene.TruckScene;
 import com.gilecode.yagson.YaGson;
 import com.gilecode.yagson.YaGsonBuilder;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -24,6 +25,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import Constant.Constant;
+import javafx.stage.WindowEvent;
 
 public class InputReader extends Application
 {
@@ -475,6 +477,11 @@ public class InputReader extends Application
         primaryStage.setResizable(false);
         primaryStage.setX(300);
         primaryStage.setY(100);
+        primaryStage.setOnCloseRequest(event ->
+        {
+            primaryStage.close();
+            System.exit(0);
+        });
         primaryStage.show();
         setScene(MenuScene.getScene());
     }
