@@ -4,13 +4,17 @@ import Constant.Constant;
 import Controller.InputReader;
 import Network.Client.Client;
 import View.Button.BlueButton;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Rectangle;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -33,34 +37,31 @@ public class MultiPlayerScene {
 
     private static void initStartButtons()
     {
-        int height=70,width=180,textWidth=300;
-        BlueButton playButton=new BlueButton("Login!",height,width
-                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200,false);
+        int ySpace=105;
+        BlueButton button=new BlueButton("Play!",80,200,675,50,false);
+        addNode(button.getNode());
 
-        TextField textField=new TextField();
-        textField.setMinWidth(textWidth);
-        textField.relocate(((double)Constant.GAME_SCENE_WIDTH-textWidth)/2,100);
-        textField.setStyle("-fx-font-size: 25;");
+        button=new BlueButton("Scoreboard",80,200,675,50+ySpace,false);
+        addNode(button.getNode());
 
-        playButton.getNode().setOnMouseClicked(event ->
-        {
-            login(textField);
+        button=new BlueButton("ChatRoom",80,200,675,50+2*ySpace,false);
+        button.getNode().setOnMouseClicked(event -> {
+
         });
-        textField.setOnKeyPressed(event -> {
-            if(event.getCode().equals(KeyCode.ENTER)){
-                login(textField);
-            }
+        addNode(button.getNode());
+
+        button=new BlueButton("Disconnect",80,200,675,50+3*ySpace,false);
+
+        button.getNode().setOnMouseClicked(event -> {
+            InputReader.getClient().setServerIP(null);
+            ConnectScene.init();
+            InputReader.setScene(ConnectScene.getScene());
         });
-        addNode(playButton.getNode());
-        addNode(textField);
+
+        addNode(button.getNode());
+
     }
 
-    private static void login(TextField textField) {
-        Client client=new Client(textField.getText());
-        InputReader.setClient(client);
-        MenuScene.init(false);
-        InputReader.setScene(MenuScene.getScene());
-    }
 
 
     private static void initBackground() throws FileNotFoundException
@@ -71,6 +72,11 @@ public class MultiPlayerScene {
         backgroundView.setFitHeight(Constant.GAME_SCENE_HEIGHT);
         backgroundView.setImage(backgroundImage);
         root.getChildren().add(backgroundView);
+
+        Rectangle rectangle=new Rectangle(0,0,600,600);
+        rectangle.relocate(50,50);
+        rectangle.setOpacity(0.5);
+        addNode(rectangle);
     }
 
 

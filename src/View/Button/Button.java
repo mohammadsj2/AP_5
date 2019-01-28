@@ -30,6 +30,7 @@ public abstract class Button
         insideText.setText(text);
         insideText.setStyle("-fx-font-family: 'Comic Sans MS';-fx-font-size: " + (int) (0.4 * Math.min(height, width)));
         insideText.setFill(Color.WHITE);
+
         pane.getChildren().add(imageView);
         pane.getChildren().add(insideText);
         pane.setAlignment(Pos.CENTER);
