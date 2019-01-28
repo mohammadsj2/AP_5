@@ -5,13 +5,16 @@ import Network.Address;
 import Network.Chatroom;
 import Network.Server.Server;
 import com.gilecode.yagson.YaGson;
+import com.gilecode.yagson.com.google.gson.reflect.TypeToken;
 import javafx.scene.image.Image;
+import sun.misc.Cleaner;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Objects;
 import java.util.Scanner;
@@ -144,6 +147,19 @@ public class Client {
     public Chatroom getGlobalChatroom(){
         YaGson yaGson= InputReader.getYaGson();
         formatter.format("getGlobalChatroom\n");
+        formatter.flush();
+        return yaGson.fromJson(scanner.nextLine(),Chatroom.class);
+    }
+    public ArrayList<Client> getScoreBoard(){
+        YaGson yaGson= InputReader.getYaGson();
+        formatter.format("getScoreBoard\n");
+        formatter.flush();
+        return yaGson.fromJson(scanner.nextLine(), new TypeToken<ArrayList<Client>>(){}.getType());
+    }
+    public Chatroom getPrivateChatroom(Client client){
+        YaGson yaGson= InputReader.getYaGson();
+        formatter.format("getPrivateChatroom\n");
+        formatter.format(yaGson.toJson(client));
         formatter.flush();
         return yaGson.fromJson(scanner.nextLine(),Chatroom.class);
     }

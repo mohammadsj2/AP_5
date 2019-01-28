@@ -356,11 +356,8 @@ public class InputReader extends Application
         primaryStage.setX(300);
         primaryStage.setY(100);
         primaryStage.show();
-        //UsernameGetterScene.init();
-        //setScene(UsernameGetterScene.getScene());
-        //TODO
-        MultiPlayerScene.init();
-        setScene(MultiPlayerScene.getScene());
+        UsernameGetterScene.init();
+        setScene(UsernameGetterScene.getScene());
     }
 
     public static void setScene(Scene scene)
