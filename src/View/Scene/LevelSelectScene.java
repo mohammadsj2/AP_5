@@ -15,7 +15,7 @@ import javafx.scene.input.MouseEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class levelSelectScene
+public class LevelSelectScene
 {
     private static Group root = new Group();
     private static Scene scene = new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);

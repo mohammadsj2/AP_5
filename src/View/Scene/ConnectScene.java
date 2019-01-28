@@ -14,7 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Random;
 
-public class MultiPlayerScene
+public class ConnectScene
 {
 
     private static Group root = new Group();
