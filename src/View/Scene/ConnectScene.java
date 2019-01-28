@@ -58,7 +58,7 @@ public class ConnectScene
         root.getChildren().add(portLabel.getNode());
 
         FancyLabel hostIpLabel=new FancyLabel("Host IP: ",30,275,300);
-        TextField hostIpTextField=new TextField();
+        TextField hostIpTextField=new TextField("localhost");
         hostIpTextField.relocate(425,300);
         hostIpTextField.setMaxWidth(250);
         hostIpTextField.setStyle("-fx-font-size: 21.5;-fx-font-family: 'Comic Sans MS';");
@@ -87,6 +87,7 @@ public class ConnectScene
     private static void addClient(String ip)
     {
         /*TODO*/// call Client's connectToServer
+
         InputReader.getClient().connectToServer(ip);
     }
 
