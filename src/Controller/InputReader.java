@@ -4,6 +4,8 @@ import Exception.*;
 import Model.Entity.Item;
 import Model.Map.Cell;
 import Model.Map.Map;
+import Network.Client.Client;
+import View.Scene.UsernameGetterScene;
 import YaGson.*;
 import Model.Well;
 import Model.WorkShop;
@@ -32,131 +34,13 @@ public class InputReader extends Application
     static int indexOfLevel;
     public static Stage primaryStage;
     static YaGson yaGson=new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategy()).create();
+    static Client client;
 
 
 
     public static void main(String[] args) throws StartBusyTransporter, IOException
     {
-
-        Thread thread = new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    Scanner scanner = new Scanner(System.in);
-                    String[] input;
-                    while (true)
-                    {
-                        input = scanner.nextLine().split(" ");
-                        switch (input[0])
-                        {
-                            case "save":
-                                save();
-                                break;
-                            case "load":
-                                if (input[1].equals("level"))
-                                    loadLevel(new Integer(input[2]));
-                                else if (input[1].equals("save"))
-                                    loadSave(new Integer(input[2]));
-                                break;
-                            case "buy":
-                                buy(input[1]);
-                                break;
-                            case "pickup":
-                                pickup(new Integer(input[1]), new Integer(input[2]));
-                                break;
-                            case "cage":
-                                cage(new Integer(input[1]), new Integer(input[2]));
-                                break;
-                            case "plant":
-                                plant(new Integer(input[1]), new Integer(input[2]));
-                                break;
-                            case "well":
-                                fillWell();
-                                break;
-                            case "start":
-                                startWorkshop(new Integer(input[1]));
-                                break;
-                            case "upgrade":
-                                upgrade(input[1]);
-                                break;
-                            case "turn":
-                                nextTurn(new Integer(input[1]));
-                                break;
-                            case "truck":
-                                if (input[1].equals("go"))
-                                {
-                                    startTruck();
-                                } else if (input[1].equals("clear"))
-                                {
-                                    clearTruck();
-                                } else
-                                {
-                                    Item item = Constant.getItemByType(input[2]);
-                                    for (int i = 0; i < new Integer(input[3]); i++)
-                                    {
-                                        try
-                                        {
-                                            currentController.addItemToTruck(item);
-                                        } catch (NoTransporterSpaceException e)
-                                        {
-                                            System.out.println(Constant.NOT_ENOUGH_SPACE_MESSAGE);
-                                        } catch (NoSuchItemInWarehouseException e)
-                                        {
-                                            System.out.println(Constant.NO_SUCH_ITEM_MESSAGE);
-                                        }
-                                    }
-                                }
-                                break;
-                            case "helicopter":
-                                if (input[1].equals("go"))
-                                {
-                                    try
-                                    {
-                                        startHelicopter();
-                                    } catch (NotEnoughMoneyException e)
-                                    {
-                                        System.out.println(Constant.NOT_ENOUGH_MONEY_MESSAGE);
-                                    }
-                                } else if (input[1].equals("clear"))
-                                {
-                                    clearHelicopter();
-                                } else
-                                {
-                                    Item item = Constant.getItemByType(input[2]);
-                                    for (int i = 0; i < new Integer(input[3]); i++)
-                                    {
-                                        try
-                                        {
-                                            addItemToHelicopter(item);
-                                        } catch (NoTransporterSpaceException e)
-                                        {
-                                            System.out.println(Constant.NOT_ENOUGH_SPACE_MESSAGE);
-                                        }
-                                    }
-                                }
-                                break;
-                            case "print":
-                                System.out.println(currentController.getInfo(input[1]));
-                                break;
-                            case "cheat":
-                                currentController.increaseMoney(1000);
-                                break;
-                            default:
-                                System.out.println(Constant.BAD_INPUT_FORMAT_MESSAGE);
-                        }
-                    }
-                } catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        });
-
         createAllLevels();
-        thread.start();
 
         launch(args);
     }
@@ -470,18 +354,21 @@ public class InputReader extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-        MenuScene.init(false);
         InputReader.primaryStage = primaryStage;
         primaryStage.setResizable(false);
         primaryStage.setX(300);
         primaryStage.setY(100);
         primaryStage.show();
-        setScene(MenuScene.getScene());
+        UsernameGetterScene.init();
+        setScene(UsernameGetterScene.getScene());
     }
 
     public static void setScene(Scene scene)
     {
         primaryStage.setScene(scene);
+    }
 
+    public static void setClient(Client client) {
+        InputReader.client = client;
     }
 }
