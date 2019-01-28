@@ -1,14 +1,22 @@
 package View.Scene;
 
 import Constant.Constant;
+import Controller.InputReader;
 import Network.Address;
+import Network.Server.Server;
+import View.Button.BlueButton;
 import View.Label.FancyLabel;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Font;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -35,9 +43,44 @@ public class ConnectScene
 
     private static void initHost()
     {
-        Address address=new Address(new Random().nextInt(8999)+1000,"localhost");
-        FancyLabel portLabel=new FancyLabel("Port: "+address.getPort(),30,300,100);
+        Address address=new Address(8060,"localhost");
+        FancyLabel portLabel=new FancyLabel("Port: "+address.getPort(),30,250,100);
+        BlueButton hostButton=new BlueButton("Host",45,200,450,100,false);
+        hostButton.getNode().setOnMouseClicked(event ->
+        {
+            /*TODO*/// go to multiPlayerScene
+            InputReader.setServer(new Server(address));
+            addClient();
+        });
+        root.getChildren().add(hostButton.getNode());
         root.getChildren().add(portLabel.getNode());
+
+        FancyLabel hostIpLabel=new FancyLabel("Host IP: ",30,275,300);
+        TextField hostIpTextField=new TextField();
+        hostIpTextField.relocate(425,300);
+        hostIpTextField.setMaxWidth(250);
+        hostIpTextField.setStyle("-fx-font-size: 21.5;-fx-font-family: 'Comic Sans MS';");
+        hostIpTextField.setAlignment(Pos.CENTER);
+        hostIpTextField.setOnKeyPressed(event ->
+        {
+            if(event.getCode().equals(KeyCode.ENTER))
+            {
+                addClient();
+            }
+        });
+        BlueButton joinButton=new BlueButton("Join",45,200,450,360,false);
+        joinButton.getNode().setOnMouseClicked(event ->
+        {
+            addClient();
+        });
+        root.getChildren().add(hostIpLabel.getNode());
+        root.getChildren().add(hostIpTextField);
+        root.getChildren().add(joinButton.getNode());
+    }
+
+    private static void addClient()
+    {
+        /*TODO*/// call Client's connectToServer
     }
 
 

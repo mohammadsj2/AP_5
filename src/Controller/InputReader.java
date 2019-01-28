@@ -5,6 +5,7 @@ import Model.Entity.Item;
 import Model.Map.Cell;
 import Model.Map.Map;
 import Network.Client.Client;
+import Network.Server.Server;
 import View.Scene.UsernameGetterScene;
 import YaGson.*;
 import Model.Well;
@@ -34,7 +35,8 @@ public class InputReader extends Application
     static int indexOfLevel;
     public static Stage primaryStage;
     static YaGson yaGson=new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategy()).create();
-    static Client client;
+    private static Client client;
+    private static Server server;
 
 
 
@@ -349,6 +351,11 @@ public class InputReader extends Application
     public static Controller getCurrentController()
     {
         return currentController;
+    }
+
+    public static void setServer(Server server)
+    {
+        InputReader.server=server;
     }
 
     @Override

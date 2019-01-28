@@ -12,6 +12,14 @@ public class Server {
     private Address address;
     private Chatroom globalChatroom;
     private ArrayList<ArrayList<Chatroom>> privateChatrooms=new ArrayList<>();
+    private int currentPort;
+
+    public Server(Address address)
+    {
+        this.address=address;
+        currentPort=address.getPort()+1;
+        globalChatroom=new Chatroom();
+    }
 
     public Address getAddress() {
         return address;
