@@ -26,6 +26,7 @@ public class HelicopterScene {
     private static ArrayList<Label> inHelicopterCounterLabel;
 
     public static void init(){
+        items=InputReader.getCurrentController().getHelicopter().getPossibleItems();
         try {
             items=InputReader.getCurrentController().getHelicopter().getPossibleItems();
             inHelicopterCounterLabel=new ArrayList<>();
@@ -157,5 +158,10 @@ public class HelicopterScene {
             Label label=inHelicopterCounterLabel.get(i);
             label.setText("x"+InputReader.getCurrentController().getHelicopter().getNumberOfThisItem(items.get(i)));
         }
+    }
+
+    public static void clear() {
+        inHelicopterCounterLabel.clear();
+        root.getChildren().clear();
     }
 }

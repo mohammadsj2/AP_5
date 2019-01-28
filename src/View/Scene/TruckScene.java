@@ -147,4 +147,9 @@ public class TruckScene {
     public static void refresh(){
         refreshItemView();
     }
+
+    public static void clear() {
+        toDeleteInRefresh.clear();
+        root.getChildren().clear();
+    }
 }
