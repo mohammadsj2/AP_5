@@ -96,7 +96,6 @@ public class Client
                         switch (commadInput)
                         {
                             case "updateChatroom":
-                                System.out.println("HIR");
                                 input=scanner.nextLine();
                                 System.out.println("HIR");
                                 Chatroom chatroom=yaGson.fromJson(input,Chatroom.class);
@@ -105,8 +104,7 @@ public class Client
                                 {
                                     System.out.println("HIR");
                                     System.out.println(chatroom.getMessages().size());
-                                    ChatroomScene.CHATROOM_SCENE.init(chatroom);
-                                    InputReader.setScene(ChatroomScene.CHATROOM_SCENE.getScene());
+                                    ChatroomScene.CHATROOM_SCENE.setChatroom(chatroom);
                                 }
                                 break;
                             case "updateScoreboard":

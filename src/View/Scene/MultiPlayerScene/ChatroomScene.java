@@ -34,9 +34,10 @@ import java.util.Formatter;
 public class ChatroomScene
 {
     public final static ChatroomScene CHATROOM_SCENE=new ChatroomScene();
-    protected Group root;
-    protected Scene scene;
+    protected Group root=new Group();
+    protected Scene scene=new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
     private Chatroom chatroom;
+    private ArrayList<Node> toRemove=new ArrayList<>();
 
     private ChatroomScene()
     {
@@ -46,8 +47,6 @@ public class ChatroomScene
     public void init(Chatroom chatroom) {
         System.out.println("INIT3");
         System.out.println(chatroom.getMessages().size());
-        root=new Group();
-        scene=new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
         try
         {
             initBackground();
@@ -180,6 +179,10 @@ public class ChatroomScene
 
     public void setChatroom(Chatroom chatroom)
     {
+        for(Node node:toRemove){
+            Platform.runLater(() -> root.getChildren().remove(node));
+        }
+        toRemove.clear();
         int height=50;
         int y=540;
         this.chatroom = chatroom;
@@ -204,7 +207,8 @@ public class ChatroomScene
             }
             y-=60;
             System.out.println("KOFT");
-            root.getChildren().add(newMessage);
+            toRemove.add(newMessage);
+            Platform.runLater(() -> root.getChildren().add(newMessage));
         }
     }
 
