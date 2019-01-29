@@ -4,6 +4,7 @@ import Constant.Constant;
 import Controller.InputReader;
 import Network.Client.Client;
 import View.Button.BlueButton;
+import View.Label.FancyLabel;
 import View.Scene.ConnectScene;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -28,7 +29,6 @@ public class ScoreBoardScene extends MultiPlayerScene{
     @Override
     public void init()
     {
-        setClients(InputReader.getClient().getScoreBoard());
         try
         {
             initBackground();
@@ -37,6 +37,7 @@ public class ScoreBoardScene extends MultiPlayerScene{
         {
             e.printStackTrace();
         }
+        setClients(InputReader.getClient().getScoreBoard());
     }
 
     public void setClients(ArrayList<Client> clients) {
@@ -51,9 +52,9 @@ public class ScoreBoardScene extends MultiPlayerScene{
         int x=100;
         for (int i = 0; i < clients.size(); i++) {
             Client client = clients.get(i);
-            Label label = new Label(client.getName());
-            label.relocate(x,positionInScoreBoardY(i));
-            label.setOnMouseClicked(event -> {
+            FancyLabel label = new FancyLabel(client.getName(),23,x,positionInScoreBoardY(i));
+            addNode(label.getNode());
+            label.getNode().setOnMouseClicked(event -> {
                 ProfileScene profileScene=new ProfileScene(client);
                 profileScene.init();
                 InputReader.setScene(profileScene.getScene());

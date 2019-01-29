@@ -46,11 +46,15 @@ public class ConnectScene
         BlueButton hostButton=new BlueButton("Host",45,200,450,100,false);
         hostButton.getNode().setOnMouseClicked(event ->
         {
-            /*TODO*/// go to multiPlayerScene
+
             InputReader.setServer(new Server(address));
             MultiPlayerScene.MULTI_PLAYER_SCENE.init();
             InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
-          //  addClient(address.getIp());
+            /*TODO try {
+                InputReader.getClient().connectToServer(InputReader.getClient().getAddress().getIp());
+            } catch (ServerDoesNotExist serverDoesNotExist) {
+                serverDoesNotExist.printStackTrace();
+            }*/
         });
         root.getChildren().add(hostButton.getNode());
         root.getChildren().add(portLabel.getNode());
