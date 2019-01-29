@@ -6,6 +6,7 @@ import Network.Chatroom;
 import Network.Client.Client;
 import View.Button.BlueButton;
 import View.Scene.ConnectScene;
+import View.Scene.LevelSelectScene;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -47,6 +48,10 @@ public class MultiPlayerScene {
     {
         int ySpace=105;
         BlueButton button=new BlueButton("Play!",80,200,675,50);
+        button.getNode().setOnMouseClicked(event -> {
+            LevelSelectScene.initInMultiPlayer();
+            InputReader.setScene(LevelSelectScene.getScene());
+        });
         addNode(button.getNode());
 
         button=new BlueButton("Scoreboard",80,200,675,50+ySpace);

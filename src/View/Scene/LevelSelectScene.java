@@ -4,6 +4,7 @@ import Constant.Constant;
 import Controller.InputReader;
 import View.Button.BlueButton;
 import View.Button.CircleButton;
+import View.Scene.MultiPlayerScene.MultiPlayerScene;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -29,6 +30,7 @@ public class LevelSelectScene
 
     public static void init()
     {
+        root.getChildren().clear();
         try
         {
             initBackground();
@@ -38,6 +40,29 @@ public class LevelSelectScene
         {
             e.printStackTrace();
         }
+    }
+    public static void initInMultiPlayer() {
+        root.getChildren().clear();
+        try
+        {
+            initBackground();
+            initLevelButtons();
+            initMenuButtonInMultiPlayer();
+        } catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private static void initMenuButtonInMultiPlayer() {
+        BlueButton menuButton=new BlueButton("Back to Menu",50,150,740,640,false);
+        menuButton.getNode().setOnMouseClicked(event ->
+        {
+
+            MultiPlayerScene.MULTI_PLAYER_SCENE.init();
+            InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
+        });
+        root.getChildren().add(menuButton.getNode());
     }
 
     private static void initMenuButton()
@@ -124,5 +149,6 @@ public class LevelSelectScene
     public static void deleteNode(Node node) {
         root.getChildren().remove(node);
     }
+
 
 }

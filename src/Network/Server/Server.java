@@ -123,6 +123,7 @@ public class Server
                                     addClient(newClient);
                                     client=newClient;
                                 }
+                                updateScoreBoard();
                                 break;
                             case "getGlobalChatroom":
                                 formatter.format(yaGson.toJson(globalChatroom, Chatroom.class) + "\n");
@@ -225,7 +226,6 @@ public class Server
         }
         tmpArrayList.add(new Chatroom());
         privateChatrooms.add(tmpArrayList);
-        updateScoreBoard();
     }
 
     private void setRequestStreams(String ip, int port)

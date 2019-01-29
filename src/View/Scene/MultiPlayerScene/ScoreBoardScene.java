@@ -20,6 +20,8 @@ import javafx.scene.shape.Rectangle;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ScoreBoardScene extends MultiPlayerScene{
     public final static ScoreBoardScene SCORE_BOARD_SCENE=new ScoreBoardScene();
@@ -50,6 +52,7 @@ public class ScoreBoardScene extends MultiPlayerScene{
         for(Node node:toRemove){
             Platform.runLater(() -> root.getChildren().remove(node));
         }
+        Collections.sort(clients, (o1, o2) -> -o1.getLevel()+o2.getLevel());
         int x=100;
         for (int i = 0; i < clients.size(); i++) {
             Client client = clients.get(i);
@@ -60,7 +63,13 @@ public class ScoreBoardScene extends MultiPlayerScene{
                 profileScene.init();
                 InputReader.setScene(profileScene.getScene());
             });
+            FancyLabel score=new FancyLabel(Integer.toString(client.getLevel()),23,x+300,positionInScoreBoardY(i));
+            Platform.runLater(() -> addNode(score.getNode()));
+
+            toRemove.add(score.getNode());
             toRemove.add(label.getNode());
+
+
         }
     }
 
