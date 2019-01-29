@@ -1,9 +1,11 @@
-package View.Scene;
+package View.Scene.MultiPlayerScene;
 
 import Constant.Constant;
 import Controller.InputReader;
+import Network.Chatroom;
 import Network.Client.Client;
 import View.Button.BlueButton;
+import View.Scene.ConnectScene;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -20,10 +22,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class MultiPlayerScene {
-    private static Group root = new Group();
-    private static Scene scene = new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
+    public final static MultiPlayerScene MULTI_PLAYER_SCENE=new MultiPlayerScene();
+    protected Group root = new Group();
+    protected Scene scene = new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
 
-    public static void init()
+    public void init()
     {
         try
         {
@@ -35,22 +38,26 @@ public class MultiPlayerScene {
         }
     }
 
-    private static void initStartButtons()
+    protected void initStartButtons()
     {
         int ySpace=105;
-        BlueButton button=new BlueButton("Play!",80,200,675,50,false);
+        BlueButton button=new BlueButton("Play!",80,200,675,50);
         addNode(button.getNode());
 
-        button=new BlueButton("Scoreboard",80,200,675,50+ySpace,false);
+        button=new BlueButton("Scoreboard",80,200,675,50+ySpace);
+        button.getNode().setOnMouseClicked(event -> {
+            ScoreBoardScene.SCORE_BOARD_SCENE.init();
+            InputReader.setScene(ScoreBoardScene.SCORE_BOARD_SCENE.getScene());
+        });
         addNode(button.getNode());
 
-        button=new BlueButton("ChatRoom",80,200,675,50+2*ySpace,false);
+        button=new BlueButton("ChatRoom",80,200,675,50+2*ySpace);
         button.getNode().setOnMouseClicked(event -> {
 
         });
         addNode(button.getNode());
 
-        button=new BlueButton("Disconnect",80,200,675,50+3*ySpace,false);
+        button=new BlueButton("Disconnect",80,200,675,50+3*ySpace);
 
         button.getNode().setOnMouseClicked(event -> {
             InputReader.getClient().disconnect();
@@ -64,7 +71,7 @@ public class MultiPlayerScene {
 
 
 
-    private static void initBackground() throws FileNotFoundException
+    protected void initBackground() throws FileNotFoundException
     {
         Image backgroundImage = new Image(new FileInputStream("Textures/menu-back.jpg"));
         ImageView backgroundView = new ImageView();
@@ -80,12 +87,12 @@ public class MultiPlayerScene {
     }
 
 
-    public static void addNode(Node node) {
+    public void addNode(Node node) {
         if(!root.getChildren().contains(node))
             root.getChildren().add(node);
     }
 
-    public static Scene getScene()
+    public Scene getScene()
     {
         return scene;
     }
