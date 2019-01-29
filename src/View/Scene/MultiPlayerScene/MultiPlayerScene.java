@@ -26,6 +26,11 @@ public class MultiPlayerScene {
     protected Group root = new Group();
     protected Scene scene = new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
 
+    protected MultiPlayerScene()
+    {
+
+    }
+
     public void init()
     {
         try
@@ -54,6 +59,10 @@ public class MultiPlayerScene {
         button=new BlueButton("ChatRoom",80,200,675,50+2*ySpace);
         button.getNode().setOnMouseClicked(event -> {
 
+            Client client=InputReader.getClient();
+            Chatroom chatroom = client.getGlobalChatroom();
+            ChatroomScene.CHATROOM_SCENE.init(chatroom);
+            InputReader.setScene(ChatroomScene.CHATROOM_SCENE.getScene());
         });
         addNode(button.getNode());
 
