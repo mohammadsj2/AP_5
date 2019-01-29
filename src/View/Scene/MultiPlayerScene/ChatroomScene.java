@@ -31,18 +31,12 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Formatter;
 
-public class ChatroomScene
+public class ChatroomScene extends MultiPlayerScene
 {
     public final static ChatroomScene CHATROOM_SCENE=new ChatroomScene();
-    protected Group root=new Group();
-    protected Scene scene=new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
     private Chatroom chatroom;
     private ArrayList<Node> toRemove=new ArrayList<>();
 
-    private ChatroomScene()
-    {
-
-    }
 
     public void init(Chatroom chatroom) {
         try
@@ -55,57 +49,6 @@ public class ChatroomScene
         }
         setChatTools();
         setChatroom(chatroom);
-    }
-
-
-    protected void initStartButtons()
-    {
-        int ySpace=105;
-        BlueButton button=new BlueButton("Play!",80,200,675,50);
-        addNode(button.getNode());
-
-        button=new BlueButton("Scoreboard",80,200,675,50+ySpace);
-        button.getNode().setOnMouseClicked(event -> {
-            ScoreBoardScene.SCORE_BOARD_SCENE.init();
-            InputReader.setScene(ScoreBoardScene.SCORE_BOARD_SCENE.getScene());
-        });
-        addNode(button.getNode());
-
-        button=new BlueButton("ChatRoom",80,200,675,50+2*ySpace);
-        button.getNode().setOnMouseClicked(event -> {
-
-            Client client=InputReader.getClient();
-            Chatroom chatroom = client.getGlobalChatroom();
-            ChatroomScene.CHATROOM_SCENE.init(chatroom);
-            InputReader.setScene(ChatroomScene.CHATROOM_SCENE.getScene());
-        });
-        addNode(button.getNode());
-
-        button=new BlueButton("Disconnect",80,200,675,50+3*ySpace);
-
-        button.getNode().setOnMouseClicked(event -> {
-            InputReader.getClient().disconnect();
-            ConnectScene.init();
-            InputReader.setScene(ConnectScene.getScene());
-        });
-
-        addNode(button.getNode());
-
-    }
-
-    protected void initBackground() throws FileNotFoundException
-    {
-        Image backgroundImage = new Image(new FileInputStream("Textures/menu-back.jpg"));
-        ImageView backgroundView = new ImageView();
-        backgroundView.setFitWidth(Constant.GAME_SCENE_WIDTH);
-        backgroundView.setFitHeight(Constant.GAME_SCENE_HEIGHT);
-        backgroundView.setImage(backgroundImage);
-        root.getChildren().add(backgroundView);
-
-        Rectangle rectangle=new Rectangle(0,0,600,600);
-        rectangle.relocate(50,50);
-        rectangle.setOpacity(0.5);
-        addNode(rectangle);
     }
 
 
@@ -126,23 +69,11 @@ public class ChatroomScene
         sendButton.setMinWidth(100);
         sendButton.setTextFill(Color.WHITE);
         sendButton.setAlignment(Pos.CENTER);
-        sendButton.setOnMouseClicked(new EventHandler<MouseEvent>()
-        {
-            @Override
-            public void handle(MouseEvent event)
+        sendButton.setOnMouseClicked(event -> sendMessage(textField));
+        textField.setOnKeyPressed(event -> {
+            if (event.getCode().equals(KeyCode.ENTER))
             {
                 sendMessage(textField);
-            }
-        });
-        textField.setOnKeyPressed(new EventHandler<KeyEvent>()
-        {
-            @Override
-            public void handle(KeyEvent event)
-            {
-                if (event.getCode().equals(KeyCode.ENTER))
-                {
-                    sendMessage(textField);
-                }
             }
         });
         root.getChildren().add(sendButton);

@@ -162,7 +162,7 @@ public class Server
                                     int id2=getClientId(chatroom.getSecondClient());
                                     privateChatrooms.get(id1).set(id2,chatroom);
                                     privateChatrooms.get(id2).set(id1,chatroom);
-                                  //  System.out.println(privateChatrooms.get(0).get(1).getMessages().size());
+                                    //  System.out.println(privateChatrooms.get(0).get(1).getMessages().size());
                                     System.out.println(chatroom.getFirstClient().getName()+" "+chatroom.getSecondClient().getName());
                                     sendChatroom(chatroom.getFirstClient(),chatroom);
                                     if(!chatroom.getFirstClient().equals(chatroom.getSecondClient()))
@@ -249,7 +249,6 @@ public class Server
             OutputStream outputStream = socket.getOutputStream();
             scanners.put(port, new Scanner(inputStream));
             formatters.put(port, new Formatter(outputStream));
-          //  System.out.println("SET FORMATTER PORT "+port);
         } catch (IOException e) {
             e.printStackTrace();
         }

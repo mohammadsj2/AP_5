@@ -8,6 +8,9 @@ import Network.Client.Client;
 
 import View.Scene.*;
 import Network.Server.Server;
+import View.Scene.MultiPlayerScene.ChatroomScene;
+import View.Scene.MultiPlayerScene.MultiPlayerScene;
+import View.Scene.MultiPlayerScene.ScoreBoardScene;
 import View.Scene.UsernameGetterScene;
 import YaGson.*;
 import Model.Well;
@@ -33,7 +36,7 @@ public class InputReader extends Application
 {
 
     static Controller currentController = null;
-    static int indexOfLevel;
+    public static int indexOfLevel;
     public static Stage primaryStage;
     private static YaGson yaGson=new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategy()).create();
     private static Client client;
@@ -44,7 +47,6 @@ public class InputReader extends Application
     public static void main(String[] args) throws StartBusyTransporter, IOException
     {
         createAllLevels();
-
         launch(args);
     }
 
@@ -55,8 +57,7 @@ public class InputReader extends Application
         System.out.println("");
     }
 
-    private static void createLevel1()
-    {
+    private static void createLevel1() {
         try {
             ArrayList<String> goalEntities = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
@@ -66,7 +67,7 @@ public class InputReader extends Application
             workShop.setLocation(0);
             ArrayList<Item> helicopterItems = new ArrayList<>();
             //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
-            Controller controller = new Controller(200, goalEntities, helicopterItems);
+            Controller controller = new Controller(1,200, goalEntities, helicopterItems);
             controller.addWorkshop(workShop);
 
             controller.setMoney(120);
@@ -77,8 +78,7 @@ public class InputReader extends Application
         }
     }
 
-    private static void createLevel2()
-    {
+    private static void createLevel2() {
         try {
             ArrayList<String> goalEntities = new ArrayList<>();
             for (int i = 0; i < 3; i++) {
@@ -91,7 +91,7 @@ public class InputReader extends Application
             ArrayList<Item> helicopterItems = new ArrayList<>();
             //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
             helicopterItems.add(Constant.getItemByType("egg"));
-            Controller controller = new Controller(500, goalEntities, helicopterItems);
+            Controller controller = new Controller(2,500, goalEntities, helicopterItems);
             controller.addWorkshop(workShop);
             controller.addWorkshop(workShop2);
 
@@ -130,7 +130,7 @@ public class InputReader extends Application
             helicopterItems.add(Constant.getItemByType("sewing"));
             helicopterItems.add(Constant.getItemByType("fabric"));
             helicopterItems.add(Constant.getItemByType("adornment"));
-            Controller controller = new Controller(35000, goalEntities, helicopterItems);
+            Controller controller = new Controller(3,35000, goalEntities, helicopterItems);
             controller.addWorkshop(workShop);
             controller.addWorkshop(workShop2);
             controller.addWorkshop(workShop3);
@@ -361,7 +361,7 @@ public class InputReader extends Application
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception
+    public void start(Stage primaryStage)
     {
         InputReader.primaryStage = primaryStage;
         primaryStage.setResizable(false);

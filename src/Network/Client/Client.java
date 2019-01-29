@@ -137,7 +137,7 @@ public class Client
         this.serverIP = serverIP;
     }
 
-    private void updateClient()
+    public void updateClient()
     {
         formatter.format("updateClient\n");
         formatter.format(yaGson.toJson(this) + "\n");
