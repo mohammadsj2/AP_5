@@ -184,7 +184,6 @@ public class ChatroomScene
         int y=560;
         this.chatroom = chatroom;
         ArrayList<Message> messagesShown=chatroom.getMessages();
-        System.out.println(messagesShown.size());
         for(Message message:messagesShown)
         {
             Label newMessage = new Label("  " + message.getText() + "  ");
@@ -210,7 +209,6 @@ public class ChatroomScene
                 y-=nameHeight;
                 try
                 {
-                    System.out.println(message.getClient().getImageIndex());
                     ImageView profilePicture=new ImageView(new Image(
                             new FileInputStream("./Textures/Profile/"+message.getClient().getImageIndex()+".png")));
                     profilePicture.setFitHeight(textHeight+nameHeight);
@@ -234,6 +232,7 @@ public class ChatroomScene
                 y-=textHeight+10;
             }
         }
+        System.out.println("CHAT ROOM SET!");
     }
 
 }

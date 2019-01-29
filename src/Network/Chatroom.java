@@ -40,7 +40,7 @@ public class Chatroom {
         Chatroom chatroom = (Chatroom) o;
         if(isGlobal && chatroom.isGlobal)return true;
         else if(isGlobal || chatroom.isGlobal)return false;
-        return firstClient==chatroom.firstClient && secondClient==chatroom.secondClient;
+        return firstClient.equals(chatroom.firstClient) && secondClient.equals(chatroom.secondClient);
 
     }
 
@@ -52,5 +52,15 @@ public class Chatroom {
             resultMessages.add(messages.get(i));
         }
         return resultMessages;
+    }
+
+    public Client getFirstClient()
+    {
+        return firstClient;
+    }
+
+    public Client getSecondClient()
+    {
+        return secondClient;
     }
 }
