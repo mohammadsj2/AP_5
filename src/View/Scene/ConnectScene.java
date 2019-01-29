@@ -7,6 +7,7 @@ import Network.Server.Server;
 import View.Button.BlueButton;
 import Exception.*;
 import View.Label.FancyLabel;
+import View.Scene.MultiPlayerScene.MultiPlayerScene;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -47,8 +48,8 @@ public class ConnectScene
         {
             /*TODO*/// go to multiPlayerScene
             InputReader.setServer(new Server(address));
-            MultiPlayerScene.init();
-            InputReader.setScene(MultiPlayerScene.getScene());
+            MultiPlayerScene.MULTI_PLAYER_SCENE.init();
+            InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
           //  addClient(address.getIp());
         });
         root.getChildren().add(hostButton.getNode());
@@ -70,8 +71,8 @@ public class ConnectScene
                     System.out.println(Constant.SERVER_DOES_NOT_EXIST_MESSAGE);
                     return;
                 }
-                MultiPlayerScene.init();
-                InputReader.setScene(MultiPlayerScene.getScene());
+                MultiPlayerScene.MULTI_PLAYER_SCENE.init();
+                InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
             }
         });
         BlueButton joinButton=new BlueButton("Join",45,200,450,360,false);
@@ -83,8 +84,8 @@ public class ConnectScene
                 System.out.println(Constant.SERVER_DOES_NOT_EXIST_MESSAGE);
                 return;
             }
-            MultiPlayerScene.init();
-            InputReader.setScene(MultiPlayerScene.getScene());
+            MultiPlayerScene.MULTI_PLAYER_SCENE.init();
+            InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
         });
         root.getChildren().add(hostIpLabel.getNode());
         root.getChildren().add(hostIpTextField);
