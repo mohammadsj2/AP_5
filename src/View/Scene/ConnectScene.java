@@ -3,6 +3,7 @@ package View.Scene;
 import Constant.Constant;
 import Controller.InputReader;
 import Network.Address;
+import Network.Client.Client;
 import Network.Server.Server;
 import View.Button.BlueButton;
 import Exception.*;
@@ -50,11 +51,18 @@ public class ConnectScene
             InputReader.setServer(new Server(address));
             MultiPlayerScene.MULTI_PLAYER_SCENE.init();
             InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
-            /*TODO try {
-                InputReader.getClient().connectToServer(InputReader.getClient().getAddress().getIp());
+            if(InputReader.getClient()==null){
+                System.out.println("tof behesh !");
+            }
+            if(InputReader.getClient().getAddress()==null){
+                System.out.println("tof behesh !");
+            }
+            try {
+
+                addClient(InputReader.getClient().getAddress().getIp());
             } catch (ServerDoesNotExist serverDoesNotExist) {
                 serverDoesNotExist.printStackTrace();
-            }*/
+            }
         });
         root.getChildren().add(hostButton.getNode());
         root.getChildren().add(portLabel.getNode());
@@ -97,8 +105,6 @@ public class ConnectScene
     }
 
     private static void addClient(String ip) throws ServerDoesNotExist {
-        /*TODO*/// call Client's connectToServer
-
         InputReader.getClient().connectToServer(ip);
     }
 

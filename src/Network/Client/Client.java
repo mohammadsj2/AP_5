@@ -40,27 +40,25 @@ public class Client
 
     public Client(String name)
     {
-        Address address=new Address(1231,"localhost");
+        address=new Address(1231,"localhost");
         this.name = name;
         level = 0;
     }
 
     public void connectToServer(String ip) throws ServerDoesNotExist {
+        System.out.println(ip);
         serverIP = ip;
         try
         {
             Socket socket = new Socket(serverIP, 8060);
             OutputStream outputStream = socket.getOutputStream();
-       //     System.out.println(outputStream);
             InputStream inputStream = socket.getInputStream();
             Scanner scanner = new Scanner(inputStream);
             Formatter formatter = new Formatter(outputStream);
-      //      System.out.println(formatter);
             int listenPort = scanner.nextInt();
             address=new Address(listenPort,"localhost");
             listenToServer(address.getPort());
-      //      System.out.println(port);
-      //      listenToServer(port);
+
             formatter.format(address.getIp() + "\n");
             formatter.flush();
             socket.close();
