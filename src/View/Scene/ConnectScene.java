@@ -51,12 +51,6 @@ public class ConnectScene
             InputReader.setServer(new Server(address));
             MultiPlayerScene.MULTI_PLAYER_SCENE.init();
             InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
-            if(InputReader.getClient()==null){
-                System.out.println("tof behesh !");
-            }
-            if(InputReader.getClient().getAddress()==null){
-                System.out.println("tof behesh !");
-            }
             try {
 
                 addClient(InputReader.getClient().getAddress().getIp());
