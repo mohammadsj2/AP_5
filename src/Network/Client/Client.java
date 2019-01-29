@@ -4,6 +4,7 @@ import Controller.InputReader;
 import Network.Address;
 import Network.Chatroom;
 import Network.Server.Server;
+import View.Scene.MultiPlayerScene.ChatroomScene;
 import YaGson.*;
 import Exception.*;
 import com.gilecode.yagson.YaGson;
@@ -35,32 +36,34 @@ public class Client
     private Socket socket;
     private Scanner scanner;
     private Formatter formatter;
-    private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();;
+    private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();
+    ;
 
 
     public Client(String name)
     {
-        Address address=new Address(1231,"localhost");
+        Address address = new Address(1231, "localhost");
         this.name = name;
         level = 0;
     }
 
-    public void connectToServer(String ip) throws ServerDoesNotExist {
+    public void connectToServer(String ip) throws ServerDoesNotExist
+    {
         serverIP = ip;
         try
         {
             Socket socket = new Socket(serverIP, 8060);
             OutputStream outputStream = socket.getOutputStream();
-       //     System.out.println(outputStream);
+            //     System.out.println(outputStream);
             InputStream inputStream = socket.getInputStream();
             Scanner scanner = new Scanner(inputStream);
             Formatter formatter = new Formatter(outputStream);
-      //      System.out.println(formatter);
+            //      System.out.println(formatter);
             int listenPort = scanner.nextInt();
-            address=new Address(listenPort,"localhost");
+            address = new Address(listenPort, "localhost");
             listenToServer(address.getPort());
-      //      System.out.println(port);
-      //      listenToServer(port);
+            //      System.out.println(port);
+            //      listenToServer(port);
             formatter.format(address.getIp() + "\n");
             formatter.flush();
             socket.close();
@@ -93,10 +96,25 @@ public class Client
 
                     while (true)
                     {
-                        String input = scanner.nextLine();
-                        switch (input)
+                        String commadInput = scanner.nextLine();
+                        String input;
+                        System.out.println(commadInput);
+                        switch (commadInput)
                         {
-                            //TODO
+                            case "updateChatroom":
+                                System.out.println("HIR");
+                                input=scanner.nextLine();
+                                System.out.println("HIR");
+                                Chatroom chatroom=yaGson.fromJson(input,Chatroom.class);
+                                System.out.println(chatroom.isGlobal());
+                                if(ChatroomScene.CHATROOM_SCENE.getChatroom().equals(chatroom))
+                                {
+                                    System.out.println("HIR");
+                                    System.out.println(chatroom.getMessages().size());
+                                    ChatroomScene.CHATROOM_SCENE.init(chatroom);
+                                    InputReader.setScene(ChatroomScene.CHATROOM_SCENE.getScene());
+                                }
+                                break;
                         }
                     }
                 } catch (IOException e)
@@ -122,7 +140,7 @@ public class Client
     private void updateClient()
     {
         formatter.format("updateClient\n");
-        formatter.format(yaGson.toJson(this)+"\n");
+        formatter.format(yaGson.toJson(this) + "\n");
         formatter.flush();
     }
 
@@ -189,24 +207,35 @@ public class Client
     {
         formatter.format("getScoreBoard\n");
         formatter.flush();
-        return yaGson.fromJson(scanner.nextLine(), new TypeToken<ArrayList<Client>>(){}.getType());
+        return yaGson.fromJson(scanner.nextLine(), new TypeToken<ArrayList<Client>>()
+        {
+        }.getType());
     }
 
     public Chatroom getPrivateChatroom(Client client)
     {
         formatter.format("getPrivateChatroom\n");
-        formatter.format(yaGson.toJson(client)+"\n");
+        formatter.format(yaGson.toJson(client) + "\n");
         formatter.flush();
         return yaGson.fromJson(scanner.nextLine(), Chatroom.class);
     }
 
-    public void disconnect() {
+    public void disconnect()
+    {
         formatter.format("disconnect\n");
         formatter.flush();
         setServerIP(null);
     }
 
-    public Address getAddress() {
+    public Address getAddress()
+    {
         return address;
+    }
+
+    public void sendChatroom(Chatroom chatroom)
+    {
+        formatter.format("updateChatroom\n");
+        formatter.format(yaGson.toJson(chatroom) + "\n");
+        formatter.flush();
     }
 }
