@@ -4,6 +4,7 @@ import Controller.InputReader;
 import Network.Address;
 import Network.Chatroom;
 import Network.Server.Server;
+import View.Scene.MultiPlayerScene.ScoreBoardScene;
 import YaGson.*;
 import Exception.*;
 import com.gilecode.yagson.YaGson;
@@ -17,10 +18,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class Client
 {
@@ -40,29 +38,29 @@ public class Client
 
     public Client(String name)
     {
-        Address address=new Address(1231,"localhost");
+        address=new Address(1231,"localhost");
         this.name = name;
         level = 0;
     }
 
     public void connectToServer(String ip) throws ServerDoesNotExist {
+        System.out.println(ip);
         serverIP = ip;
         try
         {
             Socket socket = new Socket(serverIP, 8060);
             OutputStream outputStream = socket.getOutputStream();
-       //     System.out.println(outputStream);
             InputStream inputStream = socket.getInputStream();
             Scanner scanner = new Scanner(inputStream);
             Formatter formatter = new Formatter(outputStream);
-      //      System.out.println(formatter);
             int listenPort = scanner.nextInt();
             address=new Address(listenPort,"localhost");
             listenToServer(address.getPort());
-      //      System.out.println(port);
-      //      listenToServer(port);
+
+
             formatter.format(address.getIp() + "\n");
             formatter.flush();
+            scanner.nextLine();
             socket.close();
             this.socket = new Socket(serverIP, listenPort + 1);
             this.scanner = new Scanner(this.socket.getInputStream());
@@ -93,10 +91,15 @@ public class Client
 
                     while (true)
                     {
-                        String input = scanner.nextLine();
-                        switch (input)
+                        String commandInput = scanner.nextLine();
+                        String input;
+                        switch (commandInput)
                         {
-                            //TODO
+                            case "updateScoreboard":
+                                input=scanner.nextLine();
+                                ArrayList<Client> clients=yaGson.fromJson(input,new TypeToken<ArrayList<Client>>(){}.getType());
+                                ScoreBoardScene.SCORE_BOARD_SCENE.setClients(clients);
+                                break;
                         }
                     }
                 } catch (IOException e)
@@ -189,7 +192,12 @@ public class Client
     {
         formatter.format("getScoreBoard\n");
         formatter.flush();
-        return yaGson.fromJson(scanner.nextLine(), new TypeToken<ArrayList<Client>>(){}.getType());
+        System.out.println("chiii?");
+        String input=scanner.nextLine();
+        System.out.println(input);
+        ArrayList<Client> clients=yaGson.fromJson(input, new TypeToken<ArrayList<Client>>(){}.getType());
+        System.out.println("chi");
+        return clients;
     }
 
     public Chatroom getPrivateChatroom(Client client)

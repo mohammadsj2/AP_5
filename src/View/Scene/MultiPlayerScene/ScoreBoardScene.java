@@ -6,6 +6,7 @@ import Network.Client.Client;
 import View.Button.BlueButton;
 import View.Label.FancyLabel;
 import View.Scene.ConnectScene;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -47,18 +48,19 @@ public class ScoreBoardScene extends MultiPlayerScene{
 
     public void refresh() {
         for(Node node:toRemove){
-            deleteNode(node);
+            Platform.runLater(() -> root.getChildren().remove(node));
         }
         int x=100;
         for (int i = 0; i < clients.size(); i++) {
             Client client = clients.get(i);
             FancyLabel label = new FancyLabel(client.getName(),23,x,positionInScoreBoardY(i));
-            addNode(label.getNode());
+            Platform.runLater(() -> root.getChildren().add(label.getNode()));
             label.getNode().setOnMouseClicked(event -> {
                 ProfileScene profileScene=new ProfileScene(client);
                 profileScene.init();
                 InputReader.setScene(profileScene.getScene());
             });
+            toRemove.add(label.getNode());
         }
     }
 
