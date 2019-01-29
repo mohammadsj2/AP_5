@@ -4,6 +4,7 @@ import Controller.InputReader;
 import Network.Address;
 import Network.Chatroom;
 import Network.Server.Server;
+import View.Scene.MultiPlayerScene.ChatroomScene;
 import View.Scene.MultiPlayerScene.ScoreBoardScene;
 import YaGson.*;
 import Exception.*;
@@ -33,7 +34,8 @@ public class Client
     private Socket socket;
     private Scanner scanner;
     private Formatter formatter;
-    private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();;
+    private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();
+    ;
 
 
     public Client(String name)
@@ -44,7 +46,6 @@ public class Client
     }
 
     public void connectToServer(String ip) throws ServerDoesNotExist {
-        System.out.println(ip);
         serverIP = ip;
         try
         {
@@ -54,10 +55,8 @@ public class Client
             Scanner scanner = new Scanner(inputStream);
             Formatter formatter = new Formatter(outputStream);
             int listenPort = scanner.nextInt();
-            address=new Address(listenPort,"localhost");
+            address = new Address(listenPort, "localhost");
             listenToServer(address.getPort());
-
-
             formatter.format(address.getIp() + "\n");
             formatter.flush();
             scanner.nextLine();
@@ -91,10 +90,25 @@ public class Client
 
                     while (true)
                     {
-                        String commandInput = scanner.nextLine();
+                        String commadInput = scanner.nextLine();
                         String input;
-                        switch (commandInput)
+                        System.out.println(commadInput);
+                        switch (commadInput)
                         {
+                            case "updateChatroom":
+                                System.out.println("HIR");
+                                input=scanner.nextLine();
+                                System.out.println("HIR");
+                                Chatroom chatroom=yaGson.fromJson(input,Chatroom.class);
+                                System.out.println(chatroom.isGlobal());
+                                if(ChatroomScene.CHATROOM_SCENE.getChatroom().equals(chatroom))
+                                {
+                                    System.out.println("HIR");
+                                    System.out.println(chatroom.getMessages().size());
+                                    ChatroomScene.CHATROOM_SCENE.init(chatroom);
+                                    InputReader.setScene(ChatroomScene.CHATROOM_SCENE.getScene());
+                                }
+                                break;
                             case "updateScoreboard":
                                 input=scanner.nextLine();
                                 ArrayList<Client> clients=yaGson.fromJson(input,new TypeToken<ArrayList<Client>>(){}.getType());
@@ -125,7 +139,7 @@ public class Client
     private void updateClient()
     {
         formatter.format("updateClient\n");
-        formatter.format(yaGson.toJson(this)+"\n");
+        formatter.format(yaGson.toJson(this) + "\n");
         formatter.flush();
     }
 
@@ -203,18 +217,27 @@ public class Client
     public Chatroom getPrivateChatroom(Client client)
     {
         formatter.format("getPrivateChatroom\n");
-        formatter.format(yaGson.toJson(client)+"\n");
+        formatter.format(yaGson.toJson(client) + "\n");
         formatter.flush();
         return yaGson.fromJson(scanner.nextLine(), Chatroom.class);
     }
 
-    public void disconnect() {
+    public void disconnect()
+    {
         formatter.format("disconnect\n");
         formatter.flush();
         setServerIP(null);
     }
 
-    public Address getAddress() {
+    public Address getAddress()
+    {
         return address;
+    }
+
+    public void sendChatroom(Chatroom chatroom)
+    {
+        formatter.format("updateChatroom\n");
+        formatter.format(yaGson.toJson(chatroom) + "\n");
+        formatter.flush();
     }
 }

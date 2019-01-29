@@ -22,7 +22,7 @@ import java.util.*;
 public class Server
 {
     private ArrayList<Client> clients = new ArrayList<>();
-    private HashMap<Integer, Formatter> formatters = new HashMap<>();
+    private HashMap<Integer, Formatter> formatters = new HashMap<>();// key-> port, value-> formatter
     private HashMap<Integer, Scanner> scanners = new HashMap<>();
     private Address address;
     private Chatroom globalChatroom;
@@ -107,7 +107,7 @@ public class Server
                         System.out.println("listen to client\n");
                         String inputCommand = scanner.nextLine();
                         String input;
-                        System.out.println(inputCommand);
+                        System.out.println(inputCommand+"||||");
                         switch (inputCommand)
                         {
                             case "updateClient":
@@ -139,12 +139,26 @@ public class Server
                                 try
                                 {
                                     Chatroom chatroom = privateChatrooms.get(getClientId(otherClient)).get(getClientId(client));
-                                    formatter.format(yaGson.toJson(chatroom), Chatroom.class);
+                                    formatter.format(yaGson.toJson(chatroom,Chatroom.class)+"\n");
                                     formatter.format("\n");
                                     formatter.flush();
                                 } catch (ClientDoesNotExist clientDoesNotExist)
                                 {
                                     clientDoesNotExist.printStackTrace();
+                                }
+                                break;
+                            case "updateChatroom":
+                                input=scanner.nextLine();
+                                Chatroom chatroom=yaGson.fromJson(input,Chatroom.class);
+                                if(chatroom.isGlobal())
+                                {
+                                    globalChatroom = chatroom;
+                                    System.out.println("HIR||");
+                                    for(Client client1:clients)
+                                        sendChatroom(client1,chatroom);
+                                } else
+                                {
+                                    /*TODO*/// update private chatroom
                                 }
                                 break;
                             case "disconnect":
@@ -162,6 +176,16 @@ public class Server
             }
         };
         new Thread(task).start();
+    }
+
+    private void sendChatroom(Client client, Chatroom chatroom)
+    {
+        Formatter formatter=formatters.get(client.getAddress().getPort());
+        formatter.format("updateChatroom\n");
+        formatter.format(yaGson.toJson(chatroom,Chatroom.class)+"\n");
+        System.out.println("Chatroom Sent!");
+        formatter.flush();
+
     }
 
     private void disconnect(Client client) throws ClientDoesNotExist {
