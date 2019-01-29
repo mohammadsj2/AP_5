@@ -35,7 +35,7 @@ public class InputReader extends Application
     static Controller currentController = null;
     static int indexOfLevel;
     public static Stage primaryStage;
-    static YaGson yaGson=new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategy()).create();
+    private static YaGson yaGson=new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategy()).create();
     private static Client client;
     private static Server server;
 
@@ -52,6 +52,7 @@ public class InputReader extends Application
         createLevel1();
         createLevel2();
         createLevel3();
+        System.out.println("");
     }
 
     private static void createLevel1()
@@ -393,8 +394,4 @@ public class InputReader extends Application
         InputReader.client = client;
     }
 
-    public static YaGson getYaGson()
-    {
-        return yaGson;
-    }
 }

@@ -5,8 +5,9 @@ import Controller.InputReader;
 import Network.Address;
 import Network.Server.Server;
 import View.Button.BlueButton;
+import Exception.*;
 import View.Label.FancyLabel;
-import javafx.event.EventHandler;
+import View.Scene.MultiPlayerScene.MultiPlayerScene;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -15,12 +16,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.text.Font;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Random;
 
 public class ConnectScene
 {
@@ -50,8 +48,8 @@ public class ConnectScene
         {
             /*TODO*/// go to multiPlayerScene
             InputReader.setServer(new Server(address));
-            MultiPlayerScene.init();
-            InputReader.setScene(MultiPlayerScene.getScene());
+            MultiPlayerScene.MULTI_PLAYER_SCENE.init();
+            InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
           //  addClient(address.getIp());
         });
         root.getChildren().add(hostButton.getNode());
@@ -67,25 +65,34 @@ public class ConnectScene
         {
             if(event.getCode().equals(KeyCode.ENTER))
             {
-                addClient(hostIpTextField.getText());
-                MultiPlayerScene.init();
-                InputReader.setScene(MultiPlayerScene.getScene());
+                try {
+                    addClient(hostIpTextField.getText());
+                } catch (ServerDoesNotExist serverDoesNotExist) {
+                    System.out.println(Constant.SERVER_DOES_NOT_EXIST_MESSAGE);
+                    return;
+                }
+                MultiPlayerScene.MULTI_PLAYER_SCENE.init();
+                InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
             }
         });
         BlueButton joinButton=new BlueButton("Join",45,200,450,360,false);
         joinButton.getNode().setOnMouseClicked(event ->
         {
-            addClient(hostIpTextField.getText());
-            MultiPlayerScene.init();
-            InputReader.setScene(MultiPlayerScene.getScene());
+            try {
+                addClient(hostIpTextField.getText());
+            } catch (ServerDoesNotExist serverDoesNotExist) {
+                System.out.println(Constant.SERVER_DOES_NOT_EXIST_MESSAGE);
+                return;
+            }
+            MultiPlayerScene.MULTI_PLAYER_SCENE.init();
+            InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
         });
         root.getChildren().add(hostIpLabel.getNode());
         root.getChildren().add(hostIpTextField);
         root.getChildren().add(joinButton.getNode());
     }
 
-    private static void addClient(String ip)
-    {
+    private static void addClient(String ip) throws ServerDoesNotExist {
         /*TODO*/// call Client's connectToServer
 
         InputReader.getClient().connectToServer(ip);

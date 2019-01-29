@@ -92,6 +92,7 @@ public class Constant {
     public static final String NOT_ENOUGH_SPACE_MESSAGE = "**** Error: Not enough space! ****";
     public static final String NOT_ENOUGH_ITEM_MESSAGE = "**** Error: Not enough item! ****";
     public static final String NO_SAVE_MESSAGE = "**** Error: There is no save! ****";
+    public static final String SERVER_DOES_NOT_EXIST_MESSAGE = "**** Error: Server does not Exist! ****";
 
     public static final long NEXT_TURN_DURATION = 400000000L;
 
@@ -100,6 +101,7 @@ public class Constant {
     public static final int PET_HUNGRY_HEALTH = 30;
     public static final int ANIMAL_PRODUCT_TURN = 50;
     public static final int PET_MAX_HEALTH = 100;
+
 
 
     public static Item getItemByType(String type){
