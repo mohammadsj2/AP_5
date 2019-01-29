@@ -4,6 +4,7 @@ import Controller.InputReader;
 import Network.Address;
 import Network.Chatroom;
 import Network.Server.Server;
+import Exception.*;
 import com.gilecode.yagson.YaGson;
 import com.gilecode.yagson.com.google.gson.reflect.TypeToken;
 import javafx.concurrent.Task;
@@ -39,8 +40,7 @@ public class Client
         level = 0;
     }
 
-    public void connectToServer(String ip)
-    {
+    public void connectToServer(String ip) throws ServerDoesNotExist {
         serverIP = ip;
         try
         {
@@ -66,7 +66,7 @@ public class Client
             updateClient();
         } catch (IOException e)
         {
-            e.printStackTrace();
+            throw new ServerDoesNotExist();
         }
     }
 
@@ -118,7 +118,7 @@ public class Client
     {
         YaGson yaGson = InputReader.getYaGson();
         formatter.format("updateClient\n");
-        formatter.format(yaGson.toJson(this));
+        formatter.format(yaGson.toJson(this)+"\n");
         formatter.flush();
     }
 
@@ -187,18 +187,21 @@ public class Client
         YaGson yaGson = InputReader.getYaGson();
         formatter.format("getScoreBoard\n");
         formatter.flush();
-        return yaGson.fromJson(scanner.nextLine(), new TypeToken<ArrayList<Client>>()
-        {
-        }.getType());
+        return yaGson.fromJson(scanner.nextLine(), new TypeToken<ArrayList<Client>>(){}.getType());
     }
 
     public Chatroom getPrivateChatroom(Client client)
     {
         YaGson yaGson = InputReader.getYaGson();
         formatter.format("getPrivateChatroom\n");
-        formatter.format(yaGson.toJson(client));
+        formatter.format(yaGson.toJson(client)+"\n");
         formatter.flush();
         return yaGson.fromJson(scanner.nextLine(), Chatroom.class);
     }
 
+    public void disconnect() {
+        formatter.format("disconnect\n");
+        formatter.flush();
+        setServerIP(null);
+    }
 }

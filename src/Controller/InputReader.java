@@ -52,6 +52,7 @@ public class InputReader extends Application
         createLevel1();
         createLevel2();
         createLevel3();
+        System.out.println("");
     }
 
     private static void createLevel1()

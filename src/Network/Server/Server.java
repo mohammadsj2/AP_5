@@ -6,10 +6,11 @@ import Network.Chatroom;
 import Network.Client.Client;
 import Exception.*;
 import Network.Message;
+import YaGson.*;
 import com.gilecode.yagson.YaGson;
+import com.gilecode.yagson.YaGsonBuilder;
 import com.gilecode.yagson.com.google.gson.reflect.TypeToken;
 import javafx.concurrent.Task;
-import org.junit.experimental.theories.Theories;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +32,7 @@ public class Server
 
     public Server(Address address)
     {
+        System.out.println("I'm server...");
         this.address = address;
         currentPort = address.getPort() + 1;
         globalChatroom = new Chatroom();
@@ -52,14 +54,14 @@ public class Server
                     try
                     {
                         Socket socket = serverSocket.accept();
-                        System.out.println("Client Connected!!!");
+                        System.out.println("Client connected!!!");
                         InputStream inputStream = socket.getInputStream();
                         OutputStream outputStream = socket.getOutputStream();
                         Formatter formatter = new Formatter(outputStream);
                         listenToClient(currentPort);
                         formatter.format(String.valueOf(currentPort) + "\n");
                         formatter.flush();
-                        System.out.println("Port Sent!");
+                        System.out.println("Port sent!");
                         Scanner scanner = new Scanner(inputStream);
                         String clientIp = scanner.nextLine();
                         socket.close();
@@ -69,8 +71,6 @@ public class Server
                     {
                         e.printStackTrace();
                     }
-
-
                 }
             }
         };
@@ -92,34 +92,48 @@ public class Server
                     Scanner scanner = new Scanner(inputStream);
                     OutputStream outputStream = socket.getOutputStream();
                     Formatter formatter = new Formatter(outputStream);
-                    int id = 0;
-                    while (true)
+                    Client client=null;
+                    boolean connected=true;
+                    YaGson yaGson=new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategy()).create();;
+                    while (connected)
                     {
+                        System.out.println("listen to client\n");
                         String inputCommand = scanner.nextLine();
                         String input;
+                        System.out.println(inputCommand);
                         switch (inputCommand)
                         {
                             case "updateClient":
+                                System.out.println("beforeInput");
                                 input = scanner.nextLine();
-                                Client newClient = yaGson.fromJson(input, Client.class);
+                                System.out.println("afterInput");
+                                System.out.println(input);
+                                System.out.println();
+                                input=input+"\n";
+                                Client newClient = yaGson.fromJson(input, Client.class);//TODO az in khat rad nemishe !
+                                System.out.println("afterInput");
                                 try
                                 {
                                     int clientId = getClientId(newClient);
+                                    System.out.println("afterInput");
                                     clients.set(clientId, newClient);
+                                    System.out.println("afterInput");
                                 } catch (ClientDoesNotExist clientDoesNotExist)
                                 {
+                                    System.out.println("afterInput");
                                     addClient(newClient);
-                                    id = clients.size() - 1;
+                                    client=newClient;
+                                    System.out.println("afterInput");
                                 }
+                                System.out.println("afterInput");
                                 break;
                             case "getGlobalChatroom":
                                 formatter.format(yaGson.toJson(globalChatroom, Chatroom.class) + "\n");
                                 formatter.flush();
                                 break;
                             case "getScoreBoard":
-                                formatter.format(yaGson.toJson(clients), new TypeToken<ArrayList<Client>>()
-                                {
-                                }.getType());
+                                formatter.format(yaGson.toJson(clients),
+                                        new TypeToken<ArrayList<Client>>(){}.getType());
                                 formatter.flush();
                                 break;
                             case "getPrivateChatroom":
@@ -127,14 +141,21 @@ public class Server
                                 Client otherClient = yaGson.fromJson(input, Client.class);
                                 try
                                 {
-                                    Chatroom chatroom = privateChatrooms.get(getClientId(otherClient)).get(id);
+                                    Chatroom chatroom = privateChatrooms.get(getClientId(otherClient)).get(getClientId(client));
                                     formatter.format(yaGson.toJson(chatroom), Chatroom.class);
+                                    formatter.format("\n");
+                                    formatter.flush();
                                 } catch (ClientDoesNotExist clientDoesNotExist)
                                 {
                                     clientDoesNotExist.printStackTrace();
                                 }
-                        }
+                                break;
+                            case "disconnect":
+                                disconnect(client);
+                                connected=false;
+                                break;
 
+                        }
                     }
                 } catch (IOException e)
                 {
@@ -144,6 +165,16 @@ public class Server
             }
         };
         new Thread(task).start();
+    }
+
+    private void disconnect(Client client) throws ClientDoesNotExist {
+        int id=getClientId(client);
+        clients.remove(id);
+        privateChatrooms.remove(id);
+        for(ArrayList<Chatroom> chatrooms:privateChatrooms){
+            chatrooms.remove(id);
+        }
+        System.out.println("Client "+client.getName()+" disconnected!");
     }
 
     private void addClient(Client client)
