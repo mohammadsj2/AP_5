@@ -212,7 +212,7 @@ public class ChatroomScene
                 {
                     System.out.println(message.getClient().getImageIndex());
                     ImageView profilePicture=new ImageView(new Image(
-                            new FileInputStream("./Textures/Avatar/"+message.getClient().getImageIndex()+".png")));
+                            new FileInputStream("./Textures/Profile/"+message.getClient().getImageIndex()+".png")));
                     profilePicture.setFitHeight(textHeight+nameHeight);
                     profilePicture.setFitWidth(textHeight+nameHeight);
                     profilePicture.relocate(60,y);

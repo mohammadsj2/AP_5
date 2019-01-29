@@ -47,7 +47,7 @@ public class Chatroom {
     public ArrayList<Message> getMessages()
     {
         ArrayList<Message> resultMessages=new ArrayList<>();
-        for(int i=messages.size()-1;i>=Math.max(0,messages.size()-13);i--)
+        for(int i=messages.size()-1;i>=Math.max(0,messages.size()-7);i--)
         {
             resultMessages.add(messages.get(i));
         }
