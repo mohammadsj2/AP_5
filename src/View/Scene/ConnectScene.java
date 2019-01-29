@@ -50,13 +50,15 @@ public class ConnectScene
         {
             /*TODO*/// go to multiPlayerScene
             InputReader.setServer(new Server(address));
-            addClient();
+            MultiPlayerScene.init();
+            InputReader.setScene(MultiPlayerScene.getScene());
+          //  addClient(address.getIp());
         });
         root.getChildren().add(hostButton.getNode());
         root.getChildren().add(portLabel.getNode());
 
         FancyLabel hostIpLabel=new FancyLabel("Host IP: ",30,275,300);
-        TextField hostIpTextField=new TextField();
+        TextField hostIpTextField=new TextField("localhost");
         hostIpTextField.relocate(425,300);
         hostIpTextField.setMaxWidth(250);
         hostIpTextField.setStyle("-fx-font-size: 21.5;-fx-font-family: 'Comic Sans MS';");
@@ -65,22 +67,28 @@ public class ConnectScene
         {
             if(event.getCode().equals(KeyCode.ENTER))
             {
-                addClient();
+                addClient(hostIpTextField.getText());
+                MultiPlayerScene.init();
+                InputReader.setScene(MultiPlayerScene.getScene());
             }
         });
         BlueButton joinButton=new BlueButton("Join",45,200,450,360,false);
         joinButton.getNode().setOnMouseClicked(event ->
         {
-            addClient();
+            addClient(hostIpTextField.getText());
+            MultiPlayerScene.init();
+            InputReader.setScene(MultiPlayerScene.getScene());
         });
         root.getChildren().add(hostIpLabel.getNode());
         root.getChildren().add(hostIpTextField);
         root.getChildren().add(joinButton.getNode());
     }
 
-    private static void addClient()
+    private static void addClient(String ip)
     {
         /*TODO*/// call Client's connectToServer
+
+        InputReader.getClient().connectToServer(ip);
     }
 
 
