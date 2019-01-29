@@ -103,35 +103,25 @@ public class Server
                         switch (inputCommand)
                         {
                             case "updateClient":
-                                System.out.println("beforeInput");
                                 input = scanner.nextLine();
-                                System.out.println("afterInput");
-                                System.out.println(input);
-                                System.out.println();
                                 input=input+"\n";
-                                Client newClient = yaGson.fromJson(input, Client.class);//TODO az in khat rad nemishe !
-                                System.out.println("afterInput");
+                                Client newClient = yaGson.fromJson(input, Client.class);
                                 try
                                 {
                                     int clientId = getClientId(newClient);
-                                    System.out.println("afterInput");
                                     clients.set(clientId, newClient);
-                                    System.out.println("afterInput");
                                 } catch (ClientDoesNotExist clientDoesNotExist)
                                 {
-                                    System.out.println("afterInput");
                                     addClient(newClient);
                                     client=newClient;
-                                    System.out.println("afterInput");
                                 }
-                                System.out.println("afterInput");
                                 break;
                             case "getGlobalChatroom":
                                 formatter.format(yaGson.toJson(globalChatroom, Chatroom.class) + "\n");
                                 formatter.flush();
                                 break;
                             case "getScoreBoard":
-                                formatter.format(yaGson.toJson(clients),
+                                formatter.format(yaGson.toJson(clients)+"\n",
                                         new TypeToken<ArrayList<Client>>(){}.getType());
                                 formatter.flush();
                                 break;

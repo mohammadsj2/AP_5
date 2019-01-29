@@ -367,14 +367,7 @@ public class InputReader extends Application
         primaryStage.setResizable(false);
         primaryStage.setX(300);
         primaryStage.setY(100);
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>()
-        {
-            @Override
-            public void handle(WindowEvent event)
-            {
-                System.exit(0);
-            }
-        });
+        primaryStage.setOnCloseRequest(event -> System.exit(0));
         primaryStage.show();
         UsernameGetterScene.init();
         setScene(UsernameGetterScene.getScene());
