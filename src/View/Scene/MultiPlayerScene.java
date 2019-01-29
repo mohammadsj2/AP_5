@@ -53,7 +53,7 @@ public class MultiPlayerScene {
         button=new BlueButton("Disconnect",80,200,675,50+3*ySpace,false);
 
         button.getNode().setOnMouseClicked(event -> {
-            InputReader.getClient().setServerIP(null);
+            InputReader.getClient().disconnect();
             ConnectScene.init();
             InputReader.setScene(ConnectScene.getScene());
         });
