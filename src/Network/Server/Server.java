@@ -218,13 +218,13 @@ public class Server
         clients.add(client);
 
         ArrayList<Chatroom> tmpArrayList = new ArrayList<>();
-        for (ArrayList<Chatroom> arrayList : privateChatrooms)
-        {
-            Chatroom chatroom = new Chatroom();
+        for (int i = 0; i < privateChatrooms.size(); i++) {
+            ArrayList<Chatroom> arrayList = privateChatrooms.get(i);
+            Chatroom chatroom = new Chatroom(client,clients.get(i));
             arrayList.add(chatroom);
             tmpArrayList.add(chatroom);
         }
-        tmpArrayList.add(new Chatroom());
+        tmpArrayList.add(new Chatroom(client,client));
         privateChatrooms.add(tmpArrayList);
     }
 

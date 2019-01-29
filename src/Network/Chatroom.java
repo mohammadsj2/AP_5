@@ -40,8 +40,8 @@ public class Chatroom {
         Chatroom chatroom = (Chatroom) o;
         if(isGlobal && chatroom.isGlobal)return true;
         else if(isGlobal || chatroom.isGlobal)return false;
-        return firstClient==chatroom.firstClient && secondClient==chatroom.secondClient;
-
+        return (firstClient==chatroom.firstClient && secondClient==chatroom.secondClient) ||
+                (firstClient==chatroom.secondClient && secondClient==chatroom.firstClient);
     }
 
     public ArrayList<Message> getMessages()
