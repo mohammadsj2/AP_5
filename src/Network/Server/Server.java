@@ -28,7 +28,7 @@ public class Server
     private Chatroom globalChatroom;
     private ArrayList<ArrayList<Chatroom>> privateChatrooms = new ArrayList<>();
     private int currentPort;
-    private YaGson yaGson = InputReader.getYaGson();
+    private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();;
 
     public Server(Address address)
     {
@@ -94,7 +94,6 @@ public class Server
                     Formatter formatter = new Formatter(outputStream);
                     Client client=null;
                     boolean connected=true;
-                    YaGson yaGson=new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategy()).create();;
                     while (connected)
                     {
                         System.out.println("listen to client\n");
