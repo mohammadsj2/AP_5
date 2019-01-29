@@ -8,6 +8,9 @@ import Network.Client.Client;
 
 import View.Scene.*;
 import Network.Server.Server;
+import View.Scene.MultiPlayerScene.ChatroomScene;
+import View.Scene.MultiPlayerScene.MultiPlayerScene;
+import View.Scene.MultiPlayerScene.ScoreBoardScene;
 import View.Scene.UsernameGetterScene;
 import YaGson.*;
 import Model.Well;
@@ -358,7 +361,7 @@ public class InputReader extends Application
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception
+    public void start(Stage primaryStage)
     {
         InputReader.primaryStage = primaryStage;
         primaryStage.setResizable(false);

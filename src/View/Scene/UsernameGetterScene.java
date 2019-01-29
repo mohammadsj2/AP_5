@@ -41,15 +41,12 @@ public class UsernameGetterScene {
         BlueButton playButton=new BlueButton("Login!",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200,false);
 
-        TextField textField=new TextField("user"+ new Random(LocalDateTime.now().getNano()).nextInt(100000));
+        TextField textField=new TextField("Guest"+ new Random(LocalDateTime.now().getNano()).nextInt(99999));
         textField.setMinWidth(textWidth);
         textField.relocate(((double)Constant.GAME_SCENE_WIDTH-textWidth)/2,100);
         textField.setStyle("-fx-font-size: 25;");
 
-        playButton.getNode().setOnMouseClicked(event ->
-        {
-            login(textField);
-        });
+        playButton.getNode().setOnMouseClicked(event -> login(textField));
         textField.setOnKeyPressed(event -> {
             if(event.getCode().equals(KeyCode.ENTER)){
                 login(textField);

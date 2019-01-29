@@ -26,7 +26,7 @@ import java.util.Comparator;
 public class ScoreBoardScene extends MultiPlayerScene{
     public final static ScoreBoardScene SCORE_BOARD_SCENE=new ScoreBoardScene();
 
-    private static ArrayList<Client> clients;
+    private static ArrayList<Client> clients=null;
     private static ArrayList<Node> toRemove=new ArrayList<>();
 
     @Override
