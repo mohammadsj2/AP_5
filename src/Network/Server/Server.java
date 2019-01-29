@@ -107,7 +107,7 @@ public class Server
                         System.out.println("listen to client\n");
                         String inputCommand = scanner.nextLine();
                         String input;
-                        System.out.println(inputCommand+"||||");
+                        System.out.println(inputCommand);
                         switch (inputCommand)
                         {
                             case "updateClient":
@@ -153,7 +153,6 @@ public class Server
                                 if(chatroom.isGlobal())
                                 {
                                     globalChatroom = chatroom;
-                                    System.out.println("HIR||");
                                     for(Client client1:clients)
                                         sendChatroom(client1,chatroom);
                                 } else
