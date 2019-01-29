@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class Constant {
 
-
+    public static final int AVATAR_NUMBER=7;
     public static final int[] ITEM_POSITION_IN_WAREHOUSE_X = {45, 340};
     public static final int ITEM_POSITION_IN_WAREHOUSE_Y = 115;
 

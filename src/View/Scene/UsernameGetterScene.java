@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,7 +23,7 @@ import java.util.Random;
 public class UsernameGetterScene {
     private static Group root = new Group();
     private static Scene scene = new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
-
+    private static Label errorLabel=new Label();
     public static void init()
     {
         try
@@ -57,6 +58,17 @@ public class UsernameGetterScene {
     }
 
     private static void login(TextField textField) {
+        if(textField.getText().length()>10)
+        {
+            root.getChildren().remove(errorLabel);
+            errorLabel=new Label("Name must have at most 10 characters!");
+            errorLabel.setStyle("-fx-text-fill: RED;-fx-font-size: 30;-fx-font-family: 'Comic Sans MS';" +
+                    "-fx-background-color: rgba(0, 0, 0, 0.5);-fx-padding: 2px;" +
+                    "-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;");
+            errorLabel.relocate(180,300);
+            root.getChildren().add(errorLabel);
+            return ;
+        }
         Client client=new Client(textField.getText());
         InputReader.setClient(client);
         MenuScene.init(false);

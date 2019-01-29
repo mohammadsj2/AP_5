@@ -1,5 +1,6 @@
 package Network.Client;
 
+import Constant.Constant;
 import Controller.InputReader;
 import Network.Address;
 import Network.Chatroom;
@@ -19,6 +20,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class Client
@@ -31,7 +33,6 @@ public class Client
     private int imageIndex;
     private Address address;
     private boolean isInGame = false;
-    private Socket socket;
     private Scanner scanner;
     private Formatter formatter;
     private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();
@@ -43,6 +44,10 @@ public class Client
         address=new Address(1231,"localhost");
         this.name = name;
         level = 0;
+        imageIndex=((new Random(LocalDateTime.now().getNano()).nextInt())%Constant.AVATAR_NUMBER);
+        if(imageIndex<0)
+            imageIndex+=Constant.AVATAR_NUMBER;
+        imageIndex++;
     }
 
     public void connectToServer(String ip) throws ServerDoesNotExist {
@@ -61,9 +66,9 @@ public class Client
             formatter.flush();
             scanner.nextLine();
             socket.close();
-            this.socket = new Socket(serverIP, listenPort + 1);
-            this.scanner = new Scanner(this.socket.getInputStream());
-            this.formatter = new Formatter(this.socket.getOutputStream());
+            Socket socket1 = new Socket(serverIP, listenPort + 1);
+            this.scanner = new Scanner(socket1.getInputStream());
+            this.formatter = new Formatter(socket1.getOutputStream());
 
             updateClient();
         } catch (IOException e)
@@ -92,18 +97,13 @@ public class Client
                     {
                         String commadInput = scanner.nextLine();
                         String input;
-                        System.out.println(commadInput);
                         switch (commadInput)
                         {
                             case "updateChatroom":
                                 input=scanner.nextLine();
-                                System.out.println("HIR");
                                 Chatroom chatroom=yaGson.fromJson(input,Chatroom.class);
-                                System.out.println(chatroom.isGlobal());
                                 if(ChatroomScene.CHATROOM_SCENE.getChatroom().equals(chatroom))
                                 {
-                                    System.out.println("HIR");
-                                    System.out.println(chatroom.getMessages().size());
                                     ChatroomScene.CHATROOM_SCENE.setChatroom(chatroom);
                                 }
                                 break;
@@ -204,11 +204,8 @@ public class Client
     {
         formatter.format("getScoreBoard\n");
         formatter.flush();
-        System.out.println("chiii?");
         String input=scanner.nextLine();
-        System.out.println(input);
         ArrayList<Client> clients=yaGson.fromJson(input, new TypeToken<ArrayList<Client>>(){}.getType());
-        System.out.println("chi");
         return clients;
     }
 
