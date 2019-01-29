@@ -58,14 +58,22 @@ public class Server
                         InputStream inputStream = socket.getInputStream();
                         OutputStream outputStream = socket.getOutputStream();
                         Formatter formatter = new Formatter(outputStream);
-                        listenToClient(currentPort);
+
+
+
                         formatter.format(String.valueOf(currentPort) + "\n");
                         formatter.flush();
-                        System.out.println("Port sent!");
+                        System.out.println("PortSent");
                         Scanner scanner = new Scanner(inputStream);
                         String clientIp = scanner.nextLine();
-                        socket.close();
                         setRequestStreams(clientIp, currentPort);
+                        listenToClient(currentPort);
+
+                        formatter.format("setRequestStreams\n");
+                        formatter.flush();
+
+                        socket.close();
+
                         currentPort += 2;
                     } catch (IOException e)
                     {
@@ -187,8 +195,22 @@ public class Server
         for(ArrayList<Chatroom> chatrooms:privateChatrooms){
             chatrooms.remove(id);
         }
+        updateScoreBoard();
         System.out.println("Client "+client.getName()+" disconnected!");
     }
+
+    private void updateScoreBoard() {
+        String clientsToJson=yaGson.toJson(clients, new TypeToken<ArrayList<Client>>(){}.getType())+"\n";
+        System.out.println("updateSB\n");
+        for (int i = 0; i < clients.size(); i++) {
+            Client client=clients.get(i);
+            Formatter formatter=formatters.get(client.getAddress().getPort());
+            formatter.format("updateScoreboard\n");
+            formatter.format(clientsToJson);
+            formatter.flush();
+        }
+    }
+
 
     private void addClient(Client client)
     {
@@ -203,6 +225,7 @@ public class Server
         }
         tmpArrayList.add(new Chatroom());
         privateChatrooms.add(tmpArrayList);
+        updateScoreBoard();
     }
 
     private void setRequestStreams(String ip, int port)
@@ -214,8 +237,7 @@ public class Server
             OutputStream outputStream = socket.getOutputStream();
             scanners.put(port, new Scanner(inputStream));
             formatters.put(port, new Formatter(outputStream));
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

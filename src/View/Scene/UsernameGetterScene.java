@@ -16,6 +16,8 @@ import javafx.scene.input.KeyEvent;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.time.LocalDateTime;
+import java.util.Random;
 
 public class UsernameGetterScene {
     private static Group root = new Group();
@@ -39,7 +41,7 @@ public class UsernameGetterScene {
         BlueButton playButton=new BlueButton("Login!",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200,false);
 
-        TextField textField=new TextField("username");
+        TextField textField=new TextField("user"+ new Random(LocalDateTime.now().getNano()).nextInt(100000));
         textField.setMinWidth(textWidth);
         textField.relocate(((double)Constant.GAME_SCENE_WIDTH-textWidth)/2,100);
         textField.setStyle("-fx-font-size: 25;");
