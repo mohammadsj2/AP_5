@@ -2,15 +2,13 @@ package Network;
 
 import Network.Client.Client;
 
-import java.util.ArrayList;
-
 public class Message {
     String text;
-    Client clients;
+    Client client;
 
-    public Message(Client clients, String text) {
+    public Message(Client client, String text) {
         this.text = text;
-        this.clients = clients;
+        this.client = client;
     }
 
     public String getText() {
@@ -21,11 +19,11 @@ public class Message {
         this.text = text;
     }
 
-    public Client getClients() {
-        return clients;
+    public Client getClient() {
+        return client;
     }
 
-    public void setClients(Client clients) {
-        this.clients = clients;
+    public void setClient(Client client) {
+        this.client = client;
     }
 }

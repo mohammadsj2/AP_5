@@ -40,6 +40,7 @@ public class Client
 
     public Client(String name)
     {
+        Address address=new Address(1231,"localhost");
         this.name = name;
         level = 0;
     }
@@ -203,5 +204,9 @@ public class Client
         formatter.format("disconnect\n");
         formatter.flush();
         setServerIP(null);
+    }
+
+    public Address getAddress() {
+        return address;
     }
 }
