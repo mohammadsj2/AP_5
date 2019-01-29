@@ -34,10 +34,21 @@ public class ConnectScene
         {
             initBackground();
             initHost();
+            initMenuButton();
         } catch (FileNotFoundException e)
         {
             e.printStackTrace();
         }
+    }
+    private static void initMenuButton()
+    {
+        BlueButton menuButton=new BlueButton("Back to Menu",50,150,740,640,false);
+        menuButton.getNode().setOnMouseClicked(event ->
+        {
+            MenuScene.init(false);
+            InputReader.setScene(MenuScene.getScene());
+        });
+        root.getChildren().add(menuButton.getNode());
     }
 
     private static void initHost()
