@@ -1,5 +1,7 @@
 package View.Scene.MultiPlayerScene;
 
+import Controller.InputReader;
+import Network.Chatroom;
 import Network.Client.Client;
 import View.Label.FancyLabel;
 import javafx.event.EventHandler;
@@ -26,7 +28,6 @@ public class ProfileScene extends MultiPlayerScene{
     private void addProfile() {
         try
         {
-            System.out.println(client.getImageIndex());
             ImageView profilePicture=new ImageView(new Image(
                     new FileInputStream("./Textures/Profile/"+client.getImageIndex()+".png")));
             profilePicture.setFitHeight(200);
@@ -49,7 +50,9 @@ public class ProfileScene extends MultiPlayerScene{
             privateMessageImageView.setFitHeight(60);
             privateMessageImageView.setOnMouseClicked(event ->
             {
-                /*TODO*/// handle private message
+                Chatroom chatroom=InputReader.getClient().getPrivateChatroom(client);
+                ChatroomScene.CHATROOM_SCENE.init(chatroom);
+                InputReader.setScene(ChatroomScene.CHATROOM_SCENE.getScene());
             });
             root.getChildren().add(privateMessageImageView);
         } catch (FileNotFoundException e)

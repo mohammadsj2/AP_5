@@ -111,6 +111,7 @@ public class ConnectScene
 
     private static void addClient(String ip) throws ServerDoesNotExist {
         InputReader.getClient().connectToServer(ip);
+
     }
 
 

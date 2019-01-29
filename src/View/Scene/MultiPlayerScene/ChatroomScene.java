@@ -140,7 +140,6 @@ public class ChatroomScene extends MultiPlayerScene
                 y-=nameHeight;
                 try
                 {
-                    System.out.println(message.getClient().getImageIndex());
                     ImageView profilePicture=new ImageView(new Image(
                             new FileInputStream("./Textures/Profile/"+message.getClient().getImageIndex()+".png")));
                     profilePicture.setFitHeight(textHeight+nameHeight);
@@ -164,6 +163,7 @@ public class ChatroomScene extends MultiPlayerScene
                 y-=textHeight+10;
             }
         }
+        System.out.println("CHAT ROOM SET!");
     }
 
 }

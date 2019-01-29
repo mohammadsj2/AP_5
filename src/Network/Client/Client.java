@@ -92,20 +92,23 @@ public class Client
                     OutputStream outputStream = socket.getOutputStream();
                     Scanner scanner = new Scanner(inputStream);
                     Formatter formatter = new Formatter(outputStream);
-
                     while (true)
                     {
-                        String commadInput = scanner.nextLine();
+                        System.out.println("LISTEN TO SERVER ON PORT "+port);
+                        String commandInput = scanner.nextLine();
                         String input;
-                        switch (commadInput)
+                        System.out.println(commandInput+"|||||||||||||||||||");
+                        switch (commandInput)
                         {
                             case "updateChatroom":
                                 input=scanner.nextLine();
                                 Chatroom chatroom=yaGson.fromJson(input,Chatroom.class);
+                                System.out.println("CLIENT!!!: "+chatroom.getMessages().size());
                                 if(ChatroomScene.CHATROOM_SCENE.getChatroom().equals(chatroom))
                                 {
                                     ChatroomScene.CHATROOM_SCENE.setChatroom(chatroom);
                                 }
+                                System.out.println("UPDATE CHATROOM FINISHED!");
                                 break;
                             case "updateScoreboard":
                                 input=scanner.nextLine();
