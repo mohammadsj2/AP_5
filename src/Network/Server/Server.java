@@ -1,11 +1,10 @@
 package Network.Server;
 
-import Controller.InputReader;
 import Network.Address;
 import Network.Chatroom;
 import Network.Client.Client;
 import Exception.*;
-import Network.Message;
+import Network.Relationship;
 import YaGson.*;
 import com.gilecode.yagson.YaGson;
 import com.gilecode.yagson.YaGsonBuilder;
@@ -27,6 +26,7 @@ public class Server
     private Address address;
     private Chatroom globalChatroom;
     private ArrayList<ArrayList<Chatroom>> privateChatrooms = new ArrayList<>();
+    private ArrayList<ArrayList<Relationship>> relationShips=new ArrayList<>();
     private int currentPort;
     private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();;
 
@@ -115,6 +115,8 @@ public class Server
                     Formatter formatter = new Formatter(outputStream);
                     Client client=null;
                     boolean connected=true;
+                    Client otherClient;
+
                     while (connected)
                     {
                         System.out.println("listen to client\n");
@@ -149,7 +151,7 @@ public class Server
                                 break;
                             case "getPrivateChatroom":
                                 input = scanner.nextLine();
-                                Client otherClient = yaGson.fromJson(input, Client.class);
+                                otherClient = yaGson.fromJson(input, Client.class);
                                 try
                                 {
                                     Chatroom chatroom = privateChatrooms.get(getClientId(otherClient)).get(getClientId(client));
@@ -188,6 +190,24 @@ public class Server
                                 disconnect(client);
                                 connected=false;
                                 break;
+                            case "getRelationship":
+                                input = scanner.nextLine();
+                                otherClient = yaGson.fromJson(input, Client.class);
+                                try
+                                {
+                                    Relationship relationship = relationShips.get(getClientId(otherClient)).get(getClientId(client));
+                                    formatter.format(yaGson.toJson(relationship, Relationship.class)+"\n");
+                                    formatter.flush();
+                                } catch (ClientDoesNotExist clientDoesNotExist)
+                                {
+                                    clientDoesNotExist.printStackTrace();
+                                }
+                                break;
+                            case "updateRelationship":
+                                input = scanner.nextLine();
+                                Relationship relationship = yaGson.fromJson(input,Relationship.class);
+                                updateRelationship(relationship);
+                                break;
 
                         }
                     }
@@ -216,19 +236,42 @@ public class Server
         int id=getClientId(client);
         clients.remove(id);
         privateChatrooms.remove(id);
+        relationShips.remove(id);
+
         for(ArrayList<Chatroom> chatrooms:privateChatrooms){
             chatrooms.remove(id);
         }
+        for(ArrayList<Relationship> relationShip:relationShips){
+            relationShip.remove(id);
+        }
         updateScoreBoard();
         System.out.println("Client "+client.getName()+" disconnected!");
+    }
+    private void updateRelationship(Relationship relationShip) throws ClientDoesNotExist {
+        System.out.println("this ");
+        Client[] clients={relationShip.getFirstClient(),relationShip.getSecondClient()};
+        int id[]={getClientId(clients[0]),getClientId(clients[1])};
+        for(int i=0;i<2;i++){
+            relationShips.get(id[i]).set(id[1-i],relationShip);
+        }
+        for(int i=0;i<2;i++){
+            sendUpdatedRelationship(clients[i],relationShip);
+        }
+    }
+
+    private void sendUpdatedRelationship(Client client,Relationship relationShip) {
+        System.out.println("sending updated relationship to "+client.getName());
+        Formatter formatter=formatters.get(client.getAddress().getPort());
+        formatter.format("updateRelationship\n");
+        formatter.format(yaGson.toJson(relationShip)+"\n");
+        formatter.flush();
     }
 
     private void updateScoreBoard() {
         String clientsToJson=yaGson.toJson(clients, new TypeToken<ArrayList<Client>>(){}.getType())+"\n";
         System.out.println("updateSB\n");
-        for (int i = 0; i < clients.size(); i++) {
-            Client client=clients.get(i);
-            Formatter formatter=formatters.get(client.getAddress().getPort());
+        for (Client client : clients) {
+            Formatter formatter = formatters.get(client.getAddress().getPort());
             formatter.format("updateScoreboard\n");
             formatter.format(clientsToJson);
             formatter.flush();
@@ -240,16 +283,27 @@ public class Server
     {
         clients.add(client);
 
-        ArrayList<Chatroom> tmpArrayList = new ArrayList<>();
+        ArrayList<Chatroom> tmpChatroomArrayList = new ArrayList<>();
+        ArrayList<Relationship> tmpRelationships =new ArrayList<>();
         for (int i=0;i<privateChatrooms.size();i++)
         {
-            ArrayList<Chatroom> arrayList=privateChatrooms.get(i);
+            ArrayList<Chatroom> chatroomArrayList=privateChatrooms.get(i);
+            ArrayList<Relationship> relationshipArrayList =relationShips.get(i);
+
             Chatroom chatroom = new Chatroom(clients.get(i),client);
-            arrayList.add(chatroom);
-            tmpArrayList.add(chatroom);
+            Relationship relationShip=new Relationship(clients.get(i),client);
+
+            chatroomArrayList.add(chatroom);
+            tmpChatroomArrayList.add(chatroom);
+
+            relationshipArrayList.add(relationShip);
+            tmpRelationships.add(relationShip);
         }
-        tmpArrayList.add(new Chatroom(client,client));
-        privateChatrooms.add(tmpArrayList);
+        tmpChatroomArrayList.add(new Chatroom(client,client));
+        tmpRelationships.add(new Relationship(client,client));
+
+        privateChatrooms.add(tmpChatroomArrayList);
+        relationShips.add(tmpRelationships);
         updateScoreBoard();
     }
 
