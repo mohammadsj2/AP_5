@@ -58,13 +58,26 @@ public class Server
                         InputStream inputStream = socket.getInputStream();
                         OutputStream outputStream = socket.getOutputStream();
                         Formatter formatter = new Formatter(outputStream);
+                        Scanner scanner = new Scanner(inputStream);
 
-
-
+                        String name=scanner.nextLine();
+                        boolean nameExist=false;
+                        for(Client client:clients){
+                            if(client.getName().equals(name)){
+                                nameExist=true;
+                            }
+                        }
+                        if(nameExist){
+                            formatter.format("your handle isn't unique!\n");
+                            formatter.flush();
+                            socket.close();
+                            continue;
+                        }
+                        formatter.format("sendingPort\n");
                         formatter.format(String.valueOf(currentPort) + "\n");
                         formatter.flush();
                         System.out.println("PortSent");
-                        Scanner scanner = new Scanner(inputStream);
+
                         String clientIp = scanner.nextLine();
                         setRequestStreams(clientIp, currentPort);
                         listenToClient(currentPort);

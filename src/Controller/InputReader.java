@@ -368,6 +368,7 @@ public class InputReader extends Application
     @Override
     public void start(Stage primaryStage)
     {
+        primaryStage.setTitle("FarmFrenzy");
         InputReader.primaryStage = primaryStage;
         primaryStage.setResizable(false);
         primaryStage.setX(300);
@@ -391,6 +392,7 @@ public class InputReader extends Application
 
 
     public static void setClient(Client client) {
+
         InputReader.client = client;
     }
 

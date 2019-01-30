@@ -93,6 +93,7 @@ public class Constant {
     public static final String NOT_ENOUGH_ITEM_MESSAGE = "**** Error: Not enough item! ****";
     public static final String NO_SAVE_MESSAGE = "**** Error: There is no save! ****";
     public static final String SERVER_DOES_NOT_EXIST_MESSAGE = "**** Error: Server does not Exist! ****";
+    public static final String NOT_UNIQUE_USERNAME_EXCEPTION_MESSAGE = "**** Error: your username isn't unique! ****";
 
     public static final long NEXT_TURN_DURATION = 400000000L;
 
