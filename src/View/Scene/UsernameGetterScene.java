@@ -7,7 +7,6 @@ import View.Button.BlueButton;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -16,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -121,7 +119,6 @@ public class UsernameGetterScene {
         avatars[imageIndex].setOpacity(1);
         avatars[imageIndex].setScaleX(1);
         avatars[imageIndex].setScaleY(1);
-
     }
 
 
@@ -147,17 +144,17 @@ public class UsernameGetterScene {
         textField.relocate(((double)Constant.GAME_SCENE_WIDTH-textWidth)/2,500);
         textField.setStyle("-fx-font-size: 25;");
 
-        loginButton.getNode().setOnMouseClicked(event -> login(textField, imageIndex));
+        loginButton.getNode().setOnMouseClicked(event -> login(textField));
         textField.setOnKeyPressed(event -> {
             if(event.getCode().equals(KeyCode.ENTER)){
-                login(textField, imageIndex);
+                login(textField);
             }
         });
         addNode(loginButton.getNode());
         addNode(textField);
     }
 
-    private static void login(TextField textField,int avatarId) {
+    private static void login(TextField textField) {
         if(inAvatarSelectMode){
             root.getChildren().remove(errorLabel);
             errorLabel=new Label("Please select your avatar!");

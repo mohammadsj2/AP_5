@@ -46,7 +46,7 @@ public class Client
         this.imageIndex=imageIndex;
     }
 
-    public void connectToServer(String ip) throws ServerDoesNotExist {
+    public void connectToServer(String ip) throws ServerDoesNotExist, NotUniqueUsernameException {
         serverIP = ip;
         try
         {
@@ -55,6 +55,12 @@ public class Client
             InputStream inputStream = socket.getInputStream();
             Scanner scanner = new Scanner(inputStream);
             Formatter formatter = new Formatter(outputStream);
+
+            formatter.format(getName()+"\n");
+            formatter.flush();
+            if(!scanner.nextLine().equals("sendingPort")){
+                throw new NotUniqueUsernameException();
+            }
             int listenPort = scanner.nextInt();
             address = new Address(listenPort, "localhost");
             listenToServer(address.getPort());
