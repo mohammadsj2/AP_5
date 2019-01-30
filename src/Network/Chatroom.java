@@ -40,17 +40,27 @@ public class Chatroom {
         Chatroom chatroom = (Chatroom) o;
         if(isGlobal && chatroom.isGlobal)return true;
         else if(isGlobal || chatroom.isGlobal)return false;
-        return (firstClient==chatroom.firstClient && secondClient==chatroom.secondClient) ||
-                (firstClient==chatroom.secondClient && secondClient==chatroom.firstClient);
+        return firstClient.equals(chatroom.firstClient) && secondClient.equals(chatroom.secondClient);
+
     }
 
     public ArrayList<Message> getMessages()
     {
         ArrayList<Message> resultMessages=new ArrayList<>();
-        for(int i=messages.size()-1;i>=Math.max(0,messages.size()-10);i--)
+        for(int i=messages.size()-1;i>=Math.max(0,messages.size()-7);i--)
         {
             resultMessages.add(messages.get(i));
         }
         return resultMessages;
+    }
+
+    public Client getFirstClient()
+    {
+        return firstClient;
+    }
+
+    public Client getSecondClient()
+    {
+        return secondClient;
     }
 }

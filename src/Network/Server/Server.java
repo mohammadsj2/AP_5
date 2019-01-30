@@ -107,7 +107,7 @@ public class Server
                         System.out.println("listen to client\n");
                         String inputCommand = scanner.nextLine();
                         String input;
-                        System.out.println(inputCommand+"||||");
+                        System.out.println(inputCommand);
                         switch (inputCommand)
                         {
                             case "updateClient":
@@ -116,22 +116,22 @@ public class Server
                                 Client newClient = yaGson.fromJson(input, Client.class);
                                 try
                                 {
+                                    System.out.println(clients.size());
                                     int clientId = getClientId(newClient);
                                     clients.set(clientId, newClient);
                                 } catch (ClientDoesNotExist clientDoesNotExist)
                                 {
+                                    System.out.println("ADD CLIENT");
                                     addClient(newClient);
                                     client=newClient;
                                 }
-                                updateScoreBoard();
                                 break;
                             case "getGlobalChatroom":
                                 formatter.format(yaGson.toJson(globalChatroom, Chatroom.class) + "\n");
                                 formatter.flush();
                                 break;
                             case "getScoreBoard":
-                                formatter.format(yaGson.toJson(clients)+"\n",
-                                        new TypeToken<ArrayList<Client>>(){}.getType());
+                                formatter.format(yaGson.toJson(clients,new TypeToken<ArrayList<Client>>(){}.getType())+"\n");
                                 formatter.flush();
                                 break;
                             case "getPrivateChatroom":
@@ -141,7 +141,6 @@ public class Server
                                 {
                                     Chatroom chatroom = privateChatrooms.get(getClientId(otherClient)).get(getClientId(client));
                                     formatter.format(yaGson.toJson(chatroom,Chatroom.class)+"\n");
-                                    formatter.format("\n");
                                     formatter.flush();
                                 } catch (ClientDoesNotExist clientDoesNotExist)
                                 {
@@ -151,15 +150,25 @@ public class Server
                             case "updateChatroom":
                                 input=scanner.nextLine();
                                 Chatroom chatroom=yaGson.fromJson(input,Chatroom.class);
+                                System.out.println(chatroom.isGlobal());
                                 if(chatroom.isGlobal())
                                 {
                                     globalChatroom = chatroom;
-                                    System.out.println("HIR||");
                                     for(Client client1:clients)
                                         sendChatroom(client1,chatroom);
                                 } else
                                 {
-                                    /*TODO*/// update private chatroom
+                                    int id1=getClientId(chatroom.getFirstClient());
+                                    int id2=getClientId(chatroom.getSecondClient());
+                                    privateChatrooms.get(id1).set(id2,chatroom);
+                                    privateChatrooms.get(id2).set(id1,chatroom);
+                                    //  System.out.println(privateChatrooms.get(0).get(1).getMessages().size());
+                                    System.out.println(chatroom.getFirstClient().getName()+" "+chatroom.getSecondClient().getName());
+                                    sendChatroom(chatroom.getFirstClient(),chatroom);
+                                    if(!chatroom.getFirstClient().equals(chatroom.getSecondClient()))
+                                    {
+                                        sendChatroom(chatroom.getSecondClient(), chatroom);
+                                    }
                                 }
                                 break;
                             case "disconnect":
@@ -182,6 +191,7 @@ public class Server
     private void sendChatroom(Client client, Chatroom chatroom)
     {
         Formatter formatter=formatters.get(client.getAddress().getPort());
+        System.out.println(client.getAddress().getPort());
         formatter.format("updateChatroom\n");
         formatter.format(yaGson.toJson(chatroom,Chatroom.class)+"\n");
         System.out.println("Chatroom Sent!");
@@ -218,14 +228,16 @@ public class Server
         clients.add(client);
 
         ArrayList<Chatroom> tmpArrayList = new ArrayList<>();
-        for (int i = 0; i < privateChatrooms.size(); i++) {
-            ArrayList<Chatroom> arrayList = privateChatrooms.get(i);
-            Chatroom chatroom = new Chatroom(client,clients.get(i));
+        for (int i=0;i<privateChatrooms.size();i++)
+        {
+            ArrayList<Chatroom> arrayList=privateChatrooms.get(i);
+            Chatroom chatroom = new Chatroom(clients.get(i),client);
             arrayList.add(chatroom);
             tmpArrayList.add(chatroom);
         }
         tmpArrayList.add(new Chatroom(client,client));
         privateChatrooms.add(tmpArrayList);
+        updateScoreBoard();
     }
 
     private void setRequestStreams(String ip, int port)

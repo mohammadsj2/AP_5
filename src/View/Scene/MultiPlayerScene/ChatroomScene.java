@@ -111,31 +111,59 @@ public class ChatroomScene extends MultiPlayerScene
             Platform.runLater(() -> root.getChildren().remove(node));
         }
         toRemove.clear();
-        int height=50;
-        int y=540;
+        int textHeight=30,nameHeight=30;
+        int y=560;
         this.chatroom = chatroom;
         ArrayList<Message> messagesShown=chatroom.getMessages();
         for(Message message:messagesShown)
         {
             Label newMessage = new Label("  " + message.getText() + "  ");
             newMessage.relocate(0, y);
-            newMessage.setMaxHeight(height);
-            newMessage.setMinHeight(height);
+            newMessage.setMinHeight(textHeight);
+            newMessage.setMaxHeight(textHeight);
             newMessage.setMaxWidth(600);
-            newMessage.setFont(Font.font(10));
+            newMessage.setFont(Font.font(15));
             if (message.getClient().equals(InputReader.getClient()))
             {
-                newMessage.setStyle(" -fx-background-color: LightSkyBlue ");
-                newMessage.setLayoutX(50);
+                newMessage.setStyle("-fx-background-color: cornsilk");
+                newMessage.translateXProperty().bind(newMessage.widthProperty().negate().add(640));
+                toRemove.add(newMessage);
+                Platform.runLater(() -> root.getChildren().add(newMessage));
+                y-=textHeight+10;
             } else
             {
-                newMessage.setStyle("-fx-background-color: cornsilk");
-                newMessage.translateXProperty().bind(newMessage.widthProperty().negate().add(650));
+                newMessage.setText(newMessage.getText());
+                newMessage.setStyle(" -fx-background-color: LightSkyBlue ");
+                newMessage.setLayoutX(60+textHeight+nameHeight);
+                toRemove.add(newMessage);
+                Platform.runLater(() -> root.getChildren().add(newMessage));
+                y-=nameHeight;
+                try
+                {
+                    ImageView profilePicture=new ImageView(new Image(
+                            new FileInputStream("./Textures/Profile/"+message.getClient().getImageIndex()+".png")));
+                    profilePicture.setFitHeight(textHeight+nameHeight);
+                    profilePicture.setFitWidth(textHeight+nameHeight);
+                    profilePicture.relocate(60,y);
+                    toRemove.add(profilePicture);
+                    Platform.runLater(() -> root.getChildren().add(profilePicture));
+                } catch (FileNotFoundException e)
+                {
+                    e.printStackTrace();
+                }
+                Label nameLabel=new Label("  "+message.getClient().getName()+"  ");
+                nameLabel.relocate(60+textHeight+nameHeight,y);
+                nameLabel.setMaxHeight(nameHeight);
+                nameLabel.setMinHeight(nameHeight);
+                nameLabel.setMaxWidth(200);
+                nameLabel.setFont(Font.font(15));
+                nameLabel.setStyle(" -fx-background-color: LightSkyBlue;-fx-text-fill: Yellow");
+                toRemove.add(nameLabel);
+                Platform.runLater(() -> root.getChildren().add(nameLabel));
+                y-=textHeight+10;
             }
-            y-=60;
-            toRemove.add(newMessage);
-            Platform.runLater(() -> root.getChildren().add(newMessage));
         }
+        System.out.println("CHAT ROOM SET!");
     }
 
 }
