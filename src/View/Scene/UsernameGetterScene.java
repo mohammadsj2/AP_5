@@ -160,11 +160,11 @@ public class UsernameGetterScene {
     private static void login(TextField textField,int avatarId) {
         if(inAvatarSelectMode){
             root.getChildren().remove(errorLabel);
-            errorLabel=new Label("Please first select your avatar!");
+            errorLabel=new Label("Please select your avatar!");
             errorLabel.setStyle("-fx-text-fill: RED;-fx-font-size: 30;-fx-font-family: 'Comic Sans MS';" +
                     "-fx-background-color: rgba(0, 0, 0, 0.5);-fx-padding: 2px;" +
                     "-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;");
-            errorLabel.relocate(180,50);
+            errorLabel.relocate(270,50);
             root.getChildren().add(errorLabel);
             KeyValue opacityKeyValue=new KeyValue(errorLabel.opacityProperty(),0);
             KeyFrame keyFrame=new KeyFrame(Duration.seconds(3),opacityKeyValue);
