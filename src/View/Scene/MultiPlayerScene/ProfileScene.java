@@ -51,7 +51,7 @@ public class ProfileScene extends MultiPlayerScene{
             privateMessageImageView.setOnMouseClicked(event ->
             {
                 Chatroom chatroom=InputReader.getClient().getPrivateChatroom(client);
-                ChatroomScene.CHATROOM_SCENE.init(chatroom);
+                ChatroomScene.CHATROOM_SCENE.setChatroom(chatroom);
                 InputReader.setScene(ChatroomScene.CHATROOM_SCENE.getScene());
             });
             root.getChildren().add(privateMessageImageView);
