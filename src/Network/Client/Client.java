@@ -38,15 +38,12 @@ public class Client
     private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();
 
 
-    public Client(String name)
+    public Client(String name,int imageIndex)
     {
         address=new Address(1231,"localhost");
         this.name = name;
         level = 0;
-        imageIndex=((new Random(LocalDateTime.now().getNano()).nextInt())%Constant.AVATAR_NUMBER);
-        if(imageIndex<0)
-            imageIndex+=Constant.AVATAR_NUMBER;
-        imageIndex++;
+        this.imageIndex=imageIndex;
     }
 
     public void connectToServer(String ip) throws ServerDoesNotExist {
