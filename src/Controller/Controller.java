@@ -225,7 +225,7 @@ public class Controller
         {
             if(levelNumber!=-1){
                 InputReader.getClient().setLevel(levelNumber);
-                InputReader.getClient().updateClient();
+                if(InputReader.getClient().isOnline())InputReader.getClient().updateClient();
             }
             GameScene.setWinningMessage();
         }

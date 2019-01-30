@@ -1,7 +1,5 @@
 package View.ProgressBar;
 
-import View.Scene.GameScene;
-import View.View;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;

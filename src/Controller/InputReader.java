@@ -373,7 +373,12 @@ public class InputReader extends Application
         primaryStage.setResizable(false);
         primaryStage.setX(300);
         primaryStage.setY(100);
-        primaryStage.setOnCloseRequest(event -> System.exit(0));
+        primaryStage.setOnCloseRequest(event -> {
+            if(client!=null && client.isOnline()){
+                client.disconnect();
+            }
+            System.exit(0);
+        });
         primaryStage.show();
 
         ChatroomScene.CHATROOM_SCENE.init();
