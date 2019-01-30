@@ -208,7 +208,9 @@ public class Server
                                 formatter.flush();
                                 break;
                             case "removeMarketItems":
+                                System.out.println("Server: removeMarketItems");
                                 input=scanner.nextLine();
+                                System.out.println(input+"||||||");
                                 ArrayList<Item> tmp=yaGson.fromJson(input
                                         ,new TypeToken<ArrayList<Item>>(){}.getType());
                                 HashMap<Item,Integer> itemsToRemove=arrayListToHashMap(tmp);
@@ -229,9 +231,11 @@ public class Server
                                     }
                                     formatter.format("Succeed\n");
                                     formatter.flush();
+                                    updateMarketItems();
                                 }
                                 else
                                 {
+                                    System.out.println("SERVER: FAILLLLLLLLLL");
                                     formatter.format("Failed\n");
                                     formatter.flush();
                                 }
@@ -272,35 +276,19 @@ public class Server
         new Thread(task).start();
     }
 
-    private HashMap<Item,Integer> arrayListToHashMap(ArrayList<Item> items)
+    private void updateMarketItems()
     {
-        HashMap<Item,Integer> result=new HashMap<>();
-        for(Item item:items)
-        {
-            if(!result.containsKey(item))
-            {
-                result.put(item,1);
-            }
-            else
-            {
-                result.put(item,result.get(item)+1);
-            }
+        String marketItemsToJson= yaGson.toJson(hashMapToArrayList(shopItems), new TypeToken<ArrayList<Item>>(){}.getType())+"\n";
+        System.out.println("updateSB\n");
+        for (Client client : clients) {
+            Formatter formatter = formatters.get(client.getAddress().getPort());
+            formatter.format("updateMarketItems\n");
+            formatter.format(marketItemsToJson);
+            formatter.flush();
         }
-        return result;
     }
 
-    private ArrayList<Item> hashMapToArrayList(HashMap<Item, Integer> items)
-    {
-        ArrayList<Item> result=new ArrayList<>();
-        for(Item item:items.keySet())
-        {
-            for(int i=0;i<items.get(item);i++)
-            {
-                result.add(item);
-            }
-        }
-        return result;
-    }
+
 
     private void sendChatroom(Client client, Chatroom chatroom)
     {
@@ -431,5 +419,35 @@ public class Server
         int i = getClientId(a);
         int j = getClientId(b);
         return privateChatrooms.get(i).get(j);
+    }
+
+    private HashMap<Item,Integer> arrayListToHashMap(ArrayList<Item> items)
+    {
+        HashMap<Item,Integer> result=new HashMap<>();
+        for(Item item:items)
+        {
+            if(!result.containsKey(item))
+            {
+                result.put(item,1);
+            }
+            else
+            {
+                result.put(item,result.get(item)+1);
+            }
+        }
+        return result;
+    }
+
+    private ArrayList<Item> hashMapToArrayList(HashMap<Item, Integer> items)
+    {
+        ArrayList<Item> result=new ArrayList<>();
+        for(Item item:items.keySet())
+        {
+            for(int i=0;i<items.get(item);i++)
+            {
+                result.add(item);
+            }
+        }
+        return result;
     }
 }

@@ -439,6 +439,7 @@ public class Controller
                 InputReader.getClient().removeItems(helicopter.getItems());
             } catch (NotEnoughItemException e)
             {
+                helicopter.clear();
                 System.out.println(Constant.NOT_ENOUGH_ITEM_MESSAGE);
                 return ;
             }

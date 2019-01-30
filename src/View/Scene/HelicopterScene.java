@@ -3,6 +3,7 @@ package View.Scene;
 import Constant.Constant;
 import Controller.InputReader;
 import Model.Entity.Item;
+import Model.Transporter.Helicopter;
 import View.Button.BlueButton;
 import View.CoinView;
 import javafx.scene.Group;
@@ -101,7 +102,7 @@ public class HelicopterScene {
         for (Item item:items.keySet()) {
             i++;
             item.initView();
-            ImageView imageView = item.getImageView();
+            ImageView imageView = Constant.getItemByType(item.getName()).getImageView();
             Label label=new Label("x0");
             label.setStyle("-fx-font-size: 20;");
             label.relocate(getItemPositionInWarehouseX()+90,getItemPositionInWarehouseY(i)+10);
@@ -116,10 +117,10 @@ public class HelicopterScene {
             addNode(addToHelicopterButton.getNode());
             addToHelicopterButton.getNode().setOnMouseClicked(event -> {
                 try {
-                    if(InputReader.getCurrentController().getHelicopter().getNumberOfThisItem(item)<
+                    if(items.containsKey(item) && InputReader.getCurrentController().getHelicopter().getNumberOfThisItem(item)<
                         items.get(item))
                     {
-                        InputReader.addItemToHelicopter(item);
+                        InputReader.addItemToHelicopter(Constant.getItemByType(item.getName()));
                         refresh();
                     }
                 } catch (NoTransporterSpaceException e) {
@@ -176,5 +177,11 @@ public class HelicopterScene {
     public static void clear() {
         inHelicopterCounterLabel.clear();
         root.getChildren().clear();
+    }
+
+    public static void setItems(HashMap<Item, Integer> items)
+    {
+        HelicopterScene.items=items;
+        refresh();
     }
 }
