@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Objects;
 
 
 public class Item extends Entity
@@ -131,10 +132,18 @@ public class Item extends Entity
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object o)
     {
-        if (!(obj instanceof Item)) return false;
-        return ((Item) obj).getName().equals(getName());
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return Objects.equals(name, item.name);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(name);
     }
 
     @Override

@@ -15,21 +15,30 @@ import javafx.scene.image.ImageView;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import Exception.*;
 
 public class HelicopterScene {
-    public static final int ITEM_POSITION_INHELICOPTER_Y = 128;
-    public static final int ITEM_POSITION_INHELICOPTER_X = 55;
+    public static final int ITEM_POSITION_IN_HELICOPTER_Y = 128;
+    public static final int ITEM_POSITION_IN_HELICOPTER_X = 55;
     private static Group root = new Group();
     private static Scene scene = new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
-    private static ArrayList<Item> items;
-    private static ArrayList<Label> inHelicopterCounterLabel;
+
+    private static HashMap<Item,Integer> items;
+    private static HashMap<Item,Label> inHelicopterCounterLabel;
 
     public static void init(){
-        items=InputReader.getCurrentController().getHelicopter().getPossibleItems();
         try {
-            items=InputReader.getCurrentController().getHelicopter().getPossibleItems();
-            inHelicopterCounterLabel=new ArrayList<>();
+            if(InputReader.getClient().isOnline())
+            {
+                items=InputReader.getClient().getMarketItems();
+            }
+            else
+            {
+                /*TODO*///
+            }
+            inHelicopterCounterLabel=new HashMap<>();
             initBackground();
             initItemView();
             initBackButton();
@@ -88,15 +97,15 @@ public class HelicopterScene {
     }
 
     private static void initItemView() {
-        for (int i = 0; i < items.size(); i++) {
-            Item item = Constant.getItemByType(items.get(i).getName());
-
+        int i=-1;
+        for (Item item:items.keySet()) {
+            i++;
             item.initView();
             ImageView imageView = item.getImageView();
             Label label=new Label("x0");
             label.setStyle("-fx-font-size: 20;");
             label.relocate(getItemPositionInWarehouseX()+90,getItemPositionInWarehouseY(i)+10);
-            inHelicopterCounterLabel.add(label);
+            inHelicopterCounterLabel.put(item,label);
             addNode(label);
 
             addNode(imageView);
@@ -107,8 +116,12 @@ public class HelicopterScene {
             addNode(addToHelicopterButton.getNode());
             addToHelicopterButton.getNode().setOnMouseClicked(event -> {
                 try {
-                    InputReader.addItemToHelicopter(Constant.getItemByType(item.getName()));
-                    refresh();
+                    if(InputReader.getCurrentController().getHelicopter().getNumberOfThisItem(item)<
+                        items.get(item))
+                    {
+                        InputReader.addItemToHelicopter(item);
+                        refresh();
+                    }
                 } catch (NoTransporterSpaceException e) {
                     System.out.println(Constant.NOT_ENOUGH_SPACE_MESSAGE);
                 }
@@ -118,10 +131,10 @@ public class HelicopterScene {
 
 
     private static int getItemPositionInWarehouseX() {
-        return ITEM_POSITION_INHELICOPTER_X;
+        return ITEM_POSITION_IN_HELICOPTER_X;
     }
     private static int getItemPositionInWarehouseY(int i) {
-        return ITEM_POSITION_INHELICOPTER_Y +37*i;
+        return ITEM_POSITION_IN_HELICOPTER_Y +37*i;
     }
 
     private static void initBackground() throws FileNotFoundException {
@@ -154,9 +167,9 @@ public class HelicopterScene {
     }
 
     private static void refreshLabels() {
-        for(int i=0;i<inHelicopterCounterLabel.size();i++){
-            Label label=inHelicopterCounterLabel.get(i);
-            label.setText("x"+InputReader.getCurrentController().getHelicopter().getNumberOfThisItem(items.get(i)));
+        for(Item item:inHelicopterCounterLabel.keySet()){
+            Label label=inHelicopterCounterLabel.get(item);
+            label.setText("x"+InputReader.getCurrentController().getHelicopter().getNumberOfThisItem(item));
         }
     }
 

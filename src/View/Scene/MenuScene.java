@@ -3,6 +3,7 @@ package View.Scene;
 import Constant.Constant;
 import Controller.InputReader;
 import View.Button.BlueButton;
+import View.Scene.MultiPlayerScene.MultiPlayerScene;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -128,9 +129,17 @@ public class MenuScene
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,300,false);
         backToMenuButton.getNode().setOnMouseClicked(event ->
         {
-            MenuScene.init(false);
             GameScene.clear();
-            InputReader.setScene(MenuScene.getScene());
+            if(InputReader.getClient().isOnline())
+            {
+                MultiPlayerScene.MULTI_PLAYER_SCENE.init();
+                InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
+            }
+            else
+            {
+                MenuScene.init(false);
+                InputReader.setScene(MenuScene.getScene());
+            }
         });
         addNode(backToMenuButton.getNode());
     }

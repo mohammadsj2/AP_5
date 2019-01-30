@@ -1,7 +1,7 @@
 package Network.Client;
 
-import Constant.Constant;
 import Controller.InputReader;
+import Model.Entity.Item;
 import Network.Address;
 import Network.Chatroom;
 import Network.Relationship;
@@ -15,14 +15,12 @@ import com.gilecode.yagson.YaGson;
 import com.gilecode.yagson.YaGsonBuilder;
 import com.gilecode.yagson.com.google.gson.reflect.TypeToken;
 import javafx.concurrent.Task;
-import javafx.scene.image.Image;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class Client
@@ -269,5 +267,54 @@ public class Client
         formatter.format("updateRelationship\n");
         formatter.format(yaGson.toJson(relationship)+"\n");
         formatter.flush();
+    public HashMap<Item,Integer> getMarketItems()
+    {
+        formatter.format("getMarketItems\n");
+        formatter.flush();
+        ArrayList<Item> tmp=yaGson.fromJson(scanner.nextLine(),new TypeToken<ArrayList<Item>>(){}.getType());
+        return arrayListToHashMap(tmp);
+    }
+
+    private HashMap<Item,Integer> arrayListToHashMap(ArrayList<Item> items)
+    {
+        HashMap<Item,Integer> result=new HashMap<>();
+        for(Item item:items)
+        {
+            if(!result.containsKey(item))
+            {
+                result.put(item,1);
+            }
+            else
+            {
+                result.put(item,result.get(item)+1);
+            }
+        }
+        return result;
+    }
+
+    public void removeItems(HashMap<Item,Integer> items) throws NotEnoughItemException
+    {
+        formatter.format("removeMarketItems\n");
+        for(Item item:items.keySet())
+        {
+            System.out.println(item.getName());
+        }
+        formatter.format(yaGson.toJson(hashMapToArrayList(items),new TypeToken<ArrayList<Item>>(){}.getType())+"\n");
+        formatter.flush();
+        if(scanner.nextLine().equals("Failed"))
+            throw new NotEnoughItemException();
+    }
+
+    private ArrayList<Item> hashMapToArrayList(HashMap<Item, Integer> items)
+    {
+        ArrayList<Item> result=new ArrayList<>();
+        for(Item item:items.keySet())
+        {
+            for(int i=0;i<items.get(item);i++)
+            {
+                result.add(item);
+            }
+        }
+        return result;
     }
 }
