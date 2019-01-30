@@ -427,6 +427,10 @@ public class Controller
 
     void startTruck() throws StartBusyTransporter, StartEmptyTransporter
     {
+        if(InputReader.getClient().isOnline())
+        {
+            InputReader.getClient().addMarketItems(truck.getItems());
+        }
         truck.startTransportation();
     }
 

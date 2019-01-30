@@ -195,7 +195,8 @@ public class Server
                                     privateChatrooms.get(id1).set(id2,chatroom);
                                     privateChatrooms.get(id2).set(id1,chatroom);
                                     //  System.out.println(privateChatrooms.get(0).get(1).getMessages().size());
-                                    System.out.println(chatroom.getFirstClient().getName()+" "+chatroom.getSecondClient().getName());
+                                    System.out.println(chatroom.getFirstClient().getName()+" "
+                                            +chatroom.getSecondClient().getName());
                                     sendChatroom(chatroom.getFirstClient(),chatroom);
                                     if(!chatroom.getFirstClient().equals(chatroom.getSecondClient()))
                                     {
@@ -204,13 +205,13 @@ public class Server
                                 }
                                 break;
                             case "getMarketItems":
-                                formatter.format(yaGson.toJson(hashMapToArrayList(shopItems),new TypeToken<ArrayList<Item>>(){}.getType())+"\n");
+                                formatter.format(yaGson.toJson(hashMapToArrayList(shopItems)
+                                        ,new TypeToken<ArrayList<Item>>(){}.getType())+"\n");
                                 formatter.flush();
                                 break;
                             case "removeMarketItems":
                                 System.out.println("Server: removeMarketItems");
                                 input=scanner.nextLine();
-                                System.out.println(input+"||||||");
                                 ArrayList<Item> tmp=yaGson.fromJson(input
                                         ,new TypeToken<ArrayList<Item>>(){}.getType());
                                 HashMap<Item,Integer> itemsToRemove=arrayListToHashMap(tmp);
@@ -239,7 +240,25 @@ public class Server
                                     formatter.format("Failed\n");
                                     formatter.flush();
                                 }
-
+                                break;
+                            case "addMarketItems":
+                                input=scanner.nextLine();
+                                ArrayList<Item> itemsToAdd=yaGson.fromJson(input
+                                        ,new TypeToken<ArrayList<Item>>(){}.getType());
+                                System.out.println(itemsToAdd.size());
+                                for(Item item:itemsToAdd)
+                                {
+                                    if(!shopItems.containsKey(item))
+                                    {
+                                        shopItems.put(item,1);
+                                    }
+                                    else
+                                    {
+                                        System.out.println("ADD "+item.getName());
+                                        shopItems.put(item,shopItems.get(item)+1);
+                                    }
+                                }
+                                updateMarketItems();
                                 break;
                             case "disconnect":
                                 disconnect(client);
@@ -279,7 +298,6 @@ public class Server
     private void updateMarketItems()
     {
         String marketItemsToJson= yaGson.toJson(hashMapToArrayList(shopItems), new TypeToken<ArrayList<Item>>(){}.getType())+"\n";
-        System.out.println("updateSB\n");
         for (Client client : clients) {
             Formatter formatter = formatters.get(client.getAddress().getPort());
             formatter.format("updateMarketItems\n");

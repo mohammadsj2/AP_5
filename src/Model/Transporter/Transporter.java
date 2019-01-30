@@ -217,7 +217,7 @@ public abstract class Transporter implements Upgradable, Viewable
         int value = 0;
         for (Item item : items.keySet())
         {
-            value += item.getCost()*items.get(item);
+            value += ((this instanceof Truck)?item.getSellCost():item.getBuyCost())*items.get(item);
         }
         return value;
     }

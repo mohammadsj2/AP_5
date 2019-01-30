@@ -37,6 +37,7 @@ public class HelicopterScene {
             }
             else
             {
+                items=arrayListToHashMap(InputReader.getCurrentController().getHelicopter().getPossibleItems());
                 /*TODO*///
             }
             inHelicopterCounterLabel=new HashMap<>();
@@ -117,8 +118,9 @@ public class HelicopterScene {
             addNode(addToHelicopterButton.getNode());
             addToHelicopterButton.getNode().setOnMouseClicked(event -> {
                 try {
-                    if(items.containsKey(item) && InputReader.getCurrentController().getHelicopter().getNumberOfThisItem(item)<
-                        items.get(item))
+                    if(!InputReader.getClient().isOnline() || (items.containsKey(item) &&
+                            InputReader.getCurrentController().getHelicopter().getNumberOfThisItem(item)<
+                        items.get(item)))
                     {
                         InputReader.addItemToHelicopter(Constant.getItemByType(item.getName()));
                         refresh();
@@ -183,5 +185,21 @@ public class HelicopterScene {
     {
         HelicopterScene.items=items;
         refresh();
+    }
+
+    private static HashMap<Item, Integer> arrayListToHashMap(ArrayList<Item> items)
+    {
+        HashMap<Item, Integer> result = new HashMap<>();
+        for (Item item : items)
+        {
+            if (!result.containsKey(item))
+            {
+                result.put(item, 1);
+            } else
+            {
+                result.put(item, result.get(item) + 1);
+            }
+        }
+        return result;
     }
 }

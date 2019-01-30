@@ -297,6 +297,26 @@ public class Client
         return arrayListToHashMap(tmp);
     }
 
+    public void removeItems(HashMap<Item, Integer> items) throws NotEnoughItemException
+    {
+        formatter.format("removeMarketItems\n");
+        ArrayList<Item> itemsArrayList=hashMapToArrayList(items);
+        formatter.format(yaGson.toJson(itemsArrayList, new TypeToken<ArrayList<Item>>(){}.getType()) + "\n");
+        formatter.flush();
+        if (scanner.nextLine().equals("Failed"))
+            throw new NotEnoughItemException();
+    }
+
+
+    public void addMarketItems(HashMap<Item, Integer> items)
+    {
+        formatter.format("addMarketItems\n");
+        ArrayList<Item> itemsArrayList=hashMapToArrayList(items);
+        System.out.println(itemsArrayList.size());
+        formatter.format(yaGson.toJson(itemsArrayList, new TypeToken<ArrayList<Item>>(){}.getType()) + "\n");
+        formatter.flush();
+    }
+
     private HashMap<Item, Integer> arrayListToHashMap(ArrayList<Item> items)
     {
         HashMap<Item, Integer> result = new HashMap<>();
@@ -313,28 +333,6 @@ public class Client
         return result;
     }
 
-    public void removeItems(HashMap<Item, Integer> items) throws NotEnoughItemException
-    {
-        formatter.format("removeMarketItems\n");
-        formatter.flush();
-        System.out.println("Client: removeMarketItems");
-        for (Item item : items.keySet())
-        {
-            System.out.println(item.getName());
-        }
-        System.out.println("Client: Try to send items");
-        ArrayList<Item> itemsArrayList=hashMapToArrayList(items);
-        for(Item item:itemsArrayList)
-        {
-            System.out.println(item.getName()+"??");
-        }
-        formatter.format(yaGson.toJson(itemsArrayList, new TypeToken<ArrayList<Item>>(){}.getType()) + "\n");
-        System.out.println("Client: Items sent");
-        formatter.flush();
-        if (scanner.nextLine().equals("Failed"))
-            throw new NotEnoughItemException();
-    }
-
     private ArrayList<Item> hashMapToArrayList(HashMap<Item, Integer> items)
     {
         ArrayList<Item> result = new ArrayList<>();
@@ -347,4 +345,5 @@ public class Client
         }
         return result;
     }
+
 }
