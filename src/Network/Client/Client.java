@@ -36,7 +36,6 @@ public class Client
     private Scanner scanner;
     private Formatter formatter;
     private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();
-    ;
 
 
     public Client(String name)
@@ -102,6 +101,9 @@ public class Client
                         {
                             case "updateChatroom":
                                 input=scanner.nextLine();
+                                if(InputReader.getScene()!=ChatroomScene.CHATROOM_SCENE.getScene()){
+                                    break;
+                                }
                                 Chatroom chatroom=yaGson.fromJson(input,Chatroom.class);
                                 System.out.println("CLIENT!!!: "+chatroom.getMessages().size());
                                 if(ChatroomScene.CHATROOM_SCENE.getChatroom().equals(chatroom))
@@ -112,6 +114,9 @@ public class Client
                                 break;
                             case "updateScoreboard":
                                 input=scanner.nextLine();
+                                if(InputReader.getScene()!=ScoreBoardScene.SCORE_BOARD_SCENE.getScene()){
+                                    break;
+                                }
                                 ArrayList<Client> clients=yaGson.fromJson(input,new TypeToken<ArrayList<Client>>(){}.getType());
                                 ScoreBoardScene.SCORE_BOARD_SCENE.setClients(clients);
                                 break;

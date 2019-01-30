@@ -4,6 +4,7 @@ import Exception.*;
 import Model.Entity.Item;
 import Model.Map.Cell;
 import Model.Map.Map;
+import Network.Chatroom;
 import Network.Client.Client;
 
 import View.Scene.*;
@@ -360,6 +361,10 @@ public class InputReader extends Application
         InputReader.server=server;
     }
 
+    public static Scene getScene() {
+        return primaryStage.getScene();
+    }
+
     @Override
     public void start(Stage primaryStage)
     {
@@ -369,6 +374,8 @@ public class InputReader extends Application
         primaryStage.setY(100);
         primaryStage.setOnCloseRequest(event -> System.exit(0));
         primaryStage.show();
+
+        ChatroomScene.CHATROOM_SCENE.init();
         UsernameGetterScene.init();
         setScene(UsernameGetterScene.getScene());
     }

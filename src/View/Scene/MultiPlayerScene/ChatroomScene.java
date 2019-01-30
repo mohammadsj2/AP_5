@@ -38,7 +38,8 @@ public class ChatroomScene extends MultiPlayerScene
     private ArrayList<Node> toRemove=new ArrayList<>();
 
 
-    public void init(Chatroom chatroom) {
+    public void init() {
+        root.getChildren().clear();
         try
         {
             initBackground();
@@ -48,7 +49,6 @@ public class ChatroomScene extends MultiPlayerScene
             e.printStackTrace();
         }
         setChatTools();
-        setChatroom(chatroom);
     }
 
 
@@ -107,10 +107,14 @@ public class ChatroomScene extends MultiPlayerScene
 
     public void setChatroom(Chatroom chatroom)
     {
-        for(Node node:toRemove){
-            Platform.runLater(() -> root.getChildren().remove(node));
-        }
-        toRemove.clear();
+        Platform.runLater(() -> {
+            System.out.println("remove all to removes");
+            for(Node node:toRemove){
+                root.getChildren().remove(node);
+            }
+            toRemove.clear();
+        });
+
         int textHeight=30,nameHeight=30;
         int y=560;
         this.chatroom = chatroom;
@@ -127,16 +131,22 @@ public class ChatroomScene extends MultiPlayerScene
             {
                 newMessage.setStyle("-fx-background-color: cornsilk");
                 newMessage.translateXProperty().bind(newMessage.widthProperty().negate().add(640));
-                toRemove.add(newMessage);
-                Platform.runLater(() -> root.getChildren().add(newMessage));
+                Platform.runLater(() -> {
+                    System.out.println("set new Message 1");
+                    root.getChildren().add(newMessage);
+                    toRemove.add(newMessage);
+                });
                 y-=textHeight+10;
             } else
             {
                 newMessage.setText(newMessage.getText());
                 newMessage.setStyle(" -fx-background-color: LightSkyBlue ");
                 newMessage.setLayoutX(60+textHeight+nameHeight);
-                toRemove.add(newMessage);
-                Platform.runLater(() -> root.getChildren().add(newMessage));
+                Platform.runLater(() -> {
+                    System.out.println("set new message!");
+                    root.getChildren().add(newMessage);
+                    toRemove.add(newMessage);
+                });
                 y-=nameHeight;
                 try
                 {
@@ -145,8 +155,11 @@ public class ChatroomScene extends MultiPlayerScene
                     profilePicture.setFitHeight(textHeight+nameHeight);
                     profilePicture.setFitWidth(textHeight+nameHeight);
                     profilePicture.relocate(60,y);
-                    toRemove.add(profilePicture);
-                    Platform.runLater(() -> root.getChildren().add(profilePicture));
+                    Platform.runLater(() -> {
+                        System.out.println("set profile picture");
+                        root.getChildren().add(profilePicture);
+                        toRemove.add(profilePicture);
+                    });
                 } catch (FileNotFoundException e)
                 {
                     e.printStackTrace();
@@ -158,8 +171,12 @@ public class ChatroomScene extends MultiPlayerScene
                 nameLabel.setMaxWidth(200);
                 nameLabel.setFont(Font.font(15));
                 nameLabel.setStyle(" -fx-background-color: LightSkyBlue;-fx-text-fill: Yellow");
-                toRemove.add(nameLabel);
-                Platform.runLater(() -> root.getChildren().add(nameLabel));
+
+                Platform.runLater(() -> {
+                    System.out.println("set nameLavel");
+                    root.getChildren().add(nameLabel);
+                    toRemove.add(nameLabel);
+                });
                 y-=textHeight+10;
             }
         }

@@ -66,7 +66,7 @@ public class MultiPlayerScene {
 
             Client client=InputReader.getClient();
             Chatroom chatroom = client.getGlobalChatroom();
-            ChatroomScene.CHATROOM_SCENE.init(chatroom);
+            ChatroomScene.CHATROOM_SCENE.setChatroom(chatroom);
             InputReader.setScene(ChatroomScene.CHATROOM_SCENE.getScene());
         });
         addNode(button.getNode());
