@@ -3,7 +3,6 @@ package View.Scene;
 import Constant.Constant;
 import Controller.InputReader;
 import Network.Address;
-import Network.Client.Client;
 import Network.Server.Server;
 import View.Button.BlueButton;
 import Exception.*;
@@ -67,6 +66,8 @@ public class ConnectScene
                 addClient(InputReader.getClient().getAddress().getIp());
             } catch (ServerDoesNotExist serverDoesNotExist) {
                 serverDoesNotExist.printStackTrace();
+            } catch (NotUniqueUsernameException e) {
+                System.out.println(Constant.NOT_UNIQUE_USERNAME_EXCEPTION_MESSAGE);
             }
         });
         root.getChildren().add(hostButton.getNode());
@@ -87,6 +88,9 @@ public class ConnectScene
                 } catch (ServerDoesNotExist serverDoesNotExist) {
                     System.out.println(Constant.SERVER_DOES_NOT_EXIST_MESSAGE);
                     return;
+                } catch (NotUniqueUsernameException e) {
+                    System.out.println(Constant.NOT_UNIQUE_USERNAME_EXCEPTION_MESSAGE);
+                    return;
                 }
                 MultiPlayerScene.MULTI_PLAYER_SCENE.init();
                 InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
@@ -100,6 +104,9 @@ public class ConnectScene
             } catch (ServerDoesNotExist serverDoesNotExist) {
                 System.out.println(Constant.SERVER_DOES_NOT_EXIST_MESSAGE);
                 return;
+            } catch (NotUniqueUsernameException e) {
+                System.out.println(Constant.NOT_UNIQUE_USERNAME_EXCEPTION_MESSAGE);
+                return;
             }
             MultiPlayerScene.MULTI_PLAYER_SCENE.init();
             InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
@@ -109,9 +116,8 @@ public class ConnectScene
         root.getChildren().add(joinButton.getNode());
     }
 
-    private static void addClient(String ip) throws ServerDoesNotExist {
+    private static void addClient(String ip) throws ServerDoesNotExist, NotUniqueUsernameException {
         InputReader.getClient().connectToServer(ip);
-
     }
 
 

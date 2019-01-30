@@ -36,21 +36,17 @@ public class Client
     private Scanner scanner;
     private Formatter formatter;
     private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();
-    ;
 
 
-    public Client(String name)
+    public Client(String name,int imageIndex)
     {
         address=new Address(1231,"localhost");
         this.name = name;
         level = 0;
-        imageIndex=((new Random(LocalDateTime.now().getNano()).nextInt())%Constant.AVATAR_NUMBER);
-        if(imageIndex<0)
-            imageIndex+=Constant.AVATAR_NUMBER;
-        imageIndex++;
+        this.imageIndex=imageIndex;
     }
 
-    public void connectToServer(String ip) throws ServerDoesNotExist {
+    public void connectToServer(String ip) throws ServerDoesNotExist, NotUniqueUsernameException {
         serverIP = ip;
         try
         {
@@ -59,6 +55,12 @@ public class Client
             InputStream inputStream = socket.getInputStream();
             Scanner scanner = new Scanner(inputStream);
             Formatter formatter = new Formatter(outputStream);
+
+            formatter.format(getName()+"\n");
+            formatter.flush();
+            if(!scanner.nextLine().equals("sendingPort")){
+                throw new NotUniqueUsernameException();
+            }
             int listenPort = scanner.nextInt();
             address = new Address(listenPort, "localhost");
             listenToServer(address.getPort());
@@ -102,6 +104,9 @@ public class Client
                         {
                             case "updateChatroom":
                                 input=scanner.nextLine();
+                                if(InputReader.getScene()!=ChatroomScene.CHATROOM_SCENE.getScene()){
+                                    break;
+                                }
                                 Chatroom chatroom=yaGson.fromJson(input,Chatroom.class);
                                 System.out.println("CLIENT!!!: "+chatroom.getMessages().size());
                                 if(ChatroomScene.CHATROOM_SCENE.getChatroom().equals(chatroom))
@@ -112,6 +117,9 @@ public class Client
                                 break;
                             case "updateScoreboard":
                                 input=scanner.nextLine();
+                                if(InputReader.getScene()!=ScoreBoardScene.SCORE_BOARD_SCENE.getScene()){
+                                    break;
+                                }
                                 ArrayList<Client> clients=yaGson.fromJson(input,new TypeToken<ArrayList<Client>>(){}.getType());
                                 ScoreBoardScene.SCORE_BOARD_SCENE.setClients(clients);
                                 break;
