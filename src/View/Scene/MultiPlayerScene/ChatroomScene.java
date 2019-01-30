@@ -105,15 +105,9 @@ public class ChatroomScene extends MultiPlayerScene
         return chatroom;
     }
 
-    public void setChatroom(Chatroom chatroom)
+    public void setChatroom(Chatroom chatroom,boolean force)
     {
-        Platform.runLater(() -> {
-            System.out.println("remove all to removes");
-            for(Node node:toRemove){
-                root.getChildren().remove(node);
-            }
-            toRemove.clear();
-        });
+        removeAllNodesWithForce(force, toRemove, root.getChildren());
 
         int textHeight=30,nameHeight=30;
         int y=560;
@@ -131,22 +125,14 @@ public class ChatroomScene extends MultiPlayerScene
             {
                 newMessage.setStyle("-fx-background-color: cornsilk");
                 newMessage.translateXProperty().bind(newMessage.widthProperty().negate().add(640));
-                Platform.runLater(() -> {
-                    System.out.println("set new Message 1");
-                    root.getChildren().add(newMessage);
-                    toRemove.add(newMessage);
-                });
+                addWithForce(force, newMessage);
                 y-=textHeight+10;
             } else
             {
                 newMessage.setText(newMessage.getText());
                 newMessage.setStyle(" -fx-background-color: LightSkyBlue ");
                 newMessage.setLayoutX(60+textHeight+nameHeight);
-                Platform.runLater(() -> {
-                    System.out.println("set new message!");
-                    root.getChildren().add(newMessage);
-                    toRemove.add(newMessage);
-                });
+                addWithForce(force, newMessage);
                 y-=nameHeight;
                 try
                 {
@@ -155,11 +141,7 @@ public class ChatroomScene extends MultiPlayerScene
                     profilePicture.setFitHeight(textHeight+nameHeight);
                     profilePicture.setFitWidth(textHeight+nameHeight);
                     profilePicture.relocate(60,y);
-                    Platform.runLater(() -> {
-                        System.out.println("set profile picture");
-                        root.getChildren().add(profilePicture);
-                        toRemove.add(profilePicture);
-                    });
+                    addWithForce(force,profilePicture);
                 } catch (FileNotFoundException e)
                 {
                     e.printStackTrace();
@@ -172,15 +154,23 @@ public class ChatroomScene extends MultiPlayerScene
                 nameLabel.setFont(Font.font(15));
                 nameLabel.setStyle(" -fx-background-color: LightSkyBlue;-fx-text-fill: Yellow");
 
-                Platform.runLater(() -> {
-                    System.out.println("set nameLavel");
-                    root.getChildren().add(nameLabel);
-                    toRemove.add(nameLabel);
-                });
+                addWithForce(force, nameLabel);
                 y-=textHeight+10;
             }
         }
         System.out.println("CHAT ROOM SET!");
+    }
+
+    public void addWithForce(boolean force, Node node) {
+        if(force){
+            root.getChildren().add(node);
+            toRemove.add(node);
+        }else {
+            Platform.runLater(() -> {
+                root.getChildren().add(node);
+                toRemove.add(node);
+            });
+        }
     }
 
 }

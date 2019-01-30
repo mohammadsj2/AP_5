@@ -40,36 +40,43 @@ public class ScoreBoardScene extends MultiPlayerScene{
         {
             e.printStackTrace();
         }
-        setClients(InputReader.getClient().getScoreBoard());
+        setClients(InputReader.getClient().getScoreBoard(),true);
     }
 
-    public void setClients(ArrayList<Client> clients) {
+    public void setClients(ArrayList<Client> clients,boolean force) {
         ScoreBoardScene.clients = clients;
-        refresh();
+        refresh(force);
     }
 
-    public void refresh() {
-        for(Node node:toRemove){
-            Platform.runLater(() -> root.getChildren().remove(node));
-        }
+    public void refresh(boolean force) {
+        removeAllNodesWithForce(force, toRemove, root.getChildren());
         Collections.sort(clients, (o1, o2) -> -o1.getLevel()+o2.getLevel());
         int x=100;
         for (int i = 0; i < clients.size(); i++) {
             Client client = clients.get(i);
             FancyLabel label = new FancyLabel(client.getName(),23,x,positionInScoreBoardY(i));
-            Platform.runLater(() -> root.getChildren().add(label.getNode()));
+            if(force){
+                root.getChildren().add(label.getNode());
+            }else {
+                Platform.runLater(() -> root.getChildren().add(label.getNode()));
+            }
             label.getNode().setOnMouseClicked(event -> {
                 ProfileScene profileScene=new ProfileScene(client);
                 profileScene.init();
                 InputReader.setScene(profileScene.getScene());
             });
             FancyLabel score=new FancyLabel(Integer.toString(client.getLevel()),23,x+300,positionInScoreBoardY(i));
-            Platform.runLater(() -> addNode(score.getNode()));
-
-            toRemove.add(score.getNode());
-            toRemove.add(label.getNode());
-
-
+            if(force){
+                addNode(score.getNode());
+                toRemove.add(score.getNode());
+                toRemove.add(label.getNode());
+            }else{
+                Platform.runLater(() -> {
+                    addNode(score.getNode());
+                    toRemove.add(score.getNode());
+                    toRemove.add(label.getNode());
+                });
+            }
         }
     }
 

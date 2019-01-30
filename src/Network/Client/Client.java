@@ -4,8 +4,10 @@ import Constant.Constant;
 import Controller.InputReader;
 import Network.Address;
 import Network.Chatroom;
+import Network.Relationship;
 import Network.Server.Server;
 import View.Scene.MultiPlayerScene.ChatroomScene;
+import View.Scene.MultiPlayerScene.ProfileScene;
 import View.Scene.MultiPlayerScene.ScoreBoardScene;
 import YaGson.*;
 import Exception.*;
@@ -111,7 +113,7 @@ public class Client
                                 System.out.println("CLIENT!!!: "+chatroom.getMessages().size());
                                 if(ChatroomScene.CHATROOM_SCENE.getChatroom().equals(chatroom))
                                 {
-                                    ChatroomScene.CHATROOM_SCENE.setChatroom(chatroom);
+                                    ChatroomScene.CHATROOM_SCENE.setChatroom(chatroom,false);
                                 }
                                 System.out.println("UPDATE CHATROOM FINISHED!");
                                 break;
@@ -121,7 +123,16 @@ public class Client
                                     break;
                                 }
                                 ArrayList<Client> clients=yaGson.fromJson(input,new TypeToken<ArrayList<Client>>(){}.getType());
-                                ScoreBoardScene.SCORE_BOARD_SCENE.setClients(clients);
+                                ScoreBoardScene.SCORE_BOARD_SCENE.setClients(clients,false);
+                                break;
+                            case "updateRelationship":
+                                input=scanner.nextLine();
+                                Relationship relationship=yaGson.fromJson(input,Relationship.class);
+                                ProfileScene profileScene=ProfileScene.getCurrentProfileScene();
+                                if(profileScene==null || InputReader.getScene()!=profileScene.getScene()){
+                                    break;
+                                }
+                                profileScene.setRelationship(relationship,false);
                                 break;
                         }
                     }
@@ -244,6 +255,19 @@ public class Client
     {
         formatter.format("updateChatroom\n");
         formatter.format(yaGson.toJson(chatroom) + "\n");
+        formatter.flush();
+    }
+
+    public Relationship getRelationship(Client client) {
+        formatter.format("getRelationship\n");
+        formatter.format(yaGson.toJson(client)+"\n");
+        formatter.flush();
+        return yaGson.fromJson(scanner.nextLine(),Relationship.class);
+    }
+
+    public void updateRelationship(Relationship relationship) {
+        formatter.format("updateRelationship\n");
+        formatter.format(yaGson.toJson(relationship)+"\n");
         formatter.flush();
     }
 }
