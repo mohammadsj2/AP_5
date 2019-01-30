@@ -14,6 +14,13 @@ import java.util.ArrayList;
 public class Chicken extends Pet {
     public Chicken(Cell cell) {
         super(cell);
+
+
+    }
+
+    @Override
+    public void initView() {
+        super.initView();
         ImageView imageView=getImageView();
         Image image= null;
         try {
@@ -22,7 +29,6 @@ public class Chicken extends Pet {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

@@ -17,7 +17,11 @@ public class Dog extends Animal {
 
     public Dog(Cell cell) {
         super(cell);
-        ImageView imageView=getImageView();
+    }
+
+    @Override
+    public void initView() {
+        super.initView();
         Image image= null;
         try {
             image = new Image(new FileInputStream("./Textures/Animals/Dog/down.png"));
@@ -26,6 +30,7 @@ public class Dog extends Animal {
             e.printStackTrace();
         }
     }
+
     @Override
     public void walk() throws CellDoesNotExistException {
         Map map=InputReader.getCurrentController().getMap();

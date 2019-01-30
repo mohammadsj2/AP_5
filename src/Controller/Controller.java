@@ -45,6 +45,7 @@ public class Controller
     private Truck truck;
     private int catLevel = 1;
     private boolean isGameFinished=false;
+    private int levelNumber=-1;
 
     Controller(int goalMoney, ArrayList<String> goalEntities, ArrayList<Item> helicopterItems)
     {
@@ -55,6 +56,11 @@ public class Controller
         helicopter = new Helicopter(helicopterItems);
         truck = new Truck();
         wareHouse = new WareHouse();
+    }
+    Controller(int levelNumber,int goalMoney, ArrayList<String> goalEntities, ArrayList<Item> helicopterItems)
+    {
+        this(goalMoney,goalEntities,helicopterItems);
+        this.levelNumber=levelNumber;
     }
 
     public int getMoney()
@@ -89,7 +95,6 @@ public class Controller
 
     public void addItemToWareHouse(Item item) throws NoWarehouseSpaceException
     {
-        //TODO level.entityEarned(item);
         wareHouse.addItem(item);
         item.setInWareHouse(true);
         try
@@ -218,6 +223,10 @@ public class Controller
         }
         if (level.checkLevel())
         {
+            if(levelNumber!=-1){
+                InputReader.getClient().setLevel(levelNumber);
+                InputReader.getClient().updateClient();
+            }
             GameScene.setWinningMessage();
         }
     }
@@ -436,5 +445,12 @@ public class Controller
     public boolean isGameFinished()
     {
         return isGameFinished;
+    }
+
+    public void initLoad() {
+        ArrayList<Entity> entities=getMap().getEntities();
+        for(Entity entity:entities){
+            entity.initLoad();
+        }
     }
 }

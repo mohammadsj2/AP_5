@@ -36,19 +36,32 @@ public class MenuScene
     private static void initStartButtons()
     {
         int height=70,width=180;
-        BlueButton playButton=new BlueButton("Play",height,width
+        BlueButton singlePlayerButton=new BlueButton("SinglePlayer",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,100,false);
-        playButton.getNode().setOnMouseClicked(event ->
+        singlePlayerButton.getNode().setOnMouseClicked(event ->
         {
-            levelSelectScene.init();
-            InputReader.setScene(levelSelectScene.getScene());
+            LevelSelectScene.init();
+            InputReader.setScene(LevelSelectScene.getScene());
             /*
             InputReader.loadLevel(1);
             InputReader.runByLevelNumber(1);
             GameScene.init();
             InputReader.setScene(GameScene.getScene());*/
         });
-        addNode(playButton.getNode());
+        addNode(singlePlayerButton.getNode());
+        BlueButton multiPlayerButton=new BlueButton("MultiPlayer",height,width
+                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200,false);
+        multiPlayerButton.getNode().setOnMouseClicked(event ->
+        {
+            ConnectScene.init();
+            InputReader.setScene(ConnectScene.getScene());
+            /*
+            InputReader.loadLevel(1);
+            InputReader.runByLevelNumber(1);
+            GameScene.init();
+            InputReader.setScene(GameScene.getScene());*/
+        });
+        addNode(multiPlayerButton.getNode());
         /*
         BlueButton loadButton=new BlueButton("Load Game",height,width
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200);
@@ -67,10 +80,11 @@ public class MenuScene
         });
         addNode(loadButton.getNode());*/
         BlueButton exitButton=new BlueButton("Exit",height,width
-                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,200,false);
+                ,((double)Constant.GAME_SCENE_WIDTH-width)/2,300,false);
         exitButton.getNode().setOnMouseClicked(event ->
         {
             InputReader.primaryStage.close();
+            System.exit(0);
         });
         addNode(exitButton.getNode());
 
@@ -115,6 +129,7 @@ public class MenuScene
         backToMenuButton.getNode().setOnMouseClicked(event ->
         {
             MenuScene.init(false);
+            GameScene.clear();
             InputReader.setScene(MenuScene.getScene());
         });
         addNode(backToMenuButton.getNode());

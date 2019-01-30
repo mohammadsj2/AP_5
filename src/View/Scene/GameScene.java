@@ -373,7 +373,7 @@ public class GameScene
         Image image = null;
         try
         {
-            image = new Image(new FileInputStream("./Textures/win-back.png"));// TODO Change Background
+            image = new Image(new FileInputStream("./Textures/win-back.png"));
         } catch (FileNotFoundException e)
         {
             e.printStackTrace();
@@ -391,8 +391,8 @@ public class GameScene
                 ,(double)(width-100)/2,390,false);
         backToLevelSelectButton.getNode().setOnMouseClicked(event ->
         {
-            levelSelectScene.init();
-            InputReader.setScene(levelSelectScene.getScene());
+            LevelSelectScene.init();
+            InputReader.setScene(LevelSelectScene.getScene());
         });
         try {
             image=new Image(new FileInputStream("Textures/prize_gold.png"));
@@ -405,5 +405,17 @@ public class GameScene
         winRoot.getChildren().addAll(backToLevelSelectButton.getNode(),imageView);
         root.getChildren().add(winRoot);
 
+    }
+
+    public static void loadInit() {
+        init();
+        InputReader.getCurrentController().initLoad();
+    }
+
+    public static void clear() {
+        moneyText=null;
+        root.getChildren().clear();
+        TruckScene.clear();
+        HelicopterScene.clear();
     }
 }

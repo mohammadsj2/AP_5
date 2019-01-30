@@ -4,6 +4,7 @@ import Constant.Constant;
 import Controller.InputReader;
 import View.Button.BlueButton;
 import View.Button.CircleButton;
+import View.Scene.MultiPlayerScene.MultiPlayerScene;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -15,7 +16,7 @@ import javafx.scene.input.MouseEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class levelSelectScene
+public class LevelSelectScene
 {
     private static Group root = new Group();
     private static Scene scene = new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
@@ -29,6 +30,7 @@ public class levelSelectScene
 
     public static void init()
     {
+        root.getChildren().clear();
         try
         {
             initBackground();
@@ -38,6 +40,29 @@ public class levelSelectScene
         {
             e.printStackTrace();
         }
+    }
+    public static void initInMultiPlayer() {
+        root.getChildren().clear();
+        try
+        {
+            initBackground();
+            initLevelButtons();
+            initMenuButtonInMultiPlayer();
+        } catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private static void initMenuButtonInMultiPlayer() {
+        BlueButton menuButton=new BlueButton("Back to Menu",50,150,740,640,false);
+        menuButton.getNode().setOnMouseClicked(event ->
+        {
+
+            MultiPlayerScene.MULTI_PLAYER_SCENE.init();
+            InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
+        });
+        root.getChildren().add(menuButton.getNode());
     }
 
     private static void initMenuButton()
@@ -59,11 +84,14 @@ public class levelSelectScene
         for (int i = 0; i < levelCount; i++)
         {
             CircleButton button = new CircleButton(String.valueOf(i + 1), 60, 60
-                    , positionX[i], positionY[i],false);
+                    , positionX[i], positionY[i],false,i>=3);
             int finalI = i;
             button.getNode().setOnMouseClicked(event ->
             {
-                refreshButtons(finalI+1);
+                if(finalI+1<=3)
+                {
+                    refreshButtons(finalI + 1);
+                }
             });
             root.getChildren().add(button.getNode());
         }
@@ -96,7 +124,7 @@ public class levelSelectScene
             {
                 e.printStackTrace();
             }
-            GameScene.init();
+            GameScene.loadInit();
             InputReader.setScene(GameScene.getScene());
         });
         addNode(newGameButton.getNode());
@@ -121,5 +149,6 @@ public class levelSelectScene
     public static void deleteNode(Node node) {
         root.getChildren().remove(node);
     }
+
 
 }

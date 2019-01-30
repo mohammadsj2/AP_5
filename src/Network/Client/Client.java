@@ -1,0 +1,249 @@
+package Network.Client;
+
+import Constant.Constant;
+import Controller.InputReader;
+import Network.Address;
+import Network.Chatroom;
+import Network.Server.Server;
+import View.Scene.MultiPlayerScene.ChatroomScene;
+import View.Scene.MultiPlayerScene.ScoreBoardScene;
+import YaGson.*;
+import Exception.*;
+import com.gilecode.yagson.YaGson;
+import com.gilecode.yagson.YaGsonBuilder;
+import com.gilecode.yagson.com.google.gson.reflect.TypeToken;
+import javafx.concurrent.Task;
+import javafx.scene.image.Image;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.time.LocalDateTime;
+import java.util.*;
+
+public class Client
+{
+    //server request to client on port
+    //client request to server on port+1
+    private String name;
+    private String serverIP = null;
+    private int level;
+    private int imageIndex;
+    private Address address;
+    private boolean isInGame = false;
+    private Scanner scanner;
+    private Formatter formatter;
+    private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();
+
+
+    public Client(String name,int imageIndex)
+    {
+        address=new Address(1231,"localhost");
+        this.name = name;
+        level = 0;
+        this.imageIndex=imageIndex;
+    }
+
+    public void connectToServer(String ip) throws ServerDoesNotExist, NotUniqueUsernameException {
+        serverIP = ip;
+        try
+        {
+            Socket socket = new Socket(serverIP, 8060);
+            OutputStream outputStream = socket.getOutputStream();
+            InputStream inputStream = socket.getInputStream();
+            Scanner scanner = new Scanner(inputStream);
+            Formatter formatter = new Formatter(outputStream);
+
+            formatter.format(getName()+"\n");
+            formatter.flush();
+            if(!scanner.nextLine().equals("sendingPort")){
+                throw new NotUniqueUsernameException();
+            }
+            int listenPort = scanner.nextInt();
+            address = new Address(listenPort, "localhost");
+            listenToServer(address.getPort());
+            formatter.format(address.getIp() + "\n");
+            formatter.flush();
+            scanner.nextLine();
+            socket.close();
+            Socket socket1 = new Socket(serverIP, listenPort + 1);
+            this.scanner = new Scanner(socket1.getInputStream());
+            this.formatter = new Formatter(socket1.getOutputStream());
+
+            updateClient();
+        } catch (IOException e)
+        {
+            throw new ServerDoesNotExist();
+        }
+    }
+
+    private void listenToServer(int port)
+    {
+        Task task = new Task<Void>()
+        {
+            @Override
+            public Void call()
+            {
+                try
+                {
+                    ServerSocket serverSocket = new ServerSocket(port);
+                    Socket socket = serverSocket.accept();
+                    InputStream inputStream = socket.getInputStream();
+                    OutputStream outputStream = socket.getOutputStream();
+                    Scanner scanner = new Scanner(inputStream);
+                    Formatter formatter = new Formatter(outputStream);
+                    while (true)
+                    {
+                        System.out.println("LISTEN TO SERVER ON PORT "+port);
+                        String commandInput = scanner.nextLine();
+                        String input;
+                        System.out.println(commandInput+"|||||||||||||||||||");
+                        switch (commandInput)
+                        {
+                            case "updateChatroom":
+                                input=scanner.nextLine();
+                                if(InputReader.getScene()!=ChatroomScene.CHATROOM_SCENE.getScene()){
+                                    break;
+                                }
+                                Chatroom chatroom=yaGson.fromJson(input,Chatroom.class);
+                                System.out.println("CLIENT!!!: "+chatroom.getMessages().size());
+                                if(ChatroomScene.CHATROOM_SCENE.getChatroom().equals(chatroom))
+                                {
+                                    ChatroomScene.CHATROOM_SCENE.setChatroom(chatroom);
+                                }
+                                System.out.println("UPDATE CHATROOM FINISHED!");
+                                break;
+                            case "updateScoreboard":
+                                input=scanner.nextLine();
+                                if(InputReader.getScene()!=ScoreBoardScene.SCORE_BOARD_SCENE.getScene()){
+                                    break;
+                                }
+                                ArrayList<Client> clients=yaGson.fromJson(input,new TypeToken<ArrayList<Client>>(){}.getType());
+                                ScoreBoardScene.SCORE_BOARD_SCENE.setClients(clients);
+                                break;
+                        }
+                    }
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+        new Thread(task).start();
+    }
+
+    public boolean isOnline()
+    {
+        return serverIP != null;
+    }
+
+    public void setServerIP(String serverIP)
+    {
+        this.serverIP = serverIP;
+    }
+
+    public void updateClient()
+    {
+        formatter.format("updateClient\n");
+        formatter.format(yaGson.toJson(this) + "\n");
+        formatter.flush();
+    }
+
+    public boolean isInGame()
+    {
+        return isInGame;
+    }
+
+    public void setAddress(Address address)
+    {
+        this.address = address;
+    }
+
+
+    public void setLevel(int level)
+    {
+        this.level = level;
+    }
+
+    public void setImageIndex(int imageIndex)
+    {
+        this.imageIndex = imageIndex;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+
+    public int getLevel()
+    {
+        return level;
+    }
+
+    public int getImageIndex()
+    {
+        return imageIndex;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return Objects.equals(name, client.name);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(name);
+    }
+
+    public Chatroom getGlobalChatroom()
+    {
+        formatter.format("getGlobalChatroom\n");
+        formatter.flush();
+        return yaGson.fromJson(scanner.nextLine(), Chatroom.class);
+    }
+
+    public ArrayList<Client> getScoreBoard()
+    {
+        formatter.format("getScoreBoard\n");
+        formatter.flush();
+        String input=scanner.nextLine();
+        ArrayList<Client> clients=yaGson.fromJson(input, new TypeToken<ArrayList<Client>>(){}.getType());
+        return clients;
+    }
+
+    public Chatroom getPrivateChatroom(Client client)
+    {
+        formatter.format("getPrivateChatroom\n");
+        formatter.format(yaGson.toJson(client) + "\n");
+        formatter.flush();
+        return yaGson.fromJson(scanner.nextLine(), Chatroom.class);
+    }
+
+    public void disconnect()
+    {
+        formatter.format("disconnect\n");
+        formatter.flush();
+        setServerIP(null);
+    }
+
+    public Address getAddress()
+    {
+        return address;
+    }
+
+    public void sendChatroom(Chatroom chatroom)
+    {
+        formatter.format("updateChatroom\n");
+        formatter.format(yaGson.toJson(chatroom) + "\n");
+        formatter.flush();
+    }
+}

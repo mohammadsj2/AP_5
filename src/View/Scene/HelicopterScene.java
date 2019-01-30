@@ -22,11 +22,14 @@ public class HelicopterScene {
     public static final int ITEM_POSITION_INHELICOPTER_X = 55;
     private static Group root = new Group();
     private static Scene scene = new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
-    private static ArrayList<Item> items=InputReader.getCurrentController().getHelicopter().getPossibleItems();
-    private static ArrayList<Label> inHelicopterCounterLabel=new ArrayList<>();
+    private static ArrayList<Item> items;
+    private static ArrayList<Label> inHelicopterCounterLabel;
 
     public static void init(){
+        items=InputReader.getCurrentController().getHelicopter().getPossibleItems();
         try {
+            items=InputReader.getCurrentController().getHelicopter().getPossibleItems();
+            inHelicopterCounterLabel=new ArrayList<>();
             initBackground();
             initItemView();
             initBackButton();
@@ -155,5 +158,10 @@ public class HelicopterScene {
             Label label=inHelicopterCounterLabel.get(i);
             label.setText("x"+InputReader.getCurrentController().getHelicopter().getNumberOfThisItem(items.get(i)));
         }
+    }
+
+    public static void clear() {
+        inHelicopterCounterLabel.clear();
+        root.getChildren().clear();
     }
 }

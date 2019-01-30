@@ -4,15 +4,22 @@ import Exception.*;
 import Model.Entity.Item;
 import Model.Map.Cell;
 import Model.Map.Map;
+import Network.Chatroom;
+import Network.Client.Client;
+
+import View.Scene.*;
+import Network.Server.Server;
+import View.Scene.MultiPlayerScene.ChatroomScene;
+import View.Scene.MultiPlayerScene.MultiPlayerScene;
+import View.Scene.MultiPlayerScene.ScoreBoardScene;
+import View.Scene.UsernameGetterScene;
 import YaGson.*;
 import Model.Well;
 import Model.WorkShop;
-import View.Scene.HelicopterScene;
-import View.Scene.MenuScene;
-import View.Scene.TruckScene;
 import com.gilecode.yagson.YaGson;
 import com.gilecode.yagson.YaGsonBuilder;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -24,144 +31,77 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import Constant.Constant;
+import javafx.stage.WindowEvent;
 
 public class InputReader extends Application
 {
 
     static Controller currentController = null;
-    static int indexOfLevel;
+    public static int indexOfLevel;
     public static Stage primaryStage;
-    static YaGson yaGson=new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategy()).create();
+    private static YaGson yaGson=new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategy()).create();
+    private static Client client;
+    private static Server server;
 
 
 
     public static void main(String[] args) throws StartBusyTransporter, IOException
     {
-
-        Thread thread = new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    Scanner scanner = new Scanner(System.in);
-                    String[] input;
-                    while (true)
-                    {
-                        input = scanner.nextLine().split(" ");
-                        switch (input[0])
-                        {
-                            case "save":
-                                save();
-                                break;
-                            case "load":
-                                if (input[1].equals("level"))
-                                    loadLevel(new Integer(input[2]));
-                                else if (input[1].equals("save"))
-                                    loadSave(new Integer(input[2]));
-                                break;
-                            case "buy":
-                                buy(input[1]);
-                                break;
-                            case "pickup":
-                                pickup(new Integer(input[1]), new Integer(input[2]));
-                                break;
-                            case "cage":
-                                cage(new Integer(input[1]), new Integer(input[2]));
-                                break;
-                            case "plant":
-                                plant(new Integer(input[1]), new Integer(input[2]));
-                                break;
-                            case "well":
-                                fillWell();
-                                break;
-                            case "start":
-                                startWorkshop(new Integer(input[1]));
-                                break;
-                            case "upgrade":
-                                upgrade(input[1]);
-                                break;
-                            case "turn":
-                                nextTurn(new Integer(input[1]));
-                                break;
-                            case "truck":
-                                if (input[1].equals("go"))
-                                {
-                                    startTruck();
-                                } else if (input[1].equals("clear"))
-                                {
-                                    clearTruck();
-                                } else
-                                {
-                                    Item item = Constant.getItemByType(input[2]);
-                                    for (int i = 0; i < new Integer(input[3]); i++)
-                                    {
-                                        try
-                                        {
-                                            currentController.addItemToTruck(item);
-                                        } catch (NoTransporterSpaceException e)
-                                        {
-                                            System.out.println(Constant.NOT_ENOUGH_SPACE_MESSAGE);
-                                        } catch (NoSuchItemInWarehouseException e)
-                                        {
-                                            System.out.println(Constant.NO_SUCH_ITEM_MESSAGE);
-                                        }
-                                    }
-                                }
-                                break;
-                            case "helicopter":
-                                if (input[1].equals("go"))
-                                {
-                                    try
-                                    {
-                                        startHelicopter();
-                                    } catch (NotEnoughMoneyException e)
-                                    {
-                                        System.out.println(Constant.NOT_ENOUGH_MONEY_MESSAGE);
-                                    }
-                                } else if (input[1].equals("clear"))
-                                {
-                                    clearHelicopter();
-                                } else
-                                {
-                                    Item item = Constant.getItemByType(input[2]);
-                                    for (int i = 0; i < new Integer(input[3]); i++)
-                                    {
-                                        try
-                                        {
-                                            addItemToHelicopter(item);
-                                        } catch (NoTransporterSpaceException e)
-                                        {
-                                            System.out.println(Constant.NOT_ENOUGH_SPACE_MESSAGE);
-                                        }
-                                    }
-                                }
-                                break;
-                            case "print":
-                                System.out.println(currentController.getInfo(input[1]));
-                                break;
-                            case "cheat":
-                                currentController.increaseMoney(1000);
-                                break;
-                            default:
-                                System.out.println(Constant.BAD_INPUT_FORMAT_MESSAGE);
-                        }
-                    }
-                } catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        });
         createAllLevels();
-        thread.start();
-
         launch(args);
     }
 
     private static void createAllLevels() {
+        createLevel1();
+        createLevel2();
         createLevel3();
+        System.out.println("");
+    }
+
+    private static void createLevel1() {
+        try {
+            ArrayList<String> goalEntities = new ArrayList<>();
+            for (int i = 0; i < 5; i++) {
+                goalEntities.add("egg");
+            }
+            WorkShop workShop = getWorkShop("EggPowderPlant");
+            workShop.setLocation(0);
+            ArrayList<Item> helicopterItems = new ArrayList<>();
+            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
+            Controller controller = new Controller(1,200, goalEntities, helicopterItems);
+            controller.addWorkshop(workShop);
+
+            controller.setMoney(120);
+            indexOfLevel = 1;
+            createLevel(1,controller);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private static void createLevel2() {
+        try {
+            ArrayList<String> goalEntities = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                goalEntities.add("cake");
+            }
+            WorkShop workShop = getWorkShop("EggPowderPlant");
+            WorkShop workShop2 = getWorkShop("CookieBakery");
+            workShop.setLocation(0);
+            workShop2.setLocation(1);
+            ArrayList<Item> helicopterItems = new ArrayList<>();
+            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
+            helicopterItems.add(Constant.getItemByType("egg"));
+            Controller controller = new Controller(2,500, goalEntities, helicopterItems);
+            controller.addWorkshop(workShop);
+            controller.addWorkshop(workShop2);
+
+            controller.setMoney(120);
+            indexOfLevel = 2;
+            createLevel(2,controller);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private static void createLevel3() {
@@ -191,7 +131,7 @@ public class InputReader extends Application
             helicopterItems.add(Constant.getItemByType("sewing"));
             helicopterItems.add(Constant.getItemByType("fabric"));
             helicopterItems.add(Constant.getItemByType("adornment"));
-            Controller controller = new Controller(35000, goalEntities, helicopterItems);
+            Controller controller = new Controller(3,35000, goalEntities, helicopterItems);
             controller.addWorkshop(workShop);
             controller.addWorkshop(workShop2);
             controller.addWorkshop(workShop3);
@@ -289,7 +229,6 @@ public class InputReader extends Application
         indexOfLevel = levelIndex;
         currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/save" + indexOfLevel + ".json")),
                 Controller.class);
-
     }
 
 
@@ -417,21 +356,44 @@ public class InputReader extends Application
         return currentController;
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception
+    public static void setServer(Server server)
     {
-        MenuScene.init(false);
+        InputReader.server=server;
+    }
+
+    public static Scene getScene() {
+        return primaryStage.getScene();
+    }
+
+    @Override
+    public void start(Stage primaryStage)
+    {
+        primaryStage.setTitle("FarmFrenzy");
         InputReader.primaryStage = primaryStage;
         primaryStage.setResizable(false);
         primaryStage.setX(300);
         primaryStage.setY(100);
+        primaryStage.setOnCloseRequest(event -> System.exit(0));
         primaryStage.show();
-        setScene(MenuScene.getScene());
+
+        ChatroomScene.CHATROOM_SCENE.init();
+        UsernameGetterScene.init();
+        setScene(UsernameGetterScene.getScene());
     }
 
     public static void setScene(Scene scene)
     {
         primaryStage.setScene(scene);
-
     }
+
+    public static Client getClient() {
+        return client;
+    }
+
+
+    public static void setClient(Client client) {
+
+        InputReader.client = client;
+    }
+
 }

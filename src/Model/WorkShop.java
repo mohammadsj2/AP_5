@@ -11,8 +11,11 @@ import Exception.*;
 import Constant.Constant;
 import View.Scene.GameScene;
 import javafx.animation.Animation;
+import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 
 public class WorkShop implements Producer, Upgradable, Viewable
 {
@@ -37,7 +40,25 @@ public class WorkShop implements Producer, Upgradable, Viewable
 
     public void initView()
     {
-        imageView = new ImageView();
+        imageView = new ImageView();/*
+        VBox vbox=new VBox();
+        vbox.relocate(200,200);
+        vbox.setMinWidth(100);
+        vbox.setMinHeight(100);
+        vbox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;");
+        for(Item item:inputs)
+        {
+
+        }
+        imageView.setOnMouseEntered(event ->
+        {
+            GameScene.addNode(vbox);
+        });
+        imageView.setOnMouseExited(event ->
+        {
+            GameScene.deleteNode(vbox);
+            System.err.println("FFFF");
+        });*/
         imageView.setOnMouseClicked(event ->
         {
             if(InputReader.getCurrentController().isGameFinished())return;

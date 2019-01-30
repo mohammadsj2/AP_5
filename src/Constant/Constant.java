@@ -12,12 +12,14 @@ import java.util.Scanner;
 
 public class Constant {
 
-
+    public static final int AVATAR_NUMBER=7;
     public static final int[] ITEM_POSITION_IN_WAREHOUSE_X = {45, 340};
     public static final int ITEM_POSITION_IN_WAREHOUSE_Y = 115;
 
     public static final int[] WORKSHOPS_POSITION_X = {114, 730, 114, 730, 173, 730};
     public static final int[] WORKSHOPS_POSITION_Y = {500, 480, 350, 350, 205, 205};
+    public static final int[] WORKSHOPS_INFO_POSITION_X = {250, 730, 114, 730, 173, 730};
+    public static final int[] WORKSHOPS_INFO_POSITION_Y = {500, 480, 350, 350, 205, 205};
     public static final int GAME_SCENE_HEIGHT=700;
     public static final int GAME_SCENE_WIDTH=900;
 
@@ -90,6 +92,8 @@ public class Constant {
     public static final String NOT_ENOUGH_SPACE_MESSAGE = "**** Error: Not enough space! ****";
     public static final String NOT_ENOUGH_ITEM_MESSAGE = "**** Error: Not enough item! ****";
     public static final String NO_SAVE_MESSAGE = "**** Error: There is no save! ****";
+    public static final String SERVER_DOES_NOT_EXIST_MESSAGE = "**** Error: Server does not Exist! ****";
+    public static final String NOT_UNIQUE_USERNAME_EXCEPTION_MESSAGE = "**** Error: your username isn't unique! ****";
 
     public static final long NEXT_TURN_DURATION = 400000000L;
 
@@ -98,6 +102,7 @@ public class Constant {
     public static final int PET_HUNGRY_HEALTH = 30;
     public static final int ANIMAL_PRODUCT_TURN = 50;
     public static final int PET_MAX_HEALTH = 100;
+    public static final int MAX_NUMBER_OF_USERNAME_CHARS = 10;
 
 
     public static Item getItemByType(String type){

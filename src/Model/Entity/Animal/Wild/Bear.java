@@ -17,7 +17,11 @@ public class Bear extends Wild{
 
     public Bear(Cell cell) {
         super(cell);
-        ImageView imageView = getImageView();
+    }
+
+    @Override
+    public void initView() {
+        super.initView();
         Image image = null;
         try {
             image = new Image(new FileInputStream("./Textures/Animals/Grizzly/down.png"));
