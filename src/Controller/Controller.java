@@ -427,6 +427,10 @@ public class Controller
 
     void startTruck() throws StartBusyTransporter, StartEmptyTransporter
     {
+        if(InputReader.getClient().isOnline())
+        {
+            InputReader.getClient().addMarketItems(truck.getItems());
+        }
         truck.startTransportation();
     }
 
@@ -439,6 +443,7 @@ public class Controller
                 InputReader.getClient().removeItems(helicopter.getItems());
             } catch (NotEnoughItemException e)
             {
+                helicopter.clear();
                 System.out.println(Constant.NOT_ENOUGH_ITEM_MESSAGE);
                 return ;
             }

@@ -19,7 +19,12 @@ public class YaGsonExclusionStrategyForServer implements ExclusionStrategy {
         return (fieldAttributes.getDeclaredClass()== Formatter.class ||
                 fieldAttributes.getDeclaredClass()== Scanner.class ||
                 fieldAttributes.getDeclaredClass()== Socket.class ||
-                fieldAttributes.getDeclaredClass()== YaGson.class);
+                fieldAttributes.getDeclaredClass()== YaGson.class ||
+                fieldAttributes.getDeclaredClass()== ImageView.class ||
+                fieldAttributes.getDeclaredClass()== Animation.class ||
+                fieldAttributes.getDeclaredClass()== ProgressBar.class ||
+                fieldAttributes.getDeclaredClass()== BlueProgressBar.class ||
+                fieldAttributes.getDeclaredClass()== Label.class);
     }
 
     @Override

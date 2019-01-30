@@ -17,16 +17,17 @@ import java.util.Objects;
 public class Item extends Entity
 {
     private String name;
-    private int volume, cost, creatingTurn;
+    private int volume, buyCost,sellCost, creatingTurn;
     private boolean isInWareHouse = false;
 
 
-    public Item(String name, int volume, int cost, int creatingTurn)
+    public Item(String name, int volume, int buyCost,int sellCost, int creatingTurn)
     {
         super();
         this.name = name;
         this.volume = volume;
-        this.cost = cost;
+        this.buyCost=buyCost;
+        this.sellCost=sellCost;
         this.creatingTurn = creatingTurn;
   //      initView();
         refreshView();
@@ -115,9 +116,14 @@ public class Item extends Entity
         getMap().destroyEntity(getCell(), this);
     }
 
-    public int getCost()
+    public int getBuyCost()
     {
-        return cost;
+        return buyCost;
+    }
+
+    public int getSellCost()
+    {
+        return sellCost;
     }
 
     public int getVolume()
