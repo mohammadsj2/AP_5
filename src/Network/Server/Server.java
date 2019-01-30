@@ -1,11 +1,11 @@
 package Network.Server;
 
-import Controller.InputReader;
+import Constant.Constant;
+import Model.Entity.Item;
 import Network.Address;
 import Network.Chatroom;
 import Network.Client.Client;
 import Exception.*;
-import Network.Message;
 import YaGson.*;
 import com.gilecode.yagson.YaGson;
 import com.gilecode.yagson.YaGsonBuilder;
@@ -29,9 +29,11 @@ public class Server
     private ArrayList<ArrayList<Chatroom>> privateChatrooms = new ArrayList<>();
     private int currentPort;
     private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();;
+    private HashMap<Item,Integer> shopItems;
 
     public Server(Address address)
     {
+        initShop();
         System.out.println("I'm server...");
         this.address = address;
         currentPort = address.getPort() + 1;
@@ -98,6 +100,19 @@ public class Server
         new Thread(task).start();
     }
 
+    private void initShop()
+    {
+        shopItems =new HashMap<>();
+        shopItems.put(Constant.getItemByType("egg"),10);
+        shopItems.put(Constant.getItemByType("flour"),10);
+        shopItems.put(Constant.getItemByType("cake"),10);
+        shopItems.put(Constant.getItemByType("flourycake"),10);
+        shopItems.put(Constant.getItemByType("wool"),10);
+        shopItems.put(Constant.getItemByType("sewing"),10);
+        shopItems.put(Constant.getItemByType("fabric"),10);
+        shopItems.put(Constant.getItemByType("adornment"),10);
+    }
+
     private void listenToClient(int port)
     {
         Task task = new Task<Void>()
@@ -162,7 +177,7 @@ public class Server
                                 break;
                             case "updateChatroom":
                                 input=scanner.nextLine();
-                                Chatroom chatroom=yaGson.fromJson(input,Chatroom.class);
+                                Chatroom chatroom= yaGson.fromJson(input,Chatroom.class);
                                 System.out.println(chatroom.isGlobal());
                                 if(chatroom.isGlobal())
                                 {
@@ -184,6 +199,40 @@ public class Server
                                     }
                                 }
                                 break;
+                            case "getMarketItems":
+                                formatter.format(yaGson.toJson(hashMapToArrayList(shopItems),new TypeToken<ArrayList<Item>>(){}.getType())+"\n");
+                                formatter.flush();
+                                break;
+                            case "removeMarketItems":
+                                input=scanner.nextLine();
+                                ArrayList<Item> tmp=yaGson.fromJson(input
+                                        ,new TypeToken<ArrayList<Item>>(){}.getType());
+                                HashMap<Item,Integer> itemsToRemove=arrayListToHashMap(tmp);
+                                boolean ok=true;
+                                for(Item item:itemsToRemove.keySet())
+                                {
+                                    if(!shopItems.containsKey(item) || itemsToRemove.get(item)>shopItems.get(item))
+                                    {
+                                        ok=false;
+                                        break;
+                                    }
+                                }
+                                if(ok)
+                                {
+                                    for(Item item:itemsToRemove.keySet())
+                                    {
+                                        shopItems.put(item,shopItems.get(item)-itemsToRemove.get(item));
+                                    }
+                                    formatter.format("Succeed\n");
+                                    formatter.flush();
+                                }
+                                else
+                                {
+                                    formatter.format("Failed\n");
+                                    formatter.flush();
+                                }
+
+                                break;
                             case "disconnect":
                                 disconnect(client);
                                 connected=false;
@@ -199,6 +248,36 @@ public class Server
             }
         };
         new Thread(task).start();
+    }
+
+    private HashMap<Item,Integer> arrayListToHashMap(ArrayList<Item> items)
+    {
+        HashMap<Item,Integer> result=new HashMap<>();
+        for(Item item:items)
+        {
+            if(!result.containsKey(item))
+            {
+                result.put(item,1);
+            }
+            else
+            {
+                result.put(item,result.get(item)+1);
+            }
+        }
+        return result;
+    }
+
+    private ArrayList<Item> hashMapToArrayList(HashMap<Item, Integer> items)
+    {
+        ArrayList<Item> result=new ArrayList<>();
+        for(Item item:items.keySet())
+        {
+            for(int i=0;i<items.get(item);i++)
+            {
+                result.add(item);
+            }
+        }
+        return result;
     }
 
     private void sendChatroom(Client client, Chatroom chatroom)
@@ -224,7 +303,7 @@ public class Server
     }
 
     private void updateScoreBoard() {
-        String clientsToJson=yaGson.toJson(clients, new TypeToken<ArrayList<Client>>(){}.getType())+"\n";
+        String clientsToJson= yaGson.toJson(clients, new TypeToken<ArrayList<Client>>(){}.getType())+"\n";
         System.out.println("updateSB\n");
         for (int i = 0; i < clients.size(); i++) {
             Client client=clients.get(i);

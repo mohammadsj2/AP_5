@@ -20,8 +20,8 @@ public class LevelSelectScene
 {
     private static Group root = new Group();
     private static Scene scene = new Scene(root, Constant.GAME_SCENE_WIDTH, Constant.GAME_SCENE_HEIGHT);
-    private static BlueButton newGameButton=new BlueButton("",70,190,600,270,false);
-    private static BlueButton loadGameButton=new BlueButton("",70,190,600,360,false);
+    private static BlueButton newGameButton = new BlueButton("", 70, 190, 600, 270, false);
+    private static BlueButton loadGameButton = new BlueButton("", 70, 190, 600, 360, false);
 
     public static Scene getScene()
     {
@@ -41,7 +41,9 @@ public class LevelSelectScene
             e.printStackTrace();
         }
     }
-    public static void initInMultiPlayer() {
+
+    public static void initInMultiPlayer()
+    {
         root.getChildren().clear();
         try
         {
@@ -54,8 +56,9 @@ public class LevelSelectScene
         }
     }
 
-    private static void initMenuButtonInMultiPlayer() {
-        BlueButton menuButton=new BlueButton("Back to Menu",50,150,740,640,false);
+    private static void initMenuButtonInMultiPlayer()
+    {
+        BlueButton menuButton = new BlueButton("Back to Menu", 50, 150, 740, 640, false);
         menuButton.getNode().setOnMouseClicked(event ->
         {
 
@@ -67,11 +70,18 @@ public class LevelSelectScene
 
     private static void initMenuButton()
     {
-        BlueButton menuButton=new BlueButton("Back to Menu",50,150,740,640,false);
+        BlueButton menuButton = new BlueButton("Back to Menu", 50, 150, 740, 640, false);
         menuButton.getNode().setOnMouseClicked(event ->
         {
-            MenuScene.init(false);
-            InputReader.setScene(MenuScene.getScene());
+            if (InputReader.getClient().isOnline())
+            {
+                MultiPlayerScene.MULTI_PLAYER_SCENE.init();
+                InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
+            } else
+            {
+                MenuScene.init(false);
+                InputReader.setScene(MenuScene.getScene());
+            }
         });
         root.getChildren().add(menuButton.getNode());
     }
@@ -84,11 +94,11 @@ public class LevelSelectScene
         for (int i = 0; i < levelCount; i++)
         {
             CircleButton button = new CircleButton(String.valueOf(i + 1), 60, 60
-                    , positionX[i], positionY[i],false,i>=3);
+                    , positionX[i], positionY[i], false, i >= 3);
             int finalI = i;
             button.getNode().setOnMouseClicked(event ->
             {
-                if(finalI+1<=3)
+                if (finalI + 1 <= 3)
                 {
                     refreshButtons(finalI + 1);
                 }
@@ -101,8 +111,8 @@ public class LevelSelectScene
 
     private static void refreshButtons(int levelNumber)
     {
-        newGameButton.setText("Start Level "+levelNumber);
-        loadGameButton.setText("Load Level "+levelNumber);
+        newGameButton.setText("Start Level " + levelNumber);
+        loadGameButton.setText("Load Level " + levelNumber);
         newGameButton.getNode().setOnMouseClicked(event ->
         {
             try
@@ -141,12 +151,14 @@ public class LevelSelectScene
         root.getChildren().add(backgroundView);
     }
 
-    public static void addNode(Node node) {
-        if(!root.getChildren().contains(node))
+    public static void addNode(Node node)
+    {
+        if (!root.getChildren().contains(node))
             root.getChildren().add(node);
     }
 
-    public static void deleteNode(Node node) {
+    public static void deleteNode(Node node)
+    {
         root.getChildren().remove(node);
     }
 
