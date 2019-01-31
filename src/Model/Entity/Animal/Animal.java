@@ -29,7 +29,6 @@ import java.io.FileNotFoundException;
 
 public abstract class Animal extends Entity implements Upgradable, Loadable {
     private int level;
-    private int speed = Constant.ANIMAL_SPEED;
     private int step = 0;
     protected Cell currentCell;
     String direction = null;
@@ -41,12 +40,9 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
     }
 
     public int getSpeed() {
-        return speed;
+        return Constant.ANIMAL_SPEED;
     }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
 
     public Cell walkTowards(Cell cur) {
         return InputReader.getCurrentController().getMap().getBestCellBySpeed(this.getCell(), cur, this.getSpeed());
@@ -66,7 +62,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
         if (currentCell == null || step == 0 || getCell() == currentCell) {
             currentCell = map.getRandomCell(getCell(), getSpeed());
         }
-        this.changeCell(map.getBestCellBySpeed(getCell(), currentCell, Constant.ANIMAL_SPEED));
+        this.changeCell(map.getBestCellBySpeed(getCell(), currentCell, getSpeed()));
     }
 
     @Override
@@ -84,7 +80,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
     }
 
     protected void setWalkAnimation(Cell startCell, Cell targetCell) {
-        int stableDistance = Constant.ANIMAL_SPEED/5+1;
+        int stableDistance = getSpeed()/5+1;
         String directionName, animalName;
         int count = 23, rows = 0, columns = 0;
         boolean flipImage = false;
@@ -176,10 +172,9 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
             e.printStackTrace();
         }
         if (!(directionName.equals(direction) && flipImage==isFlipDirection )) {
-            changeImageView(image, count, rows, columns,
-                    GameScene.modifiedX(getCell().getPositionX()), GameScene.modifiedY(getCell().getPositionY()),
-                    GameScene.modifiedX(targetCell.getPositionX()) - GameScene.modifiedX(startCell.getPositionX()),
-                    GameScene.modifiedY(targetCell.getPositionY()) - GameScene.modifiedY(startCell.getPositionY()));
+            changeImageViewForWalk(image, count, rows, columns,
+                    GameScene.modifiedX(getCell().getPositionX()), GameScene.modifiedY(getCell().getPositionY())
+            );
             getImageView().setScaleX((flipImage)?-1:1);
             direction = directionName;
             isFlipDirection=flipImage;
@@ -203,7 +198,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
         timeline.play();
     }
 
-    public void changeImageView(Image image, int count, int rows, int columns, double x, double y, double moveX, double moveY) {
+    public void changeImageViewForWalk(Image image, int count, int rows, int columns, double x, double y) {
         ImageView imageView = getImageView();
 
         imageView.setImage(image);
@@ -216,7 +211,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
             getAnimation().stop();
         Animation animation = new SpriteAnimation(
                 imageView,
-                Duration.millis(750),
+                Duration.millis(7500.0/(double)getSpeed()),
                 count, columns,
                 0, 0,
                 imageWidth / columns, imageHeight / rows
