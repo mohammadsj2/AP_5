@@ -1,9 +1,13 @@
 
 package Model.Entity;
 
-import Controller.*;
-import Model.Map.Cell;
+import Controller.InputReader;
 import Exception.CellDoesNotExistException;
+import Model.Entity.Animal.Pet.Chicken;
+import Model.Entity.Animal.Pet.Cow;
+import Model.Entity.Animal.Pet.Pet;
+import Model.Entity.Animal.Pet.Sheep;
+import Model.Map.Cell;
 import Model.Map.Map;
 import Model.Viewable;
 import View.Scene.GameScene;
@@ -14,7 +18,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
-import java.util.Objects;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public abstract class Entity implements Viewable {
     private Map map;
@@ -124,8 +129,44 @@ public abstract class Entity implements Viewable {
         InputReader.getCurrentController().getMap().destroyEntity(getCell(),this);
     }
     public void destroy() throws CellDoesNotExistException {
-        this.destroyFromMap();
-        setAlive(false);
+        if (this instanceof Pet) {
+            Pet cur = (Pet) this;
+            int rows = 0;
+            int columns = 0;
+            int count = 24;
+            String animalName = "";
+            if (this instanceof Cow) {
+                rows = 8;
+                columns = 3;
+                animalName = "Cow";
+            } else if (this instanceof Sheep) {
+                rows = 6;
+                columns = 4;
+                animalName = "Sheep";
+            } else if (this instanceof Chicken) {
+                rows = 5;
+                columns = 5;
+                count = 23;
+                animalName = "GuineaFowl";
+            }
+            Image image = null;
+            try {
+                image = new Image(new FileInputStream("./Textures/Animals/" + animalName + "/death.png"));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            if (cur.getTimeDead() == 0)
+                cur.changeImageView(image, count, rows, columns, getCell().getPositionX(), getCell().getPositionY(), true);
+            if (cur.getTimeDead() > 2) {
+                this.destroyFromMap();
+            }
+            cur.setTimeDead(cur.getTimeDead() + 1);
+            setAlive(false);
+
+        } else {
+            this.destroyFromMap();
+            setAlive(false);
+        }
     }
 
 

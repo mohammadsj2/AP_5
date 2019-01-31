@@ -5,6 +5,7 @@ import Controller.InputReader;
 import Exception.CantUpgradeException;
 import Exception.CellDoesNotExistException;
 import Model.Entity.Animal.Pet.Chicken;
+import Model.Entity.Animal.Pet.Pet;
 import Model.Entity.Animal.Pet.Sheep;
 import Model.Entity.Animal.Wild.Bear;
 import Model.Entity.Animal.Wild.Lion;
@@ -80,11 +81,20 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
     }
 
     protected void setWalkAnimation(Cell startCell, Cell targetCell) {
+
+        if (this.getAlive() == false) {
+            try {
+                this.destroy();
+            } catch (CellDoesNotExistException e) {
+                e.printStackTrace();
+            }
+        }
         int stableDistance = getSpeed()/5+1;
+
         String directionName, animalName;
         int count = 23, rows = 0, columns = 0;
         boolean flipImage = false;
-
+        boolean sameCell = (startCell == targetCell);
         if (Math.abs(targetCell.getPositionY() - startCell.getPositionY()) < stableDistance) {
             directionName = "left";
             if (targetCell.getPositionX() > startCell.getPositionX()) {
@@ -108,7 +118,9 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
                 directionName = "up_left";
         }
 
-
+        if (sameCell && this instanceof Pet) {
+            directionName = "eat";
+        }
         if (this instanceof Cat) {
             rows=columns=5;
             count=24;
@@ -153,18 +165,25 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
             } else {
                 rows = 6;
                 columns = 4;
+                if (directionName.equals("eat")) {
+                    count = 24;
+                }
             }
             animalName = "Sheep";
         } else {
-            if (directionName.equals("up")) {
+            if (directionName.equals("up") || directionName.equals("eat")) {
                 rows = 6;
                 columns = 4;
+                if (directionName.equals("eat")) {
+                    count = 24;
+                }
             } else {
                 rows = 8;
                 columns = 3;
             }
             animalName = "Cow";
         }
+
         Image image = null;
         try {
             image = new Image(new FileInputStream("./Textures/Animals/" + animalName + "/" + directionName + ".png"));
@@ -197,6 +216,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
         timeline.setCycleCount(1);
         timeline.play();
     }
+
 
     public void changeImageViewForWalk(Image image, int count, int rows, int columns, double x, double y) {
         ImageView imageView = getImageView();
