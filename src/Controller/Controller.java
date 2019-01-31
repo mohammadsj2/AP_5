@@ -265,6 +265,22 @@ public class Controller
         }
     }
 
+
+    private void distributeItems(HashMap<Item,Integer> items)
+    {
+
+        for (Item item : items.keySet())
+        {
+            for(int i=0;i<items.get(item);i++)
+            {
+                Item newItem=Constant.getItemByType(item.getName());
+                Cell randomCell = map.getRandomCell();
+                newItem.setCell(randomCell);
+                getMap().addEntity(randomCell, newItem);
+            }
+        }
+    }
+
     private Object getObject(String type) throws IOException
     {
         // if(type.equals("cat"))return cat;
@@ -385,12 +401,20 @@ public class Controller
     }
 
     void clearTruck() {
-        ArrayList<Item> items=truck.getItems();
-        for(Item item:items){
-            try {
-                wareHouse.addItem(item);
-            } catch (NoWarehouseSpaceException e) {
-                e.printStackTrace();
+
+        HashMap<Item,Integer> items=truck.getItems();
+        for (Item item : items.keySet())
+        {
+            for(int i=0;i<items.get(item);i++)
+            {
+                Item newItem=Constant.getItemByType(item.getName());
+                try
+                {
+                    wareHouse.addItem(newItem);
+                } catch (NoWarehouseSpaceException e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
         truck.clear();
@@ -416,11 +440,27 @@ public class Controller
 
     void startTruck() throws StartBusyTransporter, StartEmptyTransporter
     {
+        if(InputReader.getClient().isOnline())
+        {
+            InputReader.getClient().addMarketItems(truck.getItems());
+        }
         truck.startTransportation();
     }
 
     void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter, StartEmptyTransporter
     {
+        if(InputReader.getClient().isOnline())
+        {
+            try
+            {
+                InputReader.getClient().removeItems(helicopter.getItems());
+            } catch (NotEnoughItemException e)
+            {
+                helicopter.clear();
+                System.out.println(Constant.NOT_ENOUGH_ITEM_MESSAGE);
+                return ;
+            }
+        }
         subtractMoney(helicopter.getValue());
         helicopter.startTransportation();
     }

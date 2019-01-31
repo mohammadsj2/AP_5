@@ -122,7 +122,8 @@ public class Constant {
                     continue;
                 }
                 Controller controller=InputReader.getCurrentController();
-                return new Item(input[0],new Integer(input[1]),new Integer(input[2]), (controller!=null)?controller.getTurn():0);
+                return new Item(input[0],new Integer(input[1]),new Integer(input[2]),new Integer (input[3])
+                        ,(controller!=null)?controller.getTurn():0);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -140,7 +141,8 @@ public class Constant {
             String[] input;
             while(scanner.hasNextLine()){
                 input=scanner.nextLine().toLowerCase().trim().replaceAll("\\s+", " ").split(" ");
-                items.add(new Item(input[0],new Integer(input[1]),new Integer(input[2]), InputReader.getCurrentController().getTurn()));
+                items.add(new Item(input[0],new Integer(input[1]),new Integer(input[2]),new Integer(input[3])
+                        ,InputReader.getCurrentController().getTurn()));
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

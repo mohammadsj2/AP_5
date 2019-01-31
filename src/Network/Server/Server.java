@@ -1,5 +1,7 @@
 package Network.Server;
 
+import Constant.Constant;
+import Model.Entity.Item;
 import Network.Address;
 import Network.Chatroom;
 import Network.Client.Client;
@@ -29,9 +31,11 @@ public class Server
     private ArrayList<ArrayList<Relationship>> relationShips=new ArrayList<>();
     private int currentPort;
     private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();;
+    private HashMap<Item,Integer> shopItems;
 
     public Server(Address address)
     {
+        initShop();
         System.out.println("I'm server...");
         this.address = address;
         currentPort = address.getPort() + 1;
@@ -96,6 +100,19 @@ public class Server
             }
         };
         new Thread(task).start();
+    }
+
+    private void initShop()
+    {
+        shopItems =new HashMap<>();
+        shopItems.put(Constant.getItemByType("egg"),10);
+        shopItems.put(Constant.getItemByType("flour"),10);
+        shopItems.put(Constant.getItemByType("cake"),10);
+        shopItems.put(Constant.getItemByType("flourycake"),10);
+        shopItems.put(Constant.getItemByType("wool"),10);
+        shopItems.put(Constant.getItemByType("sewing"),10);
+        shopItems.put(Constant.getItemByType("fabric"),10);
+        shopItems.put(Constant.getItemByType("adornment"),10);
     }
 
     private void listenToClient(int port)
@@ -165,7 +182,7 @@ public class Server
                                 break;
                             case "updateChatroom":
                                 input=scanner.nextLine();
-                                Chatroom chatroom=yaGson.fromJson(input,Chatroom.class);
+                                Chatroom chatroom= yaGson.fromJson(input,Chatroom.class);
                                 System.out.println(chatroom.isGlobal());
                                 if(chatroom.isGlobal())
                                 {
@@ -179,13 +196,70 @@ public class Server
                                     privateChatrooms.get(id1).set(id2,chatroom);
                                     privateChatrooms.get(id2).set(id1,chatroom);
                                     //  System.out.println(privateChatrooms.get(0).get(1).getMessages().size());
-                                    System.out.println(chatroom.getFirstClient().getName()+" "+chatroom.getSecondClient().getName());
+                                    System.out.println(chatroom.getFirstClient().getName()+" "
+                                            +chatroom.getSecondClient().getName());
                                     sendChatroom(chatroom.getFirstClient(),chatroom);
                                     if(!chatroom.getFirstClient().equals(chatroom.getSecondClient()))
                                     {
                                         sendChatroom(chatroom.getSecondClient(), chatroom);
                                     }
                                 }
+                                break;
+                            case "getMarketItems":
+                                formatter.format(yaGson.toJson(hashMapToArrayList(shopItems)
+                                        ,new TypeToken<ArrayList<Item>>(){}.getType())+"\n");
+                                formatter.flush();
+                                break;
+                            case "removeMarketItems":
+                                System.out.println("Server: removeMarketItems");
+                                input=scanner.nextLine();
+                                ArrayList<Item> tmp=yaGson.fromJson(input
+                                        ,new TypeToken<ArrayList<Item>>(){}.getType());
+                                HashMap<Item,Integer> itemsToRemove=arrayListToHashMap(tmp);
+                                boolean ok=true;
+                                for(Item item:itemsToRemove.keySet())
+                                {
+                                    if(!shopItems.containsKey(item) || itemsToRemove.get(item)>shopItems.get(item))
+                                    {
+                                        ok=false;
+                                        break;
+                                    }
+                                }
+                                if(ok)
+                                {
+                                    for(Item item:itemsToRemove.keySet())
+                                    {
+                                        shopItems.put(item,shopItems.get(item)-itemsToRemove.get(item));
+                                    }
+                                    formatter.format("Succeed\n");
+                                    formatter.flush();
+                                    updateMarketItems();
+                                }
+                                else
+                                {
+                                    System.out.println("SERVER: FAILLLLLLLLLL");
+                                    formatter.format("Failed\n");
+                                    formatter.flush();
+                                }
+                                break;
+                            case "addMarketItems":
+                                input=scanner.nextLine();
+                                ArrayList<Item> itemsToAdd=yaGson.fromJson(input
+                                        ,new TypeToken<ArrayList<Item>>(){}.getType());
+                                System.out.println(itemsToAdd.size());
+                                for(Item item:itemsToAdd)
+                                {
+                                    if(!shopItems.containsKey(item))
+                                    {
+                                        shopItems.put(item,1);
+                                    }
+                                    else
+                                    {
+                                        System.out.println("ADD "+item.getName());
+                                        shopItems.put(item,shopItems.get(item)+1);
+                                    }
+                                }
+                                updateMarketItems();
                                 break;
                             case "disconnect":
                                 disconnect(client);
@@ -231,6 +305,19 @@ public class Server
         };
         new Thread(task).start();
     }
+
+    private void updateMarketItems()
+    {
+        String marketItemsToJson= yaGson.toJson(hashMapToArrayList(shopItems), new TypeToken<ArrayList<Item>>(){}.getType())+"\n";
+        for (Client client : clients) {
+            Formatter formatter = formatters.get(client.getAddress().getPort());
+            formatter.format("updateMarketItems\n");
+            formatter.format(marketItemsToJson);
+            formatter.flush();
+        }
+    }
+
+
 
     private void sendChatroom(Client client, Chatroom chatroom)
     {
@@ -292,7 +379,7 @@ public class Server
     }
 
     private void updateScoreBoard() {
-        String clientsToJson=yaGson.toJson(clients, new TypeToken<ArrayList<Client>>(){}.getType())+"\n";
+        String clientsToJson= yaGson.toJson(clients, new TypeToken<ArrayList<Client>>(){}.getType())+"\n";
         System.out.println("updateSB\n");
         for (Client client : clients) {
             Formatter formatter = formatters.get(client.getAddress().getPort());
@@ -374,5 +461,35 @@ public class Server
         int i = getClientId(a);
         int j = getClientId(b);
         return privateChatrooms.get(i).get(j);
+    }
+
+    private HashMap<Item,Integer> arrayListToHashMap(ArrayList<Item> items)
+    {
+        HashMap<Item,Integer> result=new HashMap<>();
+        for(Item item:items)
+        {
+            if(!result.containsKey(item))
+            {
+                result.put(item,1);
+            }
+            else
+            {
+                result.put(item,result.get(item)+1);
+            }
+        }
+        return result;
+    }
+
+    private ArrayList<Item> hashMapToArrayList(HashMap<Item, Integer> items)
+    {
+        ArrayList<Item> result=new ArrayList<>();
+        for(Item item:items.keySet())
+        {
+            for(int i=0;i<items.get(item);i++)
+            {
+                result.add(item);
+            }
+        }
+        return result;
     }
 }

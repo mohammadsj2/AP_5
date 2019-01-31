@@ -22,37 +22,45 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public abstract class Transporter implements Upgradable, Viewable {
+public abstract class Transporter implements Upgradable, Viewable
+{
     int level, capacity, speed, startTime;
-    ArrayList<Item> items = new ArrayList<>();
+    HashMap<Item, Integer> items = new HashMap<>();
     Label valueLabel;
     boolean busy = false;
 
     ImageView imageView, littleImageView;
 
-    Transporter() {
+    Transporter()
+    {
 
     }
 
     @Override
-    public ImageView getImageView() {
+    public ImageView getImageView()
+    {
         return imageView;
     }
 
     @Override
-    public void initView() {
+    public void initView()
+    {
         imageView = new ImageView();
         GameScene.addNode(getImageView());
         initLittleImageView();
-        valueLabel=new Label();
+        valueLabel = new Label();
         valueLabel.setTextFill(Color.WHITE);
         valueLabel.setStyle("-fx-font-size: 25;");
     }
+
     @Override
-    public void refreshView() {
+    public void refreshView()
+    {
         Image image = getImageByLevel();
-        if (busy) {
+        if (busy)
+        {
             image = null;
         }
         valueLabel.setText(getValue().toString());
@@ -61,7 +69,8 @@ public abstract class Transporter implements Upgradable, Viewable {
     }
 
 
-    public void initLittleImageView() {
+    public void initLittleImageView()
+    {
         littleImageView = new ImageView();
         littleImageView.setImage(null);
         GameScene.addNode(littleImageView);
@@ -69,7 +78,8 @@ public abstract class Transporter implements Upgradable, Viewable {
 
     abstract void refreshLittleImageView();
 
-    void changeLittleImageView(Image image, int count, int rows, int columns, double x, double y) {
+    void changeLittleImageView(Image image, int count, int rows, int columns, double x, double y)
+    {
         ImageView imageView = littleImageView;
         imageView.setImage(image);
         int imageWidth = (int) image.getWidth();
@@ -93,37 +103,51 @@ public abstract class Transporter implements Upgradable, Viewable {
 
 
     @Override
-    public Animation getAnimation() {
+    public Animation getAnimation()
+    {
         return null;
     }
 
     @Override
-    public void setAnimation(Animation animation) {
+    public void setAnimation(Animation animation)
+    {
 
     }
 
     @Override
-    public void stopAnimation(int rows, int columns) {
+    public void stopAnimation(int rows, int columns)
+    {
 
     }
 
     @Override
-    public void startAnimation() {
+    public void startAnimation()
+    {
 
     }
 
-    public void addItem(Item item) throws NoTransporterSpaceException {
+    public void addItem(Item item) throws NoTransporterSpaceException
+    {
         if (!canAddItem(item))
             throw new NoTransporterSpaceException();
-        items.add(item);
+        if (!items.containsKey(item))
+        {
+            items.put(item, 1);
+        } else
+        {
+            items.put(item, items.get(item) + 1);
+        }
         refreshView();
     }
 
-    public void startTransportation() throws StartBusyTransporter, StartEmptyTransporter {
-        if (busy) {
+    public void startTransportation() throws StartBusyTransporter, StartEmptyTransporter
+    {
+        if (busy)
+        {
             throw new StartBusyTransporter();
         }
-        if (items.isEmpty()) {
+        if (items.isEmpty())
+        {
             throw new StartEmptyTransporter();
         }
         busy = true;
@@ -131,18 +155,21 @@ public abstract class Transporter implements Upgradable, Viewable {
         startTime = InputReader.getCurrentController().getTurn();
     }
 
-    public boolean isTransportationEnds() {
+    public boolean isTransportationEnds()
+    {
         return (startTime + getDurationOfTrip() <= InputReader.getCurrentController().getTurn());
     }
 
-    void goAndBackLittleImageAnimation() {
+    void goAndBackLittleImageAnimation()
+    {
         littleImageView.setScaleX(-1);
         KeyValue keyValue = new KeyValue(littleImageView.xProperty(), 840);
         KeyFrame keyFrame = new KeyFrame(Duration.seconds((double) getDurationOfTrip() * Constant.NEXT_TURN_DURATION / 2.1e9)
                 , keyValue);
         Timeline timeline = new Timeline(keyFrame);
         timeline.play();
-        timeline.setOnFinished(event -> {
+        timeline.setOnFinished(event ->
+        {
             littleImageView.setScaleX(1);
             KeyValue keyValue1 = new KeyValue(littleImageView.xProperty(), 710);
             KeyFrame keyFrame1 = new KeyFrame(Duration.seconds((double) getDurationOfTrip() * Constant.NEXT_TURN_DURATION / 2.1e9)
@@ -152,51 +179,57 @@ public abstract class Transporter implements Upgradable, Viewable {
         });
     }
 
-    public int getDurationOfTrip() {
+    public int getDurationOfTrip()
+    {
         return Constant.TOWN_DISTANCE / speed;
     }
 
-    public void endTransportation() {
+    public void endTransportation()
+    {
         busy = false;
         refreshView();
     }
 
-    public void clear() {
+    public void clear()
+    {
         items.clear();
         refreshView();
         HelicopterScene.refresh();
     }
 
-    public ArrayList<Item> getItems() {
+    public HashMap<Item, Integer> getItems()
+    {
         return items;
     }
 
-    public int getFilledVolume() {
+    public int getFilledVolume()
+    {
         int filledVolume = 0;
-        for (Item item : items) {
-            filledVolume += item.getVolume();
+        for (Item item : items.keySet())
+        {
+            filledVolume += item.getVolume()*items.get(item);
         }
         return filledVolume;
     }
 
-    public Integer getValue() {
+    public Integer getValue()
+    {
         int value = 0;
-        for (Item item : items) {
-            value += item.getCost();
+        for (Item item : items.keySet())
+        {
+            value += ((this instanceof Truck)?item.getSellCost():item.getBuyCost())*items.get(item);
         }
         return value;
     }
 
-    public boolean canAddItem(Item item) {
+    public boolean canAddItem(Item item)
+    {
         return !busy && (getFilledVolume() + item.getVolume() <= capacity);
     }
-    public int getNumberOfThisItem(Item item) {
-        int ans =0;
-        for(Item item1:items){
-            if(item1.equals(item)){
-                ans++;
-            }
-        }
-        return ans;
+
+    public int getNumberOfThisItem(Item item)
+    {
+        if(!items.containsKey(item))return 0;
+        return items.get(item);
     }
 }

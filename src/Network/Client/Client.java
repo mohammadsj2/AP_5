@@ -1,12 +1,13 @@
 package Network.Client;
 
-import Constant.Constant;
 import Controller.InputReader;
+import Model.Entity.Item;
 import Network.Address;
 import Network.Chatroom;
 import Network.Relationship;
 import Network.Server.Server;
 import View.Scene.GameScene;
+import View.Scene.HelicopterScene;
 import View.Scene.HelicopterScene;
 import View.Scene.MultiPlayerScene.ChatroomScene;
 import View.Scene.MultiPlayerScene.ProfileScene;
@@ -28,7 +29,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class Client
@@ -47,12 +47,12 @@ public class Client
     private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();
 
 
-    public Client(String name,int imageIndex)
+    public Client(String name, int imageIndex)
     {
-        address=new Address(1231,"localhost");
+        address = new Address(1231, "localhost");
         this.name = name;
         level = 0;
-        this.imageIndex=imageIndex;
+        this.imageIndex = imageIndex;
     }
 
     public void setMoney(int money) {
@@ -80,9 +80,10 @@ public class Client
             Scanner scanner = new Scanner(inputStream);
             Formatter formatter = new Formatter(outputStream);
 
-            formatter.format(getName()+"\n");
+            formatter.format(getName() + "\n");
             formatter.flush();
-            if(!scanner.nextLine().equals("sendingPort")){
+            if (!scanner.nextLine().equals("sendingPort"))
+            {
                 throw new NotUniqueUsernameException();
             }
             int listenPort = scanner.nextInt();
@@ -120,41 +121,46 @@ public class Client
                     Formatter formatter = new Formatter(outputStream);
                     while (true)
                     {
-                        System.out.println("LISTEN TO SERVER ON PORT "+port);
+                        System.out.println("LISTEN TO SERVER ON PORT " + port);
                         String commandInput = scanner.nextLine();
                         String input;
-                        System.out.println(commandInput+"|||||||||||||||||||");
+                        System.out.println(commandInput + "|||||||||||||||||||");
                         switch (commandInput)
                         {
                             case "updateChatroom":
-                                input=scanner.nextLine();
-                                if(InputReader.getScene()!=ChatroomScene.CHATROOM_SCENE.getScene()){
+                                input = scanner.nextLine();
+                                if (InputReader.getScene() != ChatroomScene.CHATROOM_SCENE.getScene())
+                                {
                                     break;
                                 }
-                                Chatroom chatroom=yaGson.fromJson(input,Chatroom.class);
-                                System.out.println("CLIENT!!!: "+chatroom.getMessages().size());
-                                if(ChatroomScene.CHATROOM_SCENE.getChatroom().equals(chatroom))
+                                Chatroom chatroom = yaGson.fromJson(input, Chatroom.class);
+                                System.out.println("CLIENT!!!: " + chatroom.getMessages().size());
+                                if (ChatroomScene.CHATROOM_SCENE.getChatroom().equals(chatroom))
                                 {
-                                    ChatroomScene.CHATROOM_SCENE.setChatroom(chatroom,false);
+                                    ChatroomScene.CHATROOM_SCENE.setChatroom(chatroom, false);
                                 }
                                 System.out.println("UPDATE CHATROOM FINISHED!");
                                 break;
                             case "updateScoreboard":
-                                input=scanner.nextLine();
-                                if(InputReader.getScene()!=ScoreBoardScene.SCORE_BOARD_SCENE.getScene()){
+                                input = scanner.nextLine();
+                                if (InputReader.getScene() != ScoreBoardScene.SCORE_BOARD_SCENE.getScene())
+                                {
                                     break;
                                 }
-                                ArrayList<Client> clients=yaGson.fromJson(input,new TypeToken<ArrayList<Client>>(){}.getType());
-                                ScoreBoardScene.SCORE_BOARD_SCENE.setClients(clients,false);
+                                ArrayList<Client> clients = yaGson.fromJson(input, new TypeToken<ArrayList<Client>>()
+                                {
+                                }.getType());
+                                ScoreBoardScene.SCORE_BOARD_SCENE.setClients(clients, false);
                                 break;
                             case "updateRelationship":
-                                input=scanner.nextLine();
-                                Relationship relationship=yaGson.fromJson(input,Relationship.class);
-                                ProfileScene profileScene=ProfileScene.getCurrentProfileScene();
-                                if(profileScene==null || InputReader.getScene()!=profileScene.getScene()){
+                                input = scanner.nextLine();
+                                Relationship relationship = yaGson.fromJson(input, Relationship.class);
+                                ProfileScene profileScene = ProfileScene.getCurrentProfileScene();
+                                if (profileScene == null || InputReader.getScene() != profileScene.getScene())
+                                {
                                     break;
                                 }
-                                profileScene.setRelationship(relationship,false);
+                                profileScene.setRelationship(relationship, false);
                                 break;
                             case "addBear":
                                 try {
@@ -166,6 +172,12 @@ public class Client
                                     System.out.println("notadddded\n");
                                 }
                                 formatter.flush();
+                                break;
+                            case "updateMarketItems":
+                                input=scanner.nextLine();
+                                HashMap<Item,Integer> items=arrayListToHashMap(yaGson.fromJson(input,
+                                        new TypeToken<ArrayList<Item>>(){}.getType()));
+                                HelicopterScene.setItems(items);
                                 break;
                         }
                     }
@@ -277,8 +289,10 @@ public class Client
     {
         formatter.format("getScoreBoard\n");
         formatter.flush();
-        String input=scanner.nextLine();
-        ArrayList<Client> clients=yaGson.fromJson(input, new TypeToken<ArrayList<Client>>(){}.getType());
+        String input = scanner.nextLine();
+        ArrayList<Client> clients = yaGson.fromJson(input, new TypeToken<ArrayList<Client>>()
+        {
+        }.getType());
         return clients;
     }
 
@@ -309,16 +323,78 @@ public class Client
         formatter.flush();
     }
 
-    public Relationship getRelationship(Client client) {
+    public Relationship getRelationship(Client client)
+    {
         formatter.format("getRelationship\n");
-        formatter.format(yaGson.toJson(client)+"\n");
+        formatter.format(yaGson.toJson(client) + "\n");
         formatter.flush();
-        return yaGson.fromJson(scanner.nextLine(),Relationship.class);
+        return yaGson.fromJson(scanner.nextLine(), Relationship.class);
     }
 
-    public void updateRelationship(Relationship relationship) {
+    public void updateRelationship(Relationship relationship)
+    {
         formatter.format("updateRelationship\n");
-        formatter.format(yaGson.toJson(relationship)+"\n");
+        formatter.format(yaGson.toJson(relationship) + "\n");
         formatter.flush();
     }
+
+    public HashMap<Item, Integer> getMarketItems()
+    {
+        formatter.format("getMarketItems\n");
+        formatter.flush();
+        ArrayList<Item> tmp = yaGson.fromJson(scanner.nextLine(), new TypeToken<ArrayList<Item>>()
+        {
+        }.getType());
+        return arrayListToHashMap(tmp);
+    }
+
+    public void removeItems(HashMap<Item, Integer> items) throws NotEnoughItemException
+    {
+        formatter.format("removeMarketItems\n");
+        ArrayList<Item> itemsArrayList=hashMapToArrayList(items);
+        formatter.format(yaGson.toJson(itemsArrayList, new TypeToken<ArrayList<Item>>(){}.getType()) + "\n");
+        formatter.flush();
+        if (scanner.nextLine().equals("Failed"))
+            throw new NotEnoughItemException();
+    }
+
+
+    public void addMarketItems(HashMap<Item, Integer> items)
+    {
+        formatter.format("addMarketItems\n");
+        ArrayList<Item> itemsArrayList=hashMapToArrayList(items);
+        System.out.println(itemsArrayList.size());
+        formatter.format(yaGson.toJson(itemsArrayList, new TypeToken<ArrayList<Item>>(){}.getType()) + "\n");
+        formatter.flush();
+    }
+
+    private HashMap<Item, Integer> arrayListToHashMap(ArrayList<Item> items)
+    {
+        HashMap<Item, Integer> result = new HashMap<>();
+        for (Item item : items)
+        {
+            if (!result.containsKey(item))
+            {
+                result.put(item, 1);
+            } else
+            {
+                result.put(item, result.get(item) + 1);
+            }
+        }
+        return result;
+    }
+
+    private ArrayList<Item> hashMapToArrayList(HashMap<Item, Integer> items)
+    {
+        ArrayList<Item> result = new ArrayList<>();
+        for (Item item : items.keySet())
+        {
+            for (int i = 0; i < items.get(item); i++)
+            {
+                result.add(item);
+            }
+        }
+        return result;
+    }
+
 }
