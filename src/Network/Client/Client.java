@@ -6,16 +6,23 @@ import Network.Address;
 import Network.Chatroom;
 import Network.Relationship;
 import Network.Server.Server;
+import View.Scene.GameScene;
+import View.Scene.HelicopterScene;
 import View.Scene.HelicopterScene;
 import View.Scene.MultiPlayerScene.ChatroomScene;
 import View.Scene.MultiPlayerScene.ProfileScene;
 import View.Scene.MultiPlayerScene.ScoreBoardScene;
+import View.Scene.TruckScene;
 import YaGson.*;
 import Exception.*;
 import com.gilecode.yagson.YaGson;
 import com.gilecode.yagson.YaGsonBuilder;
 import com.gilecode.yagson.com.google.gson.reflect.TypeToken;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import sun.misc.Cleaner;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,6 +61,13 @@ public class Client
 
     public int getMoney() {
         return money;
+    }
+    private void addBear()throws NotInGameException{
+        Scene scene=InputReader.getScene();
+        if(scene!= GameScene.getScene() && scene!= HelicopterScene.getScene() && scene!= TruckScene.getScene()){
+            throw new NotInGameException();
+        }
+        Platform.runLater(() -> InputReader.buy("bear"));
     }
 
     public void connectToServer(String ip) throws ServerDoesNotExist, NotUniqueUsernameException {
@@ -148,6 +162,17 @@ public class Client
                                 }
                                 profileScene.setRelationship(relationship, false);
                                 break;
+                            case "addBear":
+                                try {
+                                    addBear();
+                                    formatter.format("bearAdded\n");
+                                    System.out.println("addddddded");
+                                } catch (NotInGameException e) {
+                                    formatter.format("notInGame\n");
+                                    System.out.println("notadddded\n");
+                                }
+                                formatter.flush();
+                                break;
                             case "updateMarketItems":
                                 input=scanner.nextLine();
                                 HashMap<Item,Integer> items=arrayListToHashMap(yaGson.fromJson(input,
@@ -165,6 +190,24 @@ public class Client
         };
         new Thread(task).start();
     }
+
+
+    public void attackWithBear(Client client) throws NotEnoughMoneyException,NotInGameException {
+        if(InputReader.getCurrentController()==null){
+            throw new NotInGameException();
+        }
+        InputReader.getCurrentController().subtractMoney(Constant.SERVER_BEAR_COST);
+        formatter.format("attackWithBear\n");
+        formatter.format(yaGson.toJson(client)+"\n");
+        formatter.flush();
+        String input=scanner.nextLine();
+        if(input.equals("targetClientNotInGame")){
+            System.out.println("pool bear bargandade shod !");
+            InputReader.getCurrentController().increaseMoney(Constant.SERVER_BEAR_COST);
+            throw new NotInGameException();
+        }
+    }
+
 
     public boolean isOnline()
     {

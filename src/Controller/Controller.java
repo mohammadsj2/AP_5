@@ -73,7 +73,7 @@ public class Controller
         return turn;
     }
 
-    void subtractMoney(int money2) throws NotEnoughMoneyException
+    public void subtractMoney(int money2) throws NotEnoughMoneyException
     {
         if (money < money2)
             throw new NotEnoughMoneyException();
@@ -95,7 +95,7 @@ public class Controller
         }
     }
 
-    void increaseMoney(int money2)
+    public void increaseMoney(int money2)
     {
         money += money2;
         GameScene.updateMoney();
