@@ -394,7 +394,7 @@ public class InputReader extends Application
                 client.disconnect();
                 System.exit(0);
             }
-
+            System.exit(0);
         });
         primaryStage.show();
 
