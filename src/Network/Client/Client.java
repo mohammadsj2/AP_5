@@ -36,6 +36,7 @@ public class Client
     private Address address;
     private boolean isInGame = false;
     private Scanner scanner;
+    private int money=0;
     private Formatter formatter;
     private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();
 
@@ -46,6 +47,14 @@ public class Client
         this.name = name;
         level = 0;
         this.imageIndex=imageIndex;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
+    public int getMoney() {
+        return money;
     }
 
     public void connectToServer(String ip) throws ServerDoesNotExist, NotUniqueUsernameException {

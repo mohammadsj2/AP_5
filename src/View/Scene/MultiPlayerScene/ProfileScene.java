@@ -43,7 +43,7 @@ public class ProfileScene extends MultiPlayerScene{
         removeAllNodesWithForce(force, toRemove, root.getChildren());
         Image image=null;
         int x=320,y=230;
-        int setWidth=50,setHeight=50;
+        int setWidth=75,setHeight=75;
         if(relationship.isUnFriend()){
             try {
                 image=new Image(new FileInputStream("Textures/UI/Icons/RedFirendIcon.png"));
@@ -78,7 +78,7 @@ public class ProfileScene extends MultiPlayerScene{
         try {
             image=new Image(new FileInputStream("Textures/UI/Icons/CancelRelationshipButton.png"));
             ImageView anotherImageView=new ImageView(image);
-            anotherImageView.relocate(x+75,y);
+            anotherImageView.relocate(x+100,y);
             anotherImageView.setFitHeight(setHeight);
             anotherImageView.setFitWidth(setWidth);
             anotherImageView.setOnMouseClicked(event -> {
