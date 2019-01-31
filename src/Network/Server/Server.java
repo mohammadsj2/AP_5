@@ -113,6 +113,7 @@ public class Server
         shopItems.put(Constant.getItemByType("sewing"),10);
         shopItems.put(Constant.getItemByType("fabric"),10);
         shopItems.put(Constant.getItemByType("adornment"),10);
+        shopItems.put(Constant.getItemByType("milk"),10);
     }
 
     private void listenToClient(int port)
