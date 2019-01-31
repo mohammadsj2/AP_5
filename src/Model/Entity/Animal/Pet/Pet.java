@@ -118,7 +118,7 @@ public abstract class Pet extends Animal implements Producer {
         Cell cur=map.nearestCellWithGrass(getCell());
         if (isHungry() &&  cur != null) {
             if (!getCell().haveGrass()) {
-                changeCell(map.getBestCellBySpeed(getCell(),cur,Constant.ANIMAL_SPEED));
+                changeCell(map.getBestCellBySpeed(getCell(),cur,getSpeed()));
             } else {
                 setWalkAnimation(getCell(), getCell());
                 eatGrass();
@@ -142,5 +142,12 @@ public abstract class Pet extends Animal implements Producer {
         }
     }
 
-
+    @Override
+    public int getSpeed() {
+        if(!isHungry()) {
+            return super.getSpeed();
+        }else{
+            return Constant.HUNGRY_PET_SPEED;
+        }
+    }
 }

@@ -2,36 +2,29 @@ package Controller;
 
 import Exception.*;
 import Model.Entity.Item;
-import Model.Map.Cell;
-import Model.Map.Map;
-import Network.Chatroom;
 import Network.Client.Client;
 
-import View.Scene.*;
 import Network.Server.Server;
 import View.Scene.MultiPlayerScene.ChatroomScene;
-import View.Scene.MultiPlayerScene.MultiPlayerScene;
-import View.Scene.MultiPlayerScene.ScoreBoardScene;
 import View.Scene.UsernameGetterScene;
 import YaGson.*;
-import Model.Well;
 import Model.WorkShop;
 import com.gilecode.yagson.YaGson;
 import com.gilecode.yagson.YaGsonBuilder;
 import javafx.application.Application;
-import javafx.event.EventHandler;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Scanner;
 
 import Constant.Constant;
-import javafx.stage.WindowEvent;
 
 public class InputReader extends Application
 {
@@ -42,13 +35,29 @@ public class InputReader extends Application
     private static YaGson yaGson=new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategy()).create();
     private static Client client;
     private static Server server;
+    private static MediaView mediaView;
 
 
 
     public static void main(String[] args) throws StartBusyTransporter, IOException
     {
+        startSound();
         createAllLevels();
         launch(args);
+    }
+
+    public static MediaView getMediaView() {
+        return mediaView;
+    }
+
+    private static void startSound() {
+
+        Media media = new Media(new File("Textures/Sound/hero.mp3").toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.play();
+        mediaView=new MediaView(mediaPlayer);
+        System.out.println("ok sounds");
     }
 
     private static void createAllLevels() {
@@ -220,7 +229,10 @@ public class InputReader extends Application
         indexOfLevel = levelIndex;
         currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Levels/level" + indexOfLevel + ".json")),
                 Controller.class);
-
+        if(InputReader.getClient()!=null) {
+            InputReader.getClient().setMoney(currentController.getMoney());
+            if (InputReader.getClient().isOnline()) InputReader.getClient().updateClient();
+        }
     }
 
 
@@ -229,6 +241,10 @@ public class InputReader extends Application
         indexOfLevel = levelIndex;
         currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/save" + indexOfLevel + ".json")),
                 Controller.class);
+        if(InputReader.getClient()!=null) {
+            InputReader.getClient().setMoney(currentController.getMoney());
+            if (InputReader.getClient().isOnline()) InputReader.getClient().updateClient();
+        }
     }
 
 
@@ -373,7 +389,12 @@ public class InputReader extends Application
         primaryStage.setResizable(false);
         primaryStage.setX(300);
         primaryStage.setY(100);
-        primaryStage.setOnCloseRequest(event -> System.exit(0));
+        primaryStage.setOnCloseRequest(event -> {
+            if(client!=null && client.isOnline()){
+                client.disconnect();
+            }
+            System.exit(0);
+        });
         primaryStage.show();
 
         ChatroomScene.CHATROOM_SCENE.init();

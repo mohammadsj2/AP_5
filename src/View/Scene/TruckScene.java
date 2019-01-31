@@ -111,6 +111,10 @@ public class TruckScene {
         }
     }
 
+    public static Scene getScene() {
+        return scene;
+    }
+
     private static int getItemPositionInWarehouseX(int i) {
         return Constant.ITEM_POSITION_IN_WAREHOUSE_X[(i>=13)?1:0];
     }

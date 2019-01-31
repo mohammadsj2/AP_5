@@ -7,6 +7,8 @@ import Network.Client.Client;
 import View.Button.BlueButton;
 import View.Scene.ConnectScene;
 import View.Scene.LevelSelectScene;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -21,6 +23,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class MultiPlayerScene {
     public final static MultiPlayerScene MULTI_PLAYER_SCENE=new MultiPlayerScene();
@@ -66,7 +69,7 @@ public class MultiPlayerScene {
 
             Client client=InputReader.getClient();
             Chatroom chatroom = client.getGlobalChatroom();
-            ChatroomScene.CHATROOM_SCENE.setChatroom(chatroom);
+            ChatroomScene.CHATROOM_SCENE.setChatroom(chatroom,true);
             InputReader.setScene(ChatroomScene.CHATROOM_SCENE.getScene());
         });
         addNode(button.getNode());
@@ -80,8 +83,8 @@ public class MultiPlayerScene {
         });
 
         addNode(button.getNode());
-
     }
+
 
 
 
@@ -98,6 +101,21 @@ public class MultiPlayerScene {
         rectangle.relocate(50,50);
         rectangle.setOpacity(0.5);
         addNode(rectangle);
+    }
+    static void removeAllNodesWithForce(boolean force, ArrayList<Node> toRemove, ObservableList<Node> children) {
+        if(force) {
+            for(Node node: toRemove){
+                children.remove(node);
+            }
+            toRemove.clear();
+        }else {
+            Platform.runLater(() -> {
+                for(Node node: toRemove){
+                    children.remove(node);
+                }
+                toRemove.clear();
+            });
+        }
     }
 
 

@@ -1,11 +1,12 @@
 package Network.Server;
 
-import Controller.InputReader;
+import Constant.Constant;
+import Model.Entity.Item;
 import Network.Address;
 import Network.Chatroom;
 import Network.Client.Client;
 import Exception.*;
-import Network.Message;
+import Network.Relationship;
 import YaGson.*;
 import com.gilecode.yagson.YaGson;
 import com.gilecode.yagson.YaGsonBuilder;
@@ -27,11 +28,14 @@ public class Server
     private Address address;
     private Chatroom globalChatroom;
     private ArrayList<ArrayList<Chatroom>> privateChatrooms = new ArrayList<>();
+    private ArrayList<ArrayList<Relationship>> relationShips=new ArrayList<>();
     private int currentPort;
     private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();;
+    private HashMap<Item,Integer> shopItems;
 
     public Server(Address address)
     {
+        initShop();
         System.out.println("I'm server...");
         this.address = address;
         currentPort = address.getPort() + 1;
@@ -98,6 +102,19 @@ public class Server
         new Thread(task).start();
     }
 
+    private void initShop()
+    {
+        shopItems =new HashMap<>();
+        shopItems.put(Constant.getItemByType("egg"),10);
+        shopItems.put(Constant.getItemByType("flour"),10);
+        shopItems.put(Constant.getItemByType("cake"),10);
+        shopItems.put(Constant.getItemByType("flourycake"),10);
+        shopItems.put(Constant.getItemByType("wool"),10);
+        shopItems.put(Constant.getItemByType("sewing"),10);
+        shopItems.put(Constant.getItemByType("fabric"),10);
+        shopItems.put(Constant.getItemByType("adornment"),10);
+    }
+
     private void listenToClient(int port)
     {
         Task task = new Task<Void>()
@@ -115,6 +132,8 @@ public class Server
                     Formatter formatter = new Formatter(outputStream);
                     Client client=null;
                     boolean connected=true;
+                    Client otherClient;
+
                     while (connected)
                     {
                         System.out.println("listen to client\n");
@@ -132,6 +151,7 @@ public class Server
                                     System.out.println(clients.size());
                                     int clientId = getClientId(newClient);
                                     clients.set(clientId, newClient);
+                                    updateScoreBoard();
                                 } catch (ClientDoesNotExist clientDoesNotExist)
                                 {
                                     System.out.println("ADD CLIENT");
@@ -149,7 +169,7 @@ public class Server
                                 break;
                             case "getPrivateChatroom":
                                 input = scanner.nextLine();
-                                Client otherClient = yaGson.fromJson(input, Client.class);
+                                otherClient = yaGson.fromJson(input, Client.class);
                                 try
                                 {
                                     Chatroom chatroom = privateChatrooms.get(getClientId(otherClient)).get(getClientId(client));
@@ -162,7 +182,7 @@ public class Server
                                 break;
                             case "updateChatroom":
                                 input=scanner.nextLine();
-                                Chatroom chatroom=yaGson.fromJson(input,Chatroom.class);
+                                Chatroom chatroom= yaGson.fromJson(input,Chatroom.class);
                                 System.out.println(chatroom.isGlobal());
                                 if(chatroom.isGlobal())
                                 {
@@ -176,7 +196,8 @@ public class Server
                                     privateChatrooms.get(id1).set(id2,chatroom);
                                     privateChatrooms.get(id2).set(id1,chatroom);
                                     //  System.out.println(privateChatrooms.get(0).get(1).getMessages().size());
-                                    System.out.println(chatroom.getFirstClient().getName()+" "+chatroom.getSecondClient().getName());
+                                    System.out.println(chatroom.getFirstClient().getName()+" "
+                                            +chatroom.getSecondClient().getName());
                                     sendChatroom(chatroom.getFirstClient(),chatroom);
                                     if(!chatroom.getFirstClient().equals(chatroom.getSecondClient()))
                                     {
@@ -184,11 +205,95 @@ public class Server
                                     }
                                 }
                                 break;
+                            case "getMarketItems":
+                                formatter.format(yaGson.toJson(hashMapToArrayList(shopItems)
+                                        ,new TypeToken<ArrayList<Item>>(){}.getType())+"\n");
+                                formatter.flush();
+                                break;
+                            case "removeMarketItems":
+                                System.out.println("Server: removeMarketItems");
+                                input=scanner.nextLine();
+                                ArrayList<Item> tmp=yaGson.fromJson(input
+                                        ,new TypeToken<ArrayList<Item>>(){}.getType());
+                                HashMap<Item,Integer> itemsToRemove=arrayListToHashMap(tmp);
+                                boolean ok=true;
+                                for(Item item:itemsToRemove.keySet())
+                                {
+                                    if(!shopItems.containsKey(item) || itemsToRemove.get(item)>shopItems.get(item))
+                                    {
+                                        ok=false;
+                                        break;
+                                    }
+                                }
+                                if(ok)
+                                {
+                                    for(Item item:itemsToRemove.keySet())
+                                    {
+                                        shopItems.put(item,shopItems.get(item)-itemsToRemove.get(item));
+                                    }
+                                    formatter.format("Succeed\n");
+                                    formatter.flush();
+                                    updateMarketItems();
+                                }
+                                else
+                                {
+                                    System.out.println("SERVER: FAILLLLLLLLLL");
+                                    formatter.format("Failed\n");
+                                    formatter.flush();
+                                }
+                                break;
+                            case "addMarketItems":
+                                input=scanner.nextLine();
+                                ArrayList<Item> itemsToAdd=yaGson.fromJson(input
+                                        ,new TypeToken<ArrayList<Item>>(){}.getType());
+                                System.out.println(itemsToAdd.size());
+                                for(Item item:itemsToAdd)
+                                {
+                                    if(!shopItems.containsKey(item))
+                                    {
+                                        shopItems.put(item,1);
+                                    }
+                                    else
+                                    {
+                                        System.out.println("ADD "+item.getName());
+                                        shopItems.put(item,shopItems.get(item)+1);
+                                    }
+                                }
+                                updateMarketItems();
+                                break;
                             case "disconnect":
                                 disconnect(client);
                                 connected=false;
                                 break;
-
+                            case "getRelationship":
+                                input = scanner.nextLine();
+                                otherClient = yaGson.fromJson(input, Client.class);
+                                try
+                                {
+                                    Relationship relationship = relationShips.get(getClientId(otherClient)).get(getClientId(client));
+                                    formatter.format(yaGson.toJson(relationship, Relationship.class)+"\n");
+                                    formatter.flush();
+                                } catch (ClientDoesNotExist clientDoesNotExist)
+                                {
+                                    clientDoesNotExist.printStackTrace();
+                                }
+                                break;
+                            case "updateRelationship":
+                                input = scanner.nextLine();
+                                Relationship relationship = yaGson.fromJson(input,Relationship.class);
+                                updateRelationship(relationship);
+                                break;
+                            case "attackWithBear":
+                                otherClient=yaGson.fromJson(scanner.nextLine(),Client.class);
+                                try {
+                                    addBear(otherClient);
+                                    formatter.format("bearAdded\n");
+                                }catch (NotInGameException e){
+                                    System.out.println("az server error ferestade shod");
+                                    formatter.format("targetClientNotInGame\n");
+                                }
+                                formatter.flush();
+                                break;
                         }
                     }
                 } catch (IOException e)
@@ -200,6 +305,19 @@ public class Server
         };
         new Thread(task).start();
     }
+
+    private void updateMarketItems()
+    {
+        String marketItemsToJson= yaGson.toJson(hashMapToArrayList(shopItems), new TypeToken<ArrayList<Item>>(){}.getType())+"\n";
+        for (Client client : clients) {
+            Formatter formatter = formatters.get(client.getAddress().getPort());
+            formatter.format("updateMarketItems\n");
+            formatter.format(marketItemsToJson);
+            formatter.flush();
+        }
+    }
+
+
 
     private void sendChatroom(Client client, Chatroom chatroom)
     {
@@ -216,19 +334,55 @@ public class Server
         int id=getClientId(client);
         clients.remove(id);
         privateChatrooms.remove(id);
+        relationShips.remove(id);
+
         for(ArrayList<Chatroom> chatrooms:privateChatrooms){
             chatrooms.remove(id);
+        }
+        for(ArrayList<Relationship> relationShip:relationShips){
+            relationShip.remove(id);
         }
         updateScoreBoard();
         System.out.println("Client "+client.getName()+" disconnected!");
     }
+    private void updateRelationship(Relationship relationShip) throws ClientDoesNotExist {
+        System.out.println("this ");
+        Client[] clients={relationShip.getFirstClient(),relationShip.getSecondClient()};
+        int id[]={getClientId(clients[0]),getClientId(clients[1])};
+        for(int i=0;i<2;i++){
+            relationShips.get(id[i]).set(id[1-i],relationShip);
+        }
+        for(int i=0;i<2;i++){
+            sendUpdatedRelationship(clients[i],relationShip);
+        }
+    }
+
+    private void sendUpdatedRelationship(Client client,Relationship relationShip) {
+        System.out.println("sending updated relationship to "+client.getName());
+        Formatter formatter=formatters.get(client.getAddress().getPort());
+        formatter.format("updateRelationship\n");
+        formatter.format(yaGson.toJson(relationShip)+"\n");
+        formatter.flush();
+    }
+    private void addBear(Client targetClient) throws NotInGameException {
+        Formatter formatter=formatters.get(targetClient.getAddress().getPort());
+        Scanner scanner=scanners.get(targetClient.getAddress().getPort());
+
+        formatter.format("addBear\n");
+        formatter.flush();
+
+        String input=scanner.nextLine();
+        System.out.println("beserver resid: "+input);
+        if(!input.equals("bearAdded")){
+           throw new NotInGameException();
+        }
+    }
 
     private void updateScoreBoard() {
-        String clientsToJson=yaGson.toJson(clients, new TypeToken<ArrayList<Client>>(){}.getType())+"\n";
+        String clientsToJson= yaGson.toJson(clients, new TypeToken<ArrayList<Client>>(){}.getType())+"\n";
         System.out.println("updateSB\n");
-        for (int i = 0; i < clients.size(); i++) {
-            Client client=clients.get(i);
-            Formatter formatter=formatters.get(client.getAddress().getPort());
+        for (Client client : clients) {
+            Formatter formatter = formatters.get(client.getAddress().getPort());
             formatter.format("updateScoreboard\n");
             formatter.format(clientsToJson);
             formatter.flush();
@@ -240,16 +394,27 @@ public class Server
     {
         clients.add(client);
 
-        ArrayList<Chatroom> tmpArrayList = new ArrayList<>();
+        ArrayList<Chatroom> tmpChatroomArrayList = new ArrayList<>();
+        ArrayList<Relationship> tmpRelationships =new ArrayList<>();
         for (int i=0;i<privateChatrooms.size();i++)
         {
-            ArrayList<Chatroom> arrayList=privateChatrooms.get(i);
+            ArrayList<Chatroom> chatroomArrayList=privateChatrooms.get(i);
+            ArrayList<Relationship> relationshipArrayList =relationShips.get(i);
+
             Chatroom chatroom = new Chatroom(clients.get(i),client);
-            arrayList.add(chatroom);
-            tmpArrayList.add(chatroom);
+            Relationship relationShip=new Relationship(clients.get(i),client);
+
+            chatroomArrayList.add(chatroom);
+            tmpChatroomArrayList.add(chatroom);
+
+            relationshipArrayList.add(relationShip);
+            tmpRelationships.add(relationShip);
         }
-        tmpArrayList.add(new Chatroom(client,client));
-        privateChatrooms.add(tmpArrayList);
+        tmpChatroomArrayList.add(new Chatroom(client,client));
+        tmpRelationships.add(new Relationship(client,client));
+
+        privateChatrooms.add(tmpChatroomArrayList);
+        relationShips.add(tmpRelationships);
         updateScoreBoard();
     }
 
@@ -296,5 +461,35 @@ public class Server
         int i = getClientId(a);
         int j = getClientId(b);
         return privateChatrooms.get(i).get(j);
+    }
+
+    private HashMap<Item,Integer> arrayListToHashMap(ArrayList<Item> items)
+    {
+        HashMap<Item,Integer> result=new HashMap<>();
+        for(Item item:items)
+        {
+            if(!result.containsKey(item))
+            {
+                result.put(item,1);
+            }
+            else
+            {
+                result.put(item,result.get(item)+1);
+            }
+        }
+        return result;
+    }
+
+    private ArrayList<Item> hashMapToArrayList(HashMap<Item, Integer> items)
+    {
+        ArrayList<Item> result=new ArrayList<>();
+        for(Item item:items.keySet())
+        {
+            for(int i=0;i<items.get(item);i++)
+            {
+                result.add(item);
+            }
+        }
+        return result;
     }
 }
