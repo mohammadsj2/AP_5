@@ -9,9 +9,6 @@ public class BlueProgressBar extends ProgressBar{
     public BlueProgressBar(double x, double y){
         super(x,y);
     }
-    public BlueProgressBar(){
-
-    }
 
     @Override
     public Image getFillImage() {
