@@ -15,6 +15,7 @@ import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class WorkShop implements Producer, Upgradable, Viewable
@@ -40,25 +41,47 @@ public class WorkShop implements Producer, Upgradable, Viewable
 
     public void initView()
     {
-        imageView = new ImageView();/*
-        VBox vbox=new VBox();
-        vbox.relocate(200,200);
-        vbox.setMinWidth(100);
-        vbox.setMinHeight(100);
-        vbox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;");
+        imageView = new ImageView();
+        HBox hbox=new HBox();
+        VBox inputVBox=new VBox(),outputVBox=new VBox();
+        hbox.relocate(357,560);
+        hbox.setSpacing(10);
+        hbox.setMinWidth(100);
+        hbox.setMinHeight(100);
+        hbox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;");
         for(Item item:inputs)
         {
-
+            Item item1=Constant.getItemByType(item.getName());
+            inputVBox.getChildren().add(item1.getImageView());
         }
+        for(Item item:outputs){
+            Item item1=Constant.getItemByType(item.getName());
+            outputVBox.getChildren().add(item1.getImageView());
+        }
+        {
+            try {
+                VBox imageViewVBox=new VBox();
+                for(int i=0;i<4;i++) {
+                    ImageView imageView = new ImageView(new Image(new FileInputStream("Textures/UI/Icons/arrow_products.png")));
+                    imageViewVBox.getChildren().add(imageView);
+                }
+                hbox.getChildren().addAll(inputVBox,imageViewVBox,outputVBox);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        hbox.setVisible(false);
         imageView.setOnMouseEntered(event ->
         {
-            GameScene.addNode(vbox);
+            hbox.setVisible(true);
         });
         imageView.setOnMouseExited(event ->
         {
-            GameScene.deleteNode(vbox);
-            System.err.println("FFFF");
-        });*/
+            hbox.setVisible(false);
+        });
+
         imageView.setOnMouseClicked(event ->
         {
             if(InputReader.getCurrentController().isGameFinished())return;
@@ -68,6 +91,7 @@ public class WorkShop implements Producer, Upgradable, Viewable
 
         });
         GameScene.addNode(imageView);
+        GameScene.addNode(hbox);
         refreshView();
     }
 
