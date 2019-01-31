@@ -393,7 +393,7 @@ public class InputReader extends Application
             if(client!=null && client.isOnline()){
                 client.disconnect();
             }
-            System.exit(0);
+
         });
         primaryStage.show();
 
