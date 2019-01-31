@@ -32,10 +32,12 @@ public class Server
     private int currentPort;
     private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();;
     private HashMap<Item,Integer> shopItems;
+    private HashMap<Item,Integer> buyCosts, sellCosts;
 
     public Server(Address address)
     {
         initShop();
+        initItemCosts();
         System.out.println("I'm server...");
         this.address = address;
         currentPort = address.getPort() + 1;
@@ -100,6 +102,27 @@ public class Server
             }
         };
         new Thread(task).start();
+    }
+
+    private void initItemCosts()
+    {
+        buyCosts =new HashMap<>();
+        sellCosts =new HashMap<>();
+        ArrayList<Item> items=new ArrayList<>();
+        items.add(Constant.getItemByType("egg"));
+        items.add(Constant.getItemByType("flour"));
+        items.add(Constant.getItemByType("cake"));
+        items.add(Constant.getItemByType("flourycake"));
+        items.add(Constant.getItemByType("wool"));
+        items.add(Constant.getItemByType("sewing"));
+        items.add(Constant.getItemByType("adornment"));
+        items.add(Constant.getItemByType("fabric"));
+        items.add(Constant.getItemByType("milk"));
+        for(Item item:items)
+        {
+            buyCosts.put(item,item.getDefaultBuyCost());
+            sellCosts.put(item,item.getDefaultSellCost());
+        }
     }
 
     private void initShop()
@@ -294,6 +317,18 @@ public class Server
                                 }
                                 formatter.flush();
                                 break;
+                            case "getBuyCost":
+                                input=scanner.nextLine();
+                                Item item=yaGson.fromJson(input,Item.class);
+                                formatter.format(String.valueOf(buyCosts.get(item))+"\n");
+                                formatter.flush();
+                                break;
+                            case "getSellCost":
+                                input=scanner.nextLine();
+                                item=yaGson.fromJson(input,Item.class);
+                                formatter.format(String.valueOf(sellCosts.get(item))+"\n");
+                                formatter.flush();
+                                break;
                         }
                     }
                 } catch (IOException e)
@@ -463,6 +498,16 @@ public class Server
         return privateChatrooms.get(i).get(j);
     }
 
+    public int getBuyCost(Item item)
+    {
+        return buyCosts.get(item);
+    }
+
+    public int getSellCost(Item item)
+    {
+        return sellCosts.get(item);
+    }
+
     private HashMap<Item,Integer> arrayListToHashMap(ArrayList<Item> items)
     {
         HashMap<Item,Integer> result=new HashMap<>();
@@ -491,5 +536,15 @@ public class Server
             }
         }
         return result;
+    }
+
+    public void setBuyCosts(HashMap<Item, Integer> buyCosts)
+    {
+        this.buyCosts=buyCosts;
+    }
+
+    public void setSellCosts(HashMap<Item, Integer> sellCosts)
+    {
+        this.sellCosts=sellCosts;
     }
 }
