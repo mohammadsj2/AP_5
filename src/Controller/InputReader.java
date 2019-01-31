@@ -392,6 +392,7 @@ public class InputReader extends Application
         primaryStage.setOnCloseRequest(event -> {
             if(client!=null && client.isOnline()){
                 client.disconnect();
+                System.exit(0);
             }
             System.exit(0);
         });
@@ -416,5 +417,12 @@ public class InputReader extends Application
 
         InputReader.client = client;
     }
+
+    public static boolean isServer()
+    {
+        return server!=null;
+    }
+
+    public static Server getServer(){return server;}
 
 }

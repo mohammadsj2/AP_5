@@ -56,25 +56,36 @@ public class MultiPlayerScene {
             InputReader.setScene(LevelSelectScene.getScene());
         });
         addNode(button.getNode());
-
-        button=new BlueButton("Scoreboard",80,200,675,50+ySpace);
+        if(InputReader.isServer())
+        {
+            button=new BlueButton("Customize",80,200,675,50+ySpace);
+            button.getNode().setOnMouseClicked(event -> {
+                CustomizeScene.CUSTOMIZE_SCENE.init();
+                InputReader.setScene(CustomizeScene.CUSTOMIZE_SCENE.getScene());
+            });
+            addNode(button.getNode());
+        }
+        button=new BlueButton("Scoreboard",80,200,675,
+                50+(1+((InputReader.isServer())?1:0))*ySpace);
         button.getNode().setOnMouseClicked(event -> {
             ScoreBoardScene.SCORE_BOARD_SCENE.init();
             InputReader.setScene(ScoreBoardScene.SCORE_BOARD_SCENE.getScene());
         });
         addNode(button.getNode());
 
-        button=new BlueButton("ChatRoom",80,200,675,50+2*ySpace);
+        button=new BlueButton("ChatRoom",80,200,675,
+                50+(2+((InputReader.isServer())?1:0))*ySpace);
         button.getNode().setOnMouseClicked(event -> {
 
             Client client=InputReader.getClient();
             Chatroom chatroom = client.getGlobalChatroom();
-            ChatroomScene.CHATROOM_SCENE.setChatroom(chatroom,true);
+            ChatroomScene.CHATROOM_SCENE.init(chatroom);
             InputReader.setScene(ChatroomScene.CHATROOM_SCENE.getScene());
         });
         addNode(button.getNode());
 
-        button=new BlueButton("Disconnect",80,200,675,50+3*ySpace);
+        button=new BlueButton("Disconnect",80,200,675,
+                50+(3+((InputReader.isServer())?1:0))*ySpace);
 
         button.getNode().setOnMouseClicked(event -> {
             InputReader.getClient().disconnect();

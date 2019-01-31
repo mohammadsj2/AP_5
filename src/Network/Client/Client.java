@@ -23,7 +23,6 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import sun.misc.Cleaner;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,7 +45,6 @@ public class Client
     private int money=0;
     private Formatter formatter;
     private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();
-
 
     public Client(String name, int imageIndex)
     {
@@ -398,4 +396,19 @@ public class Client
         return result;
     }
 
+    public int getBuyCost(Item item)
+    {
+        formatter.format("getBuyCost\n");
+        formatter.format(yaGson.toJson(item,Item.class)+"\n");
+        formatter.flush();
+        return new Integer(scanner.nextLine());
+    }
+
+    public int getSellCost(Item item)
+    {
+        formatter.format("getSellCost\n");
+        formatter.format(yaGson.toJson(item,Item.class)+"\n");
+        formatter.flush();
+        return new Integer(scanner.nextLine());
+    }
 }
