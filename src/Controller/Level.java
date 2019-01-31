@@ -4,7 +4,6 @@ import Model.Entity.Entity;
 import Model.Entity.Item;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Level {
     private int goalMoney;
@@ -23,11 +22,17 @@ public class Level {
         ArrayList<String> goalEntitiesCopy = new ArrayList<>(goalEntities);
         for(Item item:InputReader.getCurrentController().getWareHouse().getItems())
         {
+            if (item == null) {
+                System.out.println("W T F W T F W T F W T F W T F W T F W T F W T F W T F W T F W T F ");
+            }
             if(goalEntitiesCopy.contains(item.getName()))
                 goalEntitiesCopy.remove(item.getName());
         }
         for(Entity entity:InputReader.getCurrentController().getMap().getEntities())
         {
+            if (entity == null) {
+                System.out.println("W T F W T F W T F W T F W T F W T F W T F W T F W T F W T F W T F ");
+            }
             if(goalEntitiesCopy.contains(entity.getName()))
                 goalEntitiesCopy.remove(entity.getName());
         }
