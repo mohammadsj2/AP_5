@@ -7,8 +7,6 @@ import Model.Entity.Animal.Dog;
 import Model.Entity.Entity;
 import Model.Entity.Item;
 import Model.Map.Cell;
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
 
@@ -33,11 +31,11 @@ public abstract class Wild extends Animal {
     @Override
     public void nextTurn() throws CellDoesNotExistException {
         super.nextTurn();
-        int range = 2;
+        int range = 1;
         boolean die = false;
         int x = getCell().getPositionX();
         int y = getCell().getPositionY();
-        ArrayList<Cell> inRange = getMap().getNearbyCells(getCell(), 2);
+        ArrayList<Cell> inRange = getMap().getNearbyCells(getCell(), range);
         for (Cell cell : inRange) {
             if (kill(cell)) {
                 die = true;

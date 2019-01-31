@@ -8,7 +8,6 @@ import Model.Entity.Item;
 import Model.Map.Cell;
 import Model.Map.Map;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -54,21 +53,24 @@ public class Cat extends Animal {
     public void walk() {
         Map map = InputReader.getCurrentController().getMap();
 
-        Cell targetCell = map.getRandomCell(getCell(), getSpeed());
-        if (InputReader.getCurrentController().getCatLevel() >= 0)
-        {
+        Cell targetCell = null;
+
+        if (InputReader.getCurrentController().getCatLevel() == 1) {
             targetCell = map.nearestCellWithItem(this.getCell());
-            if (targetCell == null)
-            {
-                if (step == 0 || currentCell==null || currentCell == getCell())
-                    targetCell = currentCell = map.getRandomCell(getCell(), getSpeed());
-                else
-                    targetCell = currentCell;
-            } else if (targetCell.equals(getCell()))
-            {
-                catchItem();
-            }
+        } else if (InputReader.getCurrentController().getCatLevel() == 0) {
+            targetCell = map.getRandomCellWithItem();
+        } else {
+            System.out.println("WHAT CAT LEVEL IS THIS");
         }
+        if (targetCell == null) {
+            if (step == 0 || currentCell==null || currentCell == getCell())
+                targetCell = currentCell = map.getRandomCell(getCell(), getSpeed());
+            else
+                targetCell = currentCell;
+        } else if (targetCell.equals(getCell())) {
+            catchItem();
+        }
+
         targetCell = map.getBestCellBySpeed(getCell(), targetCell, getSpeed());
         changeCell(targetCell);
     }
