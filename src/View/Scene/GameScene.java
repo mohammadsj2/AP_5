@@ -8,8 +8,9 @@ import Model.Transporter.Helicopter;
 import Model.Transporter.Truck;
 import View.Button.BlueButton;
 import View.CoinView;
+import View.Label.FancyLabel;
 import View.NextTurnTimer;
-import javafx.event.EventHandler;
+import javafx.animation.AnimationTimer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -17,7 +18,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -46,6 +46,7 @@ public class GameScene
             initWell();
             initWareHouse();
             initWorkShops();
+            initTimer();
 
             initMap();
             initAddAnimalButtons();
@@ -61,6 +62,24 @@ public class GameScene
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void initTimer() {
+        FancyLabel timerLabel=new FancyLabel("0",23,420,30);
+        addNode(timerLabel.getNode());
+        AnimationTimer timer=new AnimationTimer() {
+            private long firstTime =0;
+            private long second=1000000000;
+            @Override
+            public void handle(long now) {
+                if(firstTime ==0){
+                    firstTime =now;
+                }
+                int tmp=(int)((double)(now-firstTime)/(double)second);
+                timerLabel.setText(String.format("%02d:%02d",tmp/60,tmp%60));
+            }
+        };
+        timer.start();
     }
 
     private static void initAimsOfLevel() throws FileNotFoundException {
@@ -196,14 +215,9 @@ public class GameScene
         button.setFitWidth(60);
         addNode(button);
 
-        button.setOnMouseClicked(new EventHandler<MouseEvent>()
-        {
-            @Override
-            public void handle(MouseEvent event)
-            {
-                if (InputReader.getCurrentController().isGameFinished()) return;
-                InputReader.nextTurn(1);
-            }
+        button.setOnMouseClicked(event -> {
+            if (InputReader.getCurrentController().isGameFinished()) return;
+            InputReader.nextTurn(1);
         });
     }
 
@@ -232,14 +246,9 @@ public class GameScene
         button.setFitWidth(60);
         addNode(button);
 
-        button.setOnMouseClicked(new EventHandler<MouseEvent>()
-        {
-            @Override
-            public void handle(MouseEvent event)
-            {
-                if (InputReader.getCurrentController().isGameFinished()) return;
-                InputReader.buy(typeOfAnimal);
-            }
+        button.setOnMouseClicked(event -> {
+            if (InputReader.getCurrentController().isGameFinished()) return;
+            InputReader.buy(typeOfAnimal);
         });
     }
 

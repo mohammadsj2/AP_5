@@ -20,4 +20,7 @@ public class FancyLabel
     {
         return label;
     }
+    public void setText(String text){
+        label.setText(text);
+    }
 }
