@@ -94,6 +94,7 @@ public class Constant {
     public static final String NO_SAVE_MESSAGE = "**** Error: There is no save! ****";
     public static final String SERVER_DOES_NOT_EXIST_MESSAGE = "**** Error: Server does not Exist! ****";
     public static final String NOT_UNIQUE_USERNAME_EXCEPTION_MESSAGE = "**** Error: your username isn't unique! ****";
+    public static final String  NOT_IN_GAME_EXCEPTION_MESSAGE = "**** Error: Not in Game! ****";
 
     public static final long NEXT_TURN_DURATION = 400000000L;
 
@@ -103,6 +104,8 @@ public class Constant {
     public static final int ANIMAL_PRODUCT_TURN = 50;
     public static final int PET_MAX_HEALTH = 100;
     public static final int MAX_NUMBER_OF_USERNAME_CHARS = 10;
+    public static final int SERVER_BEAR_COST = 300;
+
 
 
     public static Item getItemByType(String type){

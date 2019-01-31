@@ -134,6 +134,7 @@ public class Server
                                     System.out.println(clients.size());
                                     int clientId = getClientId(newClient);
                                     clients.set(clientId, newClient);
+                                    updateScoreBoard();
                                 } catch (ClientDoesNotExist clientDoesNotExist)
                                 {
                                     System.out.println("ADD CLIENT");
@@ -208,7 +209,17 @@ public class Server
                                 Relationship relationship = yaGson.fromJson(input,Relationship.class);
                                 updateRelationship(relationship);
                                 break;
-
+                            case "attackWithBear":
+                                otherClient=yaGson.fromJson(scanner.nextLine(),Client.class);
+                                try {
+                                    addBear(otherClient);
+                                    formatter.format("bearAdded\n");
+                                }catch (NotInGameException e){
+                                    System.out.println("az server error ferestade shod");
+                                    formatter.format("targetClientNotInGame\n");
+                                }
+                                formatter.flush();
+                                break;
                         }
                     }
                 } catch (IOException e)
@@ -265,6 +276,19 @@ public class Server
         formatter.format("updateRelationship\n");
         formatter.format(yaGson.toJson(relationShip)+"\n");
         formatter.flush();
+    }
+    private void addBear(Client targetClient) throws NotInGameException {
+        Formatter formatter=formatters.get(targetClient.getAddress().getPort());
+        Scanner scanner=scanners.get(targetClient.getAddress().getPort());
+
+        formatter.format("addBear\n");
+        formatter.flush();
+
+        String input=scanner.nextLine();
+        System.out.println("beserver resid: "+input);
+        if(!input.equals("bearAdded")){
+           throw new NotInGameException();
+        }
     }
 
     private void updateScoreBoard() {
