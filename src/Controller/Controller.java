@@ -73,24 +73,36 @@ public class Controller
         return turn;
     }
 
-    void subtractMoney(int money2) throws NotEnoughMoneyException
+    public void subtractMoney(int money2) throws NotEnoughMoneyException
     {
         if (money < money2)
             throw new NotEnoughMoneyException();
         money -= money2;
         GameScene.updateMoney();
+        if(InputReader.getClient()!=null) {
+            InputReader.getClient().setMoney(getMoney());
+            if (InputReader.getClient().isOnline()) InputReader.getClient().updateClient();
+        }
     }
 
     void setMoney(int money)
     {
         this.money = money;
         GameScene.updateMoney();
+        if(InputReader.getClient()!=null) {
+            InputReader.getClient().setMoney(getMoney());
+            if (InputReader.getClient().isOnline()) InputReader.getClient().updateClient();
+        }
     }
 
-    void increaseMoney(int money2)
+    public void increaseMoney(int money2)
     {
         money += money2;
         GameScene.updateMoney();
+        if(InputReader.getClient()!=null) {
+            InputReader.getClient().setMoney(getMoney());
+            if (InputReader.getClient().isOnline()) InputReader.getClient().updateClient();
+        }
     }
 
     public void addItemToWareHouse(Item item) throws NoWarehouseSpaceException
@@ -223,10 +235,11 @@ public class Controller
         }
         if (level.checkLevel())
         {
+            InputReader.getClient().setMoney(0);
             if(levelNumber!=-1){
                 InputReader.getClient().setLevel(levelNumber);
-                if(InputReader.getClient().isOnline())InputReader.getClient().updateClient();
             }
+            if(InputReader.getClient().isOnline())InputReader.getClient().updateClient();
             GameScene.setWinningMessage();
         }
     }

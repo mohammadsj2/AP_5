@@ -49,6 +49,12 @@ public class Map {
             } catch (CellDoesNotExistException cellDoesNotExistException) {
                 cellDoesNotExistException.printStackTrace();
             }
+        } else {
+            try {
+                animal.destroy();
+            } catch (CellDoesNotExistException e) {
+                e.printStackTrace();
+            }
         }
 
         for(Cell cell: cells){
@@ -188,6 +194,17 @@ public class Map {
         Random random=new Random();
         int t= random.nextInt((int) cells.size());
         return cells.get(t);
+    }
+    public Cell getRandomCellWithItem() {
+        ArrayList<Cell> itemCells = new ArrayList<>();
+        for (Cell cell : cells) {
+            if (cell.getItems().size() > 0) {
+                itemCells.add(cell);
+            }
+        }
+        Random random = new Random();
+        int t = random.nextInt((int) itemCells.size());
+        return itemCells.get(t);
     }
 
    /* public Cell getRandomCell(Cell first, int speed){

@@ -28,6 +28,7 @@ public class ScoreBoardScene extends MultiPlayerScene{
 
     private static ArrayList<Client> clients=null;
     private static ArrayList<Node> toRemove=new ArrayList<>();
+    private static String sortBy="level";
 
     @Override
     public void init()
@@ -45,47 +46,73 @@ public class ScoreBoardScene extends MultiPlayerScene{
 
     public void setClients(ArrayList<Client> clients,boolean force) {
         ScoreBoardScene.clients = clients;
+        if(sortBy.equals("money")){
+            Collections.sort(clients, (o1, o2) -> -o1.getMoney()+o2.getMoney());
+        }else{
+            Collections.sort(clients, (o1, o2) -> -o1.getLevel()+o2.getLevel());
+        }
         refresh(force);
     }
 
     public void refresh(boolean force) {
         removeAllNodesWithForce(force, toRemove, root.getChildren());
-        Collections.sort(clients, (o1, o2) -> -o1.getLevel()+o2.getLevel());
         int x=100;
         for (int i = 0; i < clients.size(); i++) {
             Client client = clients.get(i);
             FancyLabel label = new FancyLabel(client.getName(),23,x,positionInScoreBoardY(i));
-            if(force){
-                root.getChildren().add(label.getNode());
-            }else {
-                Platform.runLater(() -> root.getChildren().add(label.getNode()));
-            }
+            addNodeWithForce(label.getNode(),force);
             label.getNode().setOnMouseClicked(event -> {
                 ProfileScene profileScene=new ProfileScene(client);
                 profileScene.init();
                 InputReader.setScene(profileScene.getScene());
             });
-            FancyLabel score=new FancyLabel(Integer.toString(client.getLevel()),23,x+300,positionInScoreBoardY(i));
-            if(force){
-                addNode(score.getNode());
-                toRemove.add(score.getNode());
-                toRemove.add(label.getNode());
-            }else{
-                Platform.runLater(() -> {
-                    addNode(score.getNode());
-                    toRemove.add(score.getNode());
-                    toRemove.add(label.getNode());
-                });
-            }
+            FancyLabel score=new FancyLabel(Integer.toString(client.getLevel()),23,x+200,positionInScoreBoardY(i));
+            addNodeWithForce(score.getNode(),force);
+            FancyLabel money=new FancyLabel(Integer.toString(client.getMoney()),23,x+400,positionInScoreBoardY(i));
+            addNodeWithForce(money.getNode(),force);
         }
     }
 
     private double positionInScoreBoardY(int i) {
-        return 70+i*40;
+        return 120+i*40;
     }
 
     public void deleteNode(Node node)
     {
         root.getChildren().remove(node);
+    }
+
+    private void addNodeWithForce(Node node,boolean force){
+        if(force){
+            root.getChildren().add(node);
+            toRemove.add(node);
+        }else{
+            Platform.runLater(() -> {
+                root.getChildren().add(node);
+                toRemove.add(node);
+            });
+        }
+    }
+
+    public static void setSortBy(String sortBy) {
+        ScoreBoardScene.sortBy = sortBy;
+    }
+
+    @Override
+    protected void initStartButtons() {
+        super.initStartButtons();
+        BlueButton sortByMoney=new BlueButton("Sort by money",40,130,370,60);
+        BlueButton sortByLevel=new BlueButton("Sort by level",40,130,220,60);
+        addNode(sortByLevel.getNode());
+        addNode(sortByMoney.getNode());
+
+        sortByMoney.getNode().setOnMouseClicked(event -> {
+            setSortBy("money");
+            setClients(clients,true);
+        });
+        sortByLevel.getNode().setOnMouseClicked(event -> {
+            setSortBy("level");
+            setClients(clients,true);
+        });
     }
 }

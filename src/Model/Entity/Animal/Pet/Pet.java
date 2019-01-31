@@ -9,17 +9,57 @@ import Model.Entity.Item;
 import Model.Map.Cell;
 import Model.Map.Map;
 import Model.Producer;
+import View.Scene.GameScene;
+import View.SpriteAnimation;
+import javafx.animation.Animation;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
 public abstract class Pet extends Animal implements Producer {
     private int health;
     private int lastProductTurn=0;
-
+    private int timeDead = 0;
     protected Pet(Cell cell) {
         super(cell);
         this.health=Constant.INIT_HEALTH;
         this.lastProductTurn=InputReader.getCurrentController().getTurn();
+    }
+    public void changeImageView(Image image, int count, int rows, int columns, double x, double y, boolean definite) {
+        ImageView imageView = getImageView();
+
+        imageView.setImage(image);
+        GameScene.setImageViewPositionOnMap(imageView, x, y);
+        int imageWidth = (int) image.getWidth();
+        int imageHeight = (int) image.getHeight();
+
+        imageView.setViewport(new Rectangle2D(0, 0, imageWidth / columns, imageHeight / rows));
+        if (getAnimation() != null)
+            getAnimation().stop();
+        Animation animation = new SpriteAnimation(
+                imageView,
+                Duration.millis(750),
+                count, columns,
+                0, 0,
+                imageWidth / columns, imageHeight / rows
+        );
+        setAnimation(animation);
+        if (!definite) {
+            animation.setCycleCount(Animation.INDEFINITE);
+        } else {
+            animation.setCycleCount(1);
+        }
+        animation.play();
+    }
+    public int getTimeDead() {
+        return timeDead;
+    }
+
+    public void setTimeDead(int timeDead) {
+        this.timeDead = timeDead;
     }
 
     @Override
@@ -78,8 +118,9 @@ public abstract class Pet extends Animal implements Producer {
         Cell cur=map.nearestCellWithGrass(getCell());
         if (isHungry() &&  cur != null) {
             if (!getCell().haveGrass()) {
-                changeCell(map.getBestCellBySpeed(getCell(),cur,Constant.ANIMAL_SPEED));
+                changeCell(map.getBestCellBySpeed(getCell(),cur,getSpeed()));
             } else {
+                setWalkAnimation(getCell(), getCell());
                 eatGrass();
                 updateHealth(Constant.INCREASE_PET_HEALTH_AFTER_EAT_GRASS);
             }
@@ -101,5 +142,12 @@ public abstract class Pet extends Animal implements Producer {
         }
     }
 
-
+    @Override
+    public int getSpeed() {
+        if(!isHungry()) {
+            return super.getSpeed();
+        }else{
+            return Constant.HUNGRY_PET_SPEED;
+        }
+    }
 }

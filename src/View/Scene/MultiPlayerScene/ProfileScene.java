@@ -1,18 +1,16 @@
 package View.Scene.MultiPlayerScene;
 
+import Constant.Constant;
 import Controller.InputReader;
 import Network.Chatroom;
 import Network.Client.Client;
 import Network.Relationship;
 import View.Label.FancyLabel;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import Exception.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -43,7 +41,7 @@ public class ProfileScene extends MultiPlayerScene{
         removeAllNodesWithForce(force, toRemove, root.getChildren());
         Image image=null;
         int x=320,y=230;
-        int setWidth=50,setHeight=50;
+        int setWidth=75,setHeight=75;
         if(relationship.isUnFriend()){
             try {
                 image=new Image(new FileInputStream("Textures/UI/Icons/RedFirendIcon.png"));
@@ -78,7 +76,7 @@ public class ProfileScene extends MultiPlayerScene{
         try {
             image=new Image(new FileInputStream("Textures/UI/Icons/CancelRelationshipButton.png"));
             ImageView anotherImageView=new ImageView(image);
-            anotherImageView.relocate(x+75,y);
+            anotherImageView.relocate(x+100,y);
             anotherImageView.setFitHeight(setHeight);
             anotherImageView.setFitWidth(setWidth);
             anotherImageView.setOnMouseClicked(event -> {
@@ -141,5 +139,27 @@ public class ProfileScene extends MultiPlayerScene{
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    protected void initStartButtons() {
+        super.initStartButtons();
+        ImageView bearButton= null;
+        try {
+            bearButton = new ImageView(new Image(new FileInputStream("Textures/UI/Icons/BearIcon.png")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        bearButton.relocate(520,215);
+        bearButton.setOnMouseClicked(event -> {
+            try {
+                InputReader.getClient().attackWithBear(client);
+            } catch (NotEnoughMoneyException e) {
+                System.out.println(Constant.NOT_ENOUGH_MONEY_MESSAGE);
+            } catch (NotInGameException e) {
+                System.out.println(Constant.NOT_IN_GAME_EXCEPTION_MESSAGE);
+            }
+        });
+        addNode(bearButton);
     }
 }

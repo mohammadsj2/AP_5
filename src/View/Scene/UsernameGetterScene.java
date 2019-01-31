@@ -36,6 +36,7 @@ public class UsernameGetterScene {
 
     public static void init()
     {
+        addNode(InputReader.getMediaView());
         imageIndex=((new Random(LocalDateTime.now().getNano()).nextInt())%Constant.AVATAR_NUMBER);
         if(imageIndex<0)
             imageIndex+=Constant.AVATAR_NUMBER;

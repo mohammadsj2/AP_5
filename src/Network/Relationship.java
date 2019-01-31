@@ -5,6 +5,7 @@ import Network.Client.Client;
 public class Relationship {
     Client firstClient,secondClient;
     boolean firstClientAccepted,secondClientAccepted;
+    String requestMesage="";
 
     public Relationship(Client firstClient, Client secondClient) {
         this.firstClient = firstClient;
@@ -17,6 +18,14 @@ public class Relationship {
         if(secondClient.equals(client)){
             secondClientAccepted=true;
         }
+    }
+
+    public void setRequestMesage(String requestMesage) {
+        this.requestMesage = requestMesage;
+    }
+
+    public String getRequestMesage() {
+        return requestMesage;
     }
 
     public boolean isFriend() {
