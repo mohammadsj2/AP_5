@@ -1,5 +1,6 @@
 package Network.Client;
 
+import Constant.Constant;
 import Controller.InputReader;
 import Model.Entity.Item;
 import Network.Address;
