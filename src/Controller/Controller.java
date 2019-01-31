@@ -27,7 +27,10 @@ import Exception.NoSuchItemInWarehouseException;
 import Exception.NoWarehouseSpaceException;
 import Exception.NotEnoughItemException;
 import com.gilecode.yagson.com.google.gson.annotations.Expose;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -241,6 +244,9 @@ public class Controller
             }
             if(InputReader.getClient().isOnline())InputReader.getClient().updateClient();
             GameScene.setWinningMessage();
+            Media media=new Media(new File("Textures/Sound/WinSound.wav").toURI().toString());
+            MediaPlayer mediaPlayer=new MediaPlayer(media);
+            mediaPlayer.play();
         }
     }
 
