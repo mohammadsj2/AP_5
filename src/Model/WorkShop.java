@@ -9,14 +9,19 @@ import java.util.ArrayList;
 
 import Exception.*;
 import Constant.Constant;
+import View.ProgressBar.ProgressBar;
 import View.Scene.GameScene;
 import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 public class WorkShop implements Producer, Upgradable, Viewable
 {
@@ -27,6 +32,7 @@ public class WorkShop implements Producer, Upgradable, Viewable
     private int usedLevel = -10;
     private ImageView imageView;
     private Animation animation;
+    private ProgressBar progressBar;
 
     public WorkShop(String name, int location, boolean isCustom, ArrayList<Item> inputs
             , ArrayList<Item> outputs, int produceDuration)
@@ -41,6 +47,11 @@ public class WorkShop implements Producer, Upgradable, Viewable
 
     public void initView()
     {
+        progressBar=new ProgressBar(Constant.WORKSHOPS_POSITION_X[location]+75,Constant.WORKSHOPS_POSITION_Y[location]-25);
+        progressBar.setPercentage(1);
+
+
+
         imageView = new ImageView();
         HBox hbox=new HBox();
         VBox inputVBox=new VBox(),outputVBox=new VBox();
@@ -92,6 +103,7 @@ public class WorkShop implements Producer, Upgradable, Viewable
         });
         GameScene.addNode(imageView);
         GameScene.addNode(hbox);
+        GameScene.addNode(progressBar.getNode());
         refreshView();
     }
 
@@ -167,6 +179,10 @@ public class WorkShop implements Producer, Upgradable, Viewable
         }
         busy = true;
         startTime = InputReader.getCurrentController().getTurn();
+        KeyValue percentKeyValue=new KeyValue(progressBar.getPercentageProperty(),1.0);
+        KeyFrame keyFrame=new KeyFrame(Duration.seconds((double)getProduceDuration()*Constant.NEXT_TURN_DURATION/1e9),percentKeyValue);
+        Timeline timeline=new Timeline(keyFrame);
+        timeline.play();
     }
 
     private ArrayList<Item> multipleItems(ArrayList<Item> items, int cnt)
@@ -227,6 +243,7 @@ public class WorkShop implements Producer, Upgradable, Viewable
     @Override
     public void endProduction()
     {
+        progressBar.setPercentage(1);
         busy = false;
         usedLevel = -10;
         stopAnimation(4,4);
@@ -241,6 +258,11 @@ public class WorkShop implements Producer, Upgradable, Viewable
         busy = true;
         startTime = InputReader.getCurrentController().getTurn();
         this.usedLevel = usedLevel;
+        progressBar.setPercentage(0);
+        KeyValue percentKeyValue=new KeyValue(progressBar.getPercentageProperty(),1.0);
+        KeyFrame keyFrame=new KeyFrame(Duration.seconds((double)getProduceDuration()*Constant.NEXT_TURN_DURATION/1e9),percentKeyValue);
+        Timeline timeline=new Timeline(keyFrame);
+        timeline.play();
     }
 
     public ArrayList<Item> getInputs()
