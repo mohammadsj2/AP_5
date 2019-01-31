@@ -30,6 +30,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.HashMap;
 
 public class ChatroomScene extends MultiPlayerScene
 {
@@ -115,7 +116,7 @@ public class ChatroomScene extends MultiPlayerScene
         ArrayList<Message> messagesShown=chatroom.getMessages();
         for(Message message:messagesShown)
         {
-            Label newMessage = new Label("  " + message.getText() + "  ");
+            Label newMessage = new Label("  " + handleEmojis(message.getText()) + "  ");
             newMessage.relocate(0, y);
             newMessage.setMinHeight(textHeight);
             newMessage.setMaxHeight(textHeight);
@@ -159,6 +160,25 @@ public class ChatroomScene extends MultiPlayerScene
             }
         }
         System.out.println("CHAT ROOM SET!");
+    }
+
+    private String handleEmojis(String text)
+    {
+        HashMap<String,String> emojiMap=new HashMap<>();
+        emojiMap.put(":)", "\uD83D\uDE42");
+        emojiMap.put(":(", "\uD83D\uDE41");
+        emojiMap.put(":|", "\uD83D\uDE10");
+        emojiMap.put(":P", "\uD83D\uDE0B");
+        emojiMap.put(":D", "\uD83D\uDE03");
+        emojiMap.put(":_(", "\uD83D\uDE2D");
+        emojiMap.put(":O", "\uD83D\uDE32");
+        StringBuilder changedMessage = new StringBuilder("");
+        String[] words = text.split(" ");
+        for (String word : words)
+        {
+            changedMessage.append(emojiMap.getOrDefault(word, word) + " ");
+        }
+        return String.valueOf(changedMessage);
     }
 
     public void addWithForce(boolean force, Node node) {
