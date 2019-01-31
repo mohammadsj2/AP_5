@@ -45,6 +45,7 @@ public class GameScene
             initBackground();
             initWell();
             initWareHouse();
+            initAimsOfLevel();
             initWorkShops();
             initTimer();
 
@@ -54,7 +55,7 @@ public class GameScene
             initTransporters();
             initMoney();
             initButtons();
-            initAimsOfLevel();
+
 
             nextTurnTimer = new NextTurnTimer();
             nextTurnTimer.start();
