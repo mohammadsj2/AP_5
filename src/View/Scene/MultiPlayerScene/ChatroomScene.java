@@ -37,8 +37,7 @@ public class ChatroomScene extends MultiPlayerScene
     private Chatroom chatroom;
     private ArrayList<Node> toRemove=new ArrayList<>();
 
-
-    public void init() {
+    public void init(Chatroom chatroom) {
         root.getChildren().clear();
         try
         {
@@ -49,6 +48,7 @@ public class ChatroomScene extends MultiPlayerScene
             e.printStackTrace();
         }
         setChatTools();
+        setChatroom(chatroom,true);
     }
 
 
