@@ -55,28 +55,16 @@ public class ScoreBoardScene extends MultiPlayerScene{
         for (int i = 0; i < clients.size(); i++) {
             Client client = clients.get(i);
             FancyLabel label = new FancyLabel(client.getName(),23,x,positionInScoreBoardY(i));
-            if(force){
-                root.getChildren().add(label.getNode());
-            }else {
-                Platform.runLater(() -> root.getChildren().add(label.getNode()));
-            }
+            addNodeWithForce(label.getNode(),force);
             label.getNode().setOnMouseClicked(event -> {
                 ProfileScene profileScene=new ProfileScene(client);
                 profileScene.init();
                 InputReader.setScene(profileScene.getScene());
             });
-            FancyLabel score=new FancyLabel(Integer.toString(client.getLevel()),23,x+300,positionInScoreBoardY(i));
-            if(force){
-                addNode(score.getNode());
-                toRemove.add(score.getNode());
-                toRemove.add(label.getNode());
-            }else{
-                Platform.runLater(() -> {
-                    addNode(score.getNode());
-                    toRemove.add(score.getNode());
-                    toRemove.add(label.getNode());
-                });
-            }
+            FancyLabel score=new FancyLabel(Integer.toString(client.getLevel()),23,x+200,positionInScoreBoardY(i));
+            addNodeWithForce(score.getNode(),force);
+            FancyLabel money=new FancyLabel(Integer.toString(client.getMoney()),23,x+400,positionInScoreBoardY(i));
+            addNodeWithForce(money.getNode(),force);
         }
     }
 
@@ -87,5 +75,17 @@ public class ScoreBoardScene extends MultiPlayerScene{
     public void deleteNode(Node node)
     {
         root.getChildren().remove(node);
+    }
+
+    private void addNodeWithForce(Node node,boolean force){
+        if(force){
+            root.getChildren().add(node);
+            toRemove.add(node);
+        }else{
+            Platform.runLater(() -> {
+                root.getChildren().add(node);
+                toRemove.add(node);
+            });
+        }
     }
 }
