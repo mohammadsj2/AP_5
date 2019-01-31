@@ -118,12 +118,12 @@ public class Item extends Entity
 
     public int getBuyCost()
     {
-        return buyCost;
+        return InputReader.getClient().getBuyCost(this);
     }
 
     public int getSellCost()
     {
-        return sellCost;
+        return InputReader.getClient().getSellCost(this);
     }
 
     public int getVolume()
@@ -157,5 +157,15 @@ public class Item extends Entity
         //Only for map items
         super.initLoad();
         refreshView();
+    }
+
+    public Integer getDefaultBuyCost()
+    {
+        return buyCost;
+    }
+
+    public Integer getDefaultSellCost()
+    {
+        return sellCost;
     }
 }
