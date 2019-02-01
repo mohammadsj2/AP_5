@@ -332,7 +332,13 @@ public class Server
                             case "getSellCost":
                                 input=scanner.nextLine();
                                 item=yaGson.fromJson(input,Item.class);
-                                formatter.format(String.valueOf(sellCosts.get(item))+"\n");
+                                if(item.getName().equals("cagedlion")) {
+                                    formatter.format("150\n");
+                                }else if(item.getName().equals("cagedbrownbear")){
+                                      formatter.format("100\n");
+                                }else{
+                                    formatter.format(String.valueOf(sellCosts.get(item))+"\n");
+                                }
                                 formatter.flush();
                                 break;
                             case "askWatch":
