@@ -8,7 +8,6 @@ import View.Button.BlueButton;
 import Exception.*;
 import View.Label.FancyLabel;
 import View.Scene.MultiPlayerScene.MultiPlayerScene;
-import com.sun.org.apache.xalan.internal.xsltc.dom.AdaptiveResultTreeImpl;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
