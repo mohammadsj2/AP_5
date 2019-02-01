@@ -144,6 +144,28 @@ public class ProfileScene extends MultiPlayerScene{
     @Override
     protected void initStartButtons() {
         super.initStartButtons();
+        initBearAttackButton();
+        initCommonGameButton();
+
+    }
+
+    private void initCommonGameButton() {
+        ImageView commonGameButton= null;
+        try {
+            commonGameButton = new ImageView(new Image(new FileInputStream("Textures/UI/Icons/CommonGameButton.png")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        commonGameButton.relocate(260,415);
+        commonGameButton.setOnMouseClicked(event -> {
+            if(InputReader.getClient().isOnline()){
+                InputReader.getClient().commonGameRequest(client);
+            }
+        });
+        addNode(commonGameButton);
+    }
+
+    private void initBearAttackButton() {
         ImageView bearButton= null;
         try {
             bearButton = new ImageView(new Image(new FileInputStream("Textures/UI/Icons/BearIcon.png")));
