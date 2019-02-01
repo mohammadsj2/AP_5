@@ -140,6 +140,7 @@ public class Item extends Entity
         return timeline;
     } */
     public void moveToWareHouse() {
+        if(getCell()==null)return;
         getCell().destroyEntity(this);
         Timeline timeline = moveTo(400, 610);
         timeline.setOnFinished(event ->
