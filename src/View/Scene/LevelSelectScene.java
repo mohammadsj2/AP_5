@@ -94,11 +94,11 @@ public class LevelSelectScene
         for (int i = 0; i < levelCount; i++)
         {
             CircleButton button = new CircleButton(String.valueOf(i + 1), 60, 60
-                    , positionX[i], positionY[i], false, i >= 3);
+                    , positionX[i], positionY[i], false, i>10);
             int finalI = i;
             button.getNode().setOnMouseClicked(event ->
             {
-                if (finalI + 1 <= 3)
+                if (finalI + 1 <= 10)
                 {
                     refreshButtons(finalI + 1);
                 }

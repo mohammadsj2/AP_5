@@ -90,7 +90,11 @@ public class Item extends Entity
         }
 
     }
+
     public Timeline moveTo(double x, double y) {
+
+       
+
         javafx.scene.image.ImageView curImageView = this.getImageView();
         double duration = 0.3;
         KeyValue keyValueX = new KeyValue(curImageView.xProperty(), x);

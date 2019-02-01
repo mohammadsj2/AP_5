@@ -21,7 +21,10 @@ import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Formatter;
 
 import Constant.Constant;
@@ -41,6 +44,8 @@ public class InputReader extends Application
 
     public static void main(String[] args) throws StartBusyTransporter, IOException
     {
+        System.out.println(getIp());
+        System.out.println();
         startSound();
         createAllLevels();
         launch(args);
@@ -60,102 +65,7 @@ public class InputReader extends Application
         System.out.println("ok sounds");
     }
 
-    private static void createAllLevels() {
-        createLevel1();
-        createLevel2();
-        createLevel3();
-        System.out.println("");
-    }
 
-    private static void createLevel1() {
-        try {
-            ArrayList<String> goalEntities = new ArrayList<>();
-            for (int i = 0; i < 5; i++) {
-                goalEntities.add("egg");
-            }
-            WorkShop workShop = getWorkShop("EggPowderPlant");
-            workShop.setLocation(0);
-            ArrayList<Item> helicopterItems = new ArrayList<>();
-            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
-            Controller controller = new Controller(1,200, goalEntities, helicopterItems);
-            controller.addWorkshop(workShop);
-
-            controller.setMoney(120);
-            indexOfLevel = 1;
-            createLevel(1,controller);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    private static void createLevel2() {
-        try {
-            ArrayList<String> goalEntities = new ArrayList<>();
-            for (int i = 0; i < 3; i++) {
-                goalEntities.add("cake");
-            }
-            WorkShop workShop = getWorkShop("EggPowderPlant");
-            WorkShop workShop2 = getWorkShop("CookieBakery");
-            workShop.setLocation(0);
-            workShop2.setLocation(1);
-            ArrayList<Item> helicopterItems = new ArrayList<>();
-            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
-            helicopterItems.add(Constant.getItemByType("egg"));
-            Controller controller = new Controller(2,500, goalEntities, helicopterItems);
-            controller.addWorkshop(workShop);
-            controller.addWorkshop(workShop2);
-
-            controller.setMoney(120);
-            indexOfLevel = 2;
-            createLevel(2,controller);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    private static void createLevel3() {
-        try {
-            ArrayList<String> goalEntities = new ArrayList<>();
-            for (int i = 0; i < 16; i++) {
-                goalEntities.add("flourycake");
-            }
-            WorkShop workShop = getWorkShop("EggPowderPlant");
-            WorkShop workShop2 = getWorkShop("CookieBakery");
-            WorkShop workShop3 = getWorkShop("CakeBakery");
-            WorkShop workShop4 = getWorkShop("Spinnery");
-            WorkShop workShop5 = getWorkShop("WeavingFactory");
-            WorkShop workShop6 = getWorkShop("SewingFactory");
-            workShop.setLocation(0);
-            workShop2.setLocation(1);
-            workShop3.setLocation(2);
-            workShop4.setLocation(3);
-            workShop5.setLocation(4);
-            workShop6.setLocation(5);
-            ArrayList<Item> helicopterItems = new ArrayList<>();
-            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
-            helicopterItems.add(Constant.getItemByType("egg"));
-            helicopterItems.add(Constant.getItemByType("flour"));
-            helicopterItems.add(Constant.getItemByType("cake"));
-            helicopterItems.add(Constant.getItemByType("flourycake"));
-            helicopterItems.add(Constant.getItemByType("sewing"));
-            helicopterItems.add(Constant.getItemByType("fabric"));
-            helicopterItems.add(Constant.getItemByType("adornment"));
-            Controller controller = new Controller(3,30000, goalEntities, helicopterItems);
-            controller.addWorkshop(workShop);
-            controller.addWorkshop(workShop2);
-            controller.addWorkshop(workShop3);
-            controller.addWorkshop(workShop4);
-            controller.addWorkshop(workShop5);
-            controller.addWorkshop(workShop6);
-
-            controller.setMoney(99999);
-            indexOfLevel = 3;
-            createLevel(3,controller);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
 
     public static WorkShop getWorkShop(String s) throws FileNotFoundException {
         return yaGson.fromJson(new FileReader("./ResourcesRoot/WorkShops/"+s+".json"), WorkShop.class);
@@ -438,5 +348,424 @@ public class InputReader extends Application
     }
 
     public static Server getServer(){return server;}
+
+    public static String getIp() {
+        try {
+//            System.out.println("Your Host addr: " + InetAddress.getLocalHost().getHostAddress());  // often returns "127.0.0.1"
+            Enumeration<NetworkInterface> n = NetworkInterface.getNetworkInterfaces();
+            for (; n.hasMoreElements();)
+            {
+                NetworkInterface e = n.nextElement();
+
+                Enumeration<InetAddress> a = e.getInetAddresses();
+                for (; a.hasMoreElements();)
+                {
+                    InetAddress addr = a.nextElement();
+                    String address = addr.getHostAddress();
+                    if (address.startsWith("192.168.1")) {
+                        return address;
+                    }
+//                    System.out.println("  " + addr.getHostAddress());
+                }
+            }
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (Exception e) {
+            return "Exception";
+        }
+    }
+    private static void createAllLevels() {
+        createLevel1();
+        createLevel2();
+        createLevel3();
+        createLevel4();
+        createLevel5();
+        createLevel6();
+        createLevel7();
+        createLevel8();
+        createLevel9();
+        createLevel10();
+        System.out.println("");
+    }
+
+    private static void createLevel1() {
+        try {
+            ArrayList<String> goalEntities = new ArrayList<>();
+            for (int i = 0; i < 5; i++) {
+                goalEntities.add("egg");
+            }
+            WorkShop workShop = getWorkShop("EggPowderPlant");
+            workShop.setLocation(0);
+            ArrayList<Item> helicopterItems = new ArrayList<>();
+            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
+            Controller controller = new Controller(1,200, goalEntities, helicopterItems);
+            controller.addWorkshop(workShop);
+
+            controller.setMoney(120);
+            indexOfLevel = 1;
+            createLevel(1,controller);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private static void createLevel2() {
+        try {
+            ArrayList<String> goalEntities = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                goalEntities.add("cake");
+            }
+            WorkShop workShop = getWorkShop("EggPowderPlant");
+            WorkShop workShop2 = getWorkShop("CookieBakery");
+            workShop.setLocation(0);
+            workShop2.setLocation(1);
+            ArrayList<Item> helicopterItems = new ArrayList<>();
+            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
+            helicopterItems.add(Constant.getItemByType("egg"));
+            Controller controller = new Controller(2,500, goalEntities, helicopterItems);
+            controller.addWorkshop(workShop);
+            controller.addWorkshop(workShop2);
+
+            controller.setMoney(120);
+            indexOfLevel = 2;
+            createLevel(2,controller);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private static void createLevel3() {
+        try {
+            ArrayList<String> goalEntities = new ArrayList<>();
+            for (int i = 0; i < 16; i++) {
+                goalEntities.add("flourycake");
+            }
+            WorkShop workShop = getWorkShop("EggPowderPlant");
+            WorkShop workShop2 = getWorkShop("CookieBakery");
+            WorkShop workShop3 = getWorkShop("CakeBakery");
+            WorkShop workShop4 = getWorkShop("Spinnery");
+            WorkShop workShop5 = getWorkShop("WeavingFactory");
+            WorkShop workShop6 = getWorkShop("SewingFactory");
+            workShop.setLocation(0);
+            workShop2.setLocation(1);
+            workShop3.setLocation(2);
+            workShop4.setLocation(3);
+            workShop5.setLocation(4);
+            workShop6.setLocation(5);
+            ArrayList<Item> helicopterItems = new ArrayList<>();
+            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
+            helicopterItems.add(Constant.getItemByType("egg"));
+            helicopterItems.add(Constant.getItemByType("flour"));
+            helicopterItems.add(Constant.getItemByType("cake"));
+            helicopterItems.add(Constant.getItemByType("flourycake"));
+            helicopterItems.add(Constant.getItemByType("sewing"));
+            helicopterItems.add(Constant.getItemByType("fabric"));
+            helicopterItems.add(Constant.getItemByType("adornment"));
+            Controller controller = new Controller(3,30000, goalEntities, helicopterItems);
+            controller.addWorkshop(workShop);
+            controller.addWorkshop(workShop2);
+            controller.addWorkshop(workShop3);
+            controller.addWorkshop(workShop4);
+            controller.addWorkshop(workShop5);
+            controller.addWorkshop(workShop6);
+
+            controller.setMoney(99999);
+            indexOfLevel = 3;
+            createLevel(3,controller);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private static void createLevel4() {
+        try {
+            ArrayList<String> goalEntities = new ArrayList<>();
+            for (int i = 0; i < 16; i++) {
+                goalEntities.add("milk");
+                goalEntities.add("egg");
+                goalEntities.add("fabric");
+            }
+            WorkShop workShop = getWorkShop("EggPowderPlant");
+            WorkShop workShop2 = getWorkShop("CookieBakery");
+            WorkShop workShop3 = getWorkShop("CakeBakery");
+            WorkShop workShop4 = getWorkShop("Spinnery");
+            WorkShop workShop5 = getWorkShop("WeavingFactory");
+            WorkShop workShop6 = getWorkShop("SewingFactory");
+            workShop.setLocation(0);
+            workShop2.setLocation(1);
+            workShop3.setLocation(2);
+            workShop4.setLocation(3);
+            workShop5.setLocation(4);
+            workShop6.setLocation(5);
+            ArrayList<Item> helicopterItems = new ArrayList<>();
+
+            helicopterItems.add(Constant.getItemByType("egg"));
+            helicopterItems.add(Constant.getItemByType("flour"));
+            helicopterItems.add(Constant.getItemByType("cake"));
+            helicopterItems.add(Constant.getItemByType("fabric"));
+            helicopterItems.add(Constant.getItemByType("adornment"));
+            Controller controller = new Controller(3,2000, goalEntities, helicopterItems);
+            controller.addWorkshop(workShop);
+            controller.addWorkshop(workShop2);
+            controller.addWorkshop(workShop3);
+            controller.addWorkshop(workShop4);
+            controller.addWorkshop(workShop5);
+            controller.addWorkshop(workShop6);
+
+            controller.setMoney(99999);
+            indexOfLevel = 4;
+            createLevel(4,controller);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private static void createLevel5() {
+        try {
+            ArrayList<String> goalEntities = new ArrayList<>();
+            for (int i = 0; i < 16; i++) {
+                goalEntities.add("flourycake");
+            }
+            WorkShop workShop = getWorkShop("EggPowderPlant");
+            WorkShop workShop2 = getWorkShop("CookieBakery");
+            WorkShop workShop3 = getWorkShop("CakeBakery");
+            WorkShop workShop4 = getWorkShop("Spinnery");
+            WorkShop workShop5 = getWorkShop("WeavingFactory");
+            WorkShop workShop6 = getWorkShop("SewingFactory");
+            workShop.setLocation(0);
+            workShop2.setLocation(1);
+            workShop3.setLocation(2);
+            workShop4.setLocation(3);
+            workShop5.setLocation(4);
+            workShop6.setLocation(5);
+            ArrayList<Item> helicopterItems = new ArrayList<>();
+            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
+            helicopterItems.add(Constant.getItemByType("egg"));
+            helicopterItems.add(Constant.getItemByType("flour"));
+            helicopterItems.add(Constant.getItemByType("cake"));
+            helicopterItems.add(Constant.getItemByType("flourycake"));
+            helicopterItems.add(Constant.getItemByType("sewing"));
+            helicopterItems.add(Constant.getItemByType("fabric"));
+            helicopterItems.add(Constant.getItemByType("adornment"));
+            Controller controller = new Controller(3,30000, goalEntities, helicopterItems);
+            controller.addWorkshop(workShop);
+            controller.addWorkshop(workShop2);
+            controller.addWorkshop(workShop3);
+            controller.addWorkshop(workShop4);
+            controller.addWorkshop(workShop5);
+            controller.addWorkshop(workShop6);
+
+            controller.setMoney(99999);
+            indexOfLevel = 5;
+            createLevel(5,controller);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private static void createLevel6() {
+        try {
+            ArrayList<String> goalEntities = new ArrayList<>();
+            for (int i = 0; i < 16; i++) {
+                goalEntities.add("flourycake");
+            }
+            WorkShop workShop = getWorkShop("EggPowderPlant");
+            WorkShop workShop2 = getWorkShop("CookieBakery");
+            WorkShop workShop3 = getWorkShop("CakeBakery");
+            WorkShop workShop4 = getWorkShop("Spinnery");
+            WorkShop workShop5 = getWorkShop("WeavingFactory");
+            WorkShop workShop6 = getWorkShop("SewingFactory");
+            workShop.setLocation(0);
+            workShop2.setLocation(1);
+            workShop3.setLocation(2);
+            workShop4.setLocation(3);
+            workShop5.setLocation(4);
+            workShop6.setLocation(5);
+            ArrayList<Item> helicopterItems = new ArrayList<>();
+            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
+            helicopterItems.add(Constant.getItemByType("egg"));
+            helicopterItems.add(Constant.getItemByType("flour"));
+            helicopterItems.add(Constant.getItemByType("cake"));
+            helicopterItems.add(Constant.getItemByType("flourycake"));
+            helicopterItems.add(Constant.getItemByType("sewing"));
+            helicopterItems.add(Constant.getItemByType("fabric"));
+            helicopterItems.add(Constant.getItemByType("adornment"));
+            Controller controller = new Controller(3,30000, goalEntities, helicopterItems);
+            controller.addWorkshop(workShop);
+            controller.addWorkshop(workShop2);
+            controller.addWorkshop(workShop3);
+            controller.addWorkshop(workShop4);
+            controller.addWorkshop(workShop5);
+            controller.addWorkshop(workShop6);
+
+            controller.setMoney(99999);
+            indexOfLevel = 6;
+            createLevel(6,controller);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private static void createLevel7() {
+        try {
+            ArrayList<String> goalEntities = new ArrayList<>();
+            for (int i = 0; i < 16; i++) {
+                goalEntities.add("flourycake");
+            }
+            WorkShop workShop = getWorkShop("EggPowderPlant");
+            WorkShop workShop2 = getWorkShop("CookieBakery");
+            WorkShop workShop3 = getWorkShop("CakeBakery");
+            WorkShop workShop4 = getWorkShop("Spinnery");
+            WorkShop workShop5 = getWorkShop("WeavingFactory");
+            WorkShop workShop6 = getWorkShop("SewingFactory");
+            workShop.setLocation(0);
+            workShop2.setLocation(1);
+            workShop3.setLocation(2);
+            workShop4.setLocation(3);
+            workShop5.setLocation(4);
+            workShop6.setLocation(5);
+            ArrayList<Item> helicopterItems = new ArrayList<>();
+            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
+            helicopterItems.add(Constant.getItemByType("egg"));
+            helicopterItems.add(Constant.getItemByType("flour"));
+            helicopterItems.add(Constant.getItemByType("cake"));
+            helicopterItems.add(Constant.getItemByType("flourycake"));
+            helicopterItems.add(Constant.getItemByType("sewing"));
+            helicopterItems.add(Constant.getItemByType("fabric"));
+            helicopterItems.add(Constant.getItemByType("adornment"));
+            Controller controller = new Controller(3,30000, goalEntities, helicopterItems);
+            controller.addWorkshop(workShop);
+            controller.addWorkshop(workShop2);
+            controller.addWorkshop(workShop3);
+            controller.addWorkshop(workShop4);
+            controller.addWorkshop(workShop5);
+            controller.addWorkshop(workShop6);
+
+            controller.setMoney(99999);
+            indexOfLevel = 7;
+            createLevel(7,controller);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private static void createLevel8() {
+        try {
+            ArrayList<String> goalEntities = new ArrayList<>();
+            for (int i = 0; i < 16; i++) {
+                goalEntities.add("flourycake");
+            }
+            WorkShop workShop = getWorkShop("EggPowderPlant");
+            WorkShop workShop2 = getWorkShop("CookieBakery");
+            WorkShop workShop3 = getWorkShop("CakeBakery");
+            WorkShop workShop4 = getWorkShop("Spinnery");
+            WorkShop workShop5 = getWorkShop("WeavingFactory");
+            WorkShop workShop6 = getWorkShop("SewingFactory");
+            workShop.setLocation(0);
+            workShop2.setLocation(1);
+            workShop3.setLocation(2);
+            workShop4.setLocation(3);
+            workShop5.setLocation(4);
+            workShop6.setLocation(5);
+            ArrayList<Item> helicopterItems = new ArrayList<>();
+            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
+            helicopterItems.add(Constant.getItemByType("egg"));
+            helicopterItems.add(Constant.getItemByType("flour"));
+            helicopterItems.add(Constant.getItemByType("cake"));
+            helicopterItems.add(Constant.getItemByType("flourycake"));
+            helicopterItems.add(Constant.getItemByType("sewing"));
+            helicopterItems.add(Constant.getItemByType("fabric"));
+            helicopterItems.add(Constant.getItemByType("adornment"));
+            Controller controller = new Controller(3,30000, goalEntities, helicopterItems);
+            controller.addWorkshop(workShop);
+            controller.addWorkshop(workShop2);
+            controller.addWorkshop(workShop3);
+            controller.addWorkshop(workShop4);
+            controller.addWorkshop(workShop5);
+            controller.addWorkshop(workShop6);
+
+            controller.setMoney(99999);
+            indexOfLevel = 8;
+            createLevel(8,controller);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private static void createLevel9() {
+        try {
+            ArrayList<String> goalEntities = new ArrayList<>();
+            for (int i = 0; i < 16; i++) {
+                goalEntities.add("flourycake");
+            }
+            WorkShop workShop = getWorkShop("EggPowderPlant");
+            WorkShop workShop2 = getWorkShop("CookieBakery");
+            WorkShop workShop3 = getWorkShop("CakeBakery");
+            WorkShop workShop4 = getWorkShop("Spinnery");
+            WorkShop workShop5 = getWorkShop("WeavingFactory");
+            WorkShop workShop6 = getWorkShop("SewingFactory");
+            workShop.setLocation(0);
+            workShop2.setLocation(1);
+            workShop3.setLocation(2);
+            workShop4.setLocation(3);
+            workShop5.setLocation(4);
+            workShop6.setLocation(5);
+            ArrayList<Item> helicopterItems = new ArrayList<>();
+            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
+            helicopterItems.add(Constant.getItemByType("egg"));
+            helicopterItems.add(Constant.getItemByType("flour"));
+            helicopterItems.add(Constant.getItemByType("cake"));
+            helicopterItems.add(Constant.getItemByType("flourycake"));
+            helicopterItems.add(Constant.getItemByType("sewing"));
+            helicopterItems.add(Constant.getItemByType("fabric"));
+            helicopterItems.add(Constant.getItemByType("adornment"));
+            Controller controller = new Controller(3,30000, goalEntities, helicopterItems);
+            controller.addWorkshop(workShop);
+            controller.addWorkshop(workShop2);
+            controller.addWorkshop(workShop3);
+            controller.addWorkshop(workShop4);
+            controller.addWorkshop(workShop5);
+            controller.addWorkshop(workShop6);
+
+            controller.setMoney(99999);
+            indexOfLevel = 9;
+            createLevel(9,controller);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private static void createLevel10() {
+        try {
+            ArrayList<String> goalEntities = new ArrayList<>();
+            for (int i = 0; i < 16; i++) {
+                goalEntities.add("flourycake");
+            }
+            WorkShop workShop = getWorkShop("EggPowderPlant");
+            WorkShop workShop2 = getWorkShop("CookieBakery");
+            WorkShop workShop3 = getWorkShop("CakeBakery");
+            WorkShop workShop4 = getWorkShop("Spinnery");
+            WorkShop workShop5 = getWorkShop("WeavingFactory");
+            WorkShop workShop6 = getWorkShop("SewingFactory");
+            workShop.setLocation(0);
+            workShop2.setLocation(1);
+            workShop3.setLocation(2);
+            workShop4.setLocation(3);
+            workShop5.setLocation(4);
+            workShop6.setLocation(5);
+            ArrayList<Item> helicopterItems = new ArrayList<>();
+            //nmshe Constant.getItemByType ro seda krd chon creatingTurn null mishe
+            helicopterItems.add(Constant.getItemByType("egg"));
+            helicopterItems.add(Constant.getItemByType("flour"));
+            helicopterItems.add(Constant.getItemByType("cake"));
+            helicopterItems.add(Constant.getItemByType("flourycake"));
+            helicopterItems.add(Constant.getItemByType("sewing"));
+            helicopterItems.add(Constant.getItemByType("fabric"));
+            helicopterItems.add(Constant.getItemByType("adornment"));
+            Controller controller = new Controller(3,30000, goalEntities, helicopterItems);
+            controller.addWorkshop(workShop);
+            controller.addWorkshop(workShop2);
+            controller.addWorkshop(workShop3);
+            controller.addWorkshop(workShop4);
+            controller.addWorkshop(workShop5);
+            controller.addWorkshop(workShop6);
+
+            controller.setMoney(99999);
+            indexOfLevel = 10;
+            createLevel(10,controller);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 }

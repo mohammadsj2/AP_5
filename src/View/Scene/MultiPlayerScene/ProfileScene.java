@@ -42,7 +42,6 @@ public class ProfileScene extends MultiPlayerScene{
         removeAllNodesWithForce(force, toRemove, root.getChildren());
         FancyLabel commonGamesLabel=new FancyLabel("Common games: "+Integer.toString(relationship.getNumberOfCommonGame()),23,320,170);
         addNodeWithForce(force,commonGamesLabel.getNode());
-
         Image image=null;
         int x=320,y=230;
         int setWidth=75,setHeight=75;
@@ -92,23 +91,6 @@ public class ProfileScene extends MultiPlayerScene{
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-        try {
-            image=new Image(new FileInputStream("Textures/UI/Icons/Watch.png"));
-            ImageView watchImageView=new ImageView(image);
-            watchImageView.relocate(x+250,y+355);
-            watchImageView.setFitHeight(setHeight);
-            watchImageView.setFitWidth(setWidth);
-            watchImageView.setOnMouseClicked(event -> {
-                InputReader.getClient().askWatch(client);
-            });
-            addNodeWithForce(force, watchImageView);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-
     }
 
     private void addNodeWithForce(boolean force, Node node) {
