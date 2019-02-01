@@ -168,6 +168,19 @@ public class Client {
                                         }.getType()));
                                 HelicopterScene.setItems(items);
                                 break;
+                            case "askWatch":
+                                input=scanner.nextLine();
+                                int currentWatchPort=new Integer(input);
+                                //Build serverSocket
+                                ServerSocket serverSocket1=new ServerSocket(currentWatchPort);
+                                formatter.format("Succeed\n");
+                                formatter.flush();
+                                Socket socket1=serverSocket1.accept();
+
+
+                                break;
+                            case "stopWatch":
+                                break;
                             case "commonGameRequest":
                                 input = scanner.nextLine();
                                 commonGameRequest2 = yaGson.fromJson(input, CommonGameRequest.class);
@@ -238,9 +251,26 @@ public class Client {
         InputReader.runAController(controller, false);
     }
 
+    public void askWatch(Client client)
+    {
+        formatter.format("askWatch\n");
+        formatter.format(yaGson.toJson(client,Client.class)+"\n");
+        formatter.flush();
+        int currentWatchPort=new Integer(scanner.nextLine());
+        //Build Socket
 
-    public void attackWithBear(Client client) throws NotEnoughMoneyException, NotInGameException {
-        if (InputReader.getCurrentController() == null) {
+    }
+
+    public void stopWatch(Client client)
+    {
+        formatter.format("stopWatch\n");
+        formatter.format(yaGson.toJson(client,Client.class)+"\n");
+        formatter.flush();
+    }
+
+
+    public void attackWithBear(Client client) throws NotEnoughMoneyException,NotInGameException {
+        if(InputReader.getCurrentController()==null){
             throw new NotInGameException();
         }
         InputReader.getCurrentController().subtractMoney(Constant.SERVER_BEAR_COST);
