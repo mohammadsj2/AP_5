@@ -4,6 +4,7 @@ import Constant.Constant;
 import Controller.InputReader;
 import Network.Client.Client;
 import View.Button.BlueButton;
+import View.ProgressBar.HealthProgressBar;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -52,6 +53,9 @@ public class UsernameGetterScene {
         {
             e.printStackTrace();
         }
+        HealthProgressBar healthProgressBar=new HealthProgressBar(100,100);
+        addNode(healthProgressBar.getNode());
+        healthProgressBar.setPercentage(0.5);
     }
 
     private static void initLoginTools() throws FileNotFoundException {

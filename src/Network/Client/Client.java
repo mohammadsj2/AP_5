@@ -31,8 +31,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.*;
 
 public class Client {
@@ -51,7 +53,13 @@ public class Client {
     private CommonGameRequest commonGameRequest = null;
 
     public Client(String name, int imageIndex) {
-        address = new Address(1231, "localhost");
+        InetAddress inetAddress=null;
+        try {
+            inetAddress = InetAddress. getLocalHost();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        address = new Address(1231, inetAddress. getHostAddress());
         this.name = name;
         level = 0;
         this.imageIndex = imageIndex;
@@ -66,10 +74,12 @@ public class Client {
     }
 
     private void addBear() throws NotInGameException {
+        System.out.println("ghabli");
         Scene scene = InputReader.getScene();
         if (scene != GameScene.getScene() && scene != HelicopterScene.getScene() && scene != TruckScene.getScene()) {
             throw new NotInGameException();
         }
+        System.out.println("salam\n");
         Platform.runLater(() -> InputReader.buy("bear"));
     }
 
@@ -88,7 +98,7 @@ public class Client {
                 throw new NotUniqueUsernameException();
             }
             int listenPort = scanner.nextInt();
-            address = new Address(listenPort, "localhost");
+            address = new Address(listenPort, serverIP);
             listenToServer(address.getPort());
             formatter.format(address.getIp() + "\n");
             formatter.flush();
@@ -97,7 +107,6 @@ public class Client {
             Socket socket1 = new Socket(serverIP, listenPort + 1);
             this.scanner = new Scanner(socket1.getInputStream());
             this.formatter = new Formatter(socket1.getOutputStream());
-
             updateClient();
         } catch (IOException e) {
             throw new ServerDoesNotExist();

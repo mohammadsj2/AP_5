@@ -21,6 +21,7 @@ import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Formatter;
 
@@ -41,6 +42,9 @@ public class InputReader extends Application
 
     public static void main(String[] args) throws StartBusyTransporter, IOException
     {
+        InetAddress inetAddress = InetAddress. getLocalHost();
+        System.out.println("IP Address:- " + inetAddress. getHostAddress());
+        System.out.println("Host Name:- " + inetAddress. getHostName());
         startSound();
         createAllLevels();
         launch(args);

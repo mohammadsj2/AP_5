@@ -42,7 +42,6 @@ public class ProfileScene extends MultiPlayerScene{
         removeAllNodesWithForce(force, toRemove, root.getChildren());
         FancyLabel commonGamesLabel=new FancyLabel("Common games: "+Integer.toString(relationship.getNumberOfCommonGame()),23,320,170);
         addNodeWithForce(force,commonGamesLabel.getNode());
-
         Image image=null;
         int x=320,y=230;
         int setWidth=75,setHeight=75;
