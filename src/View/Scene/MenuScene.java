@@ -140,10 +140,10 @@ public class MenuScene
             GameScene.clear();
             if(InputReader.getClient().isOnline())
             {
+                InputReader.getClient().setCommonGameRequest(null);
                 MultiPlayerScene.MULTI_PLAYER_SCENE.init();
                 InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
-            }
-            else
+            } else
             {
                 MenuScene.init(false);
                 InputReader.setScene(MenuScene.getScene());
