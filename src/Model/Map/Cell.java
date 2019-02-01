@@ -57,12 +57,32 @@ public class Cell implements Viewable {
         showGrass();
         grass = true;
     }
-
+    /*
+    public void changeImageViewOnce(Image image, int count, int rows, int columns, double x, double y) {
+        ImageView imageView = getImageView();
+        imageView.setImage(image);
+        int imageWidth = (int) image.getWidth();
+        int imageHeight = (int) image.getHeight();
+        GameScene.setMiddlePosition(imageView, imageWidth / columns
+                , imageHeight / rows, x, y);
+        imageView.setViewport(new Rectangle2D(0, 0, imageWidth / columns, imageHeight / rows));
+        Animation animation = new SpriteAnimation(
+                imageView,
+                Duration.millis(700),
+                count, columns,
+                0, 0,
+                imageWidth / columns, imageHeight / rows
+        );
+        setAnimation(animation);
+        animation.setCycleCount(1);
+        animation.play();
+    }
+    */
     private void showGrass(){
         Image image;
         try {
             image = new Image(new FileInputStream("./Textures/Grass/grass1.png"));
-            changeImageView(image, 1, 4, 4, GameScene.modifiedX(positionX), GameScene.modifiedY(positionY));
+            changeImageViewOnce(image, 16, 4, 4, GameScene.modifiedX(positionX), GameScene.modifiedY(positionY));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

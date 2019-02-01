@@ -247,6 +247,10 @@ public class Map
         GameScene.addNode(entity.getImageView());
         cell.addEntity(entity);
     }
+    public void addEntityExistingImageView(Cell cell, Entity entity) {
+        cell.addEntity(entity);
+    }
+
 
     public void destroyWalkAnimal(Cell cell, Animal animal)
     {

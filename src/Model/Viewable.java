@@ -43,7 +43,25 @@ public interface Viewable {
         animation.setCycleCount(Animation.INDEFINITE);
         animation.play();
     }
-
+    default void changeImageViewOnce(Image image, int count, int rows, int columns, double x, double y) {
+        ImageView imageView = getImageView();
+        imageView.setImage(image);
+        int imageWidth = (int) image.getWidth();
+        int imageHeight = (int) image.getHeight();
+        GameScene.setMiddlePosition(imageView, imageWidth / columns
+                , imageHeight / rows, x, y);
+        imageView.setViewport(new Rectangle2D(0, 0, imageWidth / columns, imageHeight / rows));
+        Animation animation = new SpriteAnimation(
+                imageView,
+                Duration.millis(700),
+                count, columns,
+                0, 0,
+                imageWidth / columns, imageHeight / rows
+        );
+        setAnimation(animation);
+        animation.setCycleCount(1);
+        animation.play();
+    }
 
     default public void stopAnimation(int rows, int columns) {
         getAnimation().stop();
