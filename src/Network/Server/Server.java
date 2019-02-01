@@ -1,11 +1,14 @@
 package Network.Server;
 
 import Constant.Constant;
+import Controller.Controller;
+import Model.Entity.Entity;
 import Model.Entity.Item;
 import Network.Address;
 import Network.Chatroom;
 import Network.Client.Client;
 import Exception.*;
+import Network.CommonGameRequest;
 import Network.Relationship;
 import YaGson.*;
 import com.gilecode.yagson.YaGson;
@@ -13,11 +16,13 @@ import com.gilecode.yagson.YaGsonBuilder;
 import com.gilecode.yagson.com.google.gson.reflect.TypeToken;
 import javafx.concurrent.Task;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class Server
@@ -330,6 +335,21 @@ public class Server
                                 formatter.format(String.valueOf(sellCosts.get(item))+"\n");
                                 formatter.flush();
                                 break;
+                            case "commonGameRequest":
+                                input=scanner.nextLine();
+                                otherClient=yaGson.fromJson(input,Client.class);
+                                if(commonGameRequest(client,otherClient)){
+                                    formatter.format("accepted\n");
+                                }else{
+                                    formatter.format("rejected\n");
+                                }
+                                formatter.flush();
+                                break;
+                            case "checkCommonGame":
+                                input=scanner.nextLine();
+                                CommonGameRequest commonGameRequest=yaGson.fromJson(input,CommonGameRequest.class);
+                                checkCommonGame(commonGameRequest);
+                                break;
                         }
                     }
                 } catch (IOException e)
@@ -340,6 +360,105 @@ public class Server
             }
         };
         new Thread(task).start();
+    }
+
+    private void checkCommonGame(CommonGameRequest commonGameRequest) {
+        Client[] clients={commonGameRequest.getFirstClient(),commonGameRequest.getSecondClient()};
+        Controller controller;
+        int earnedMoney=0;
+        ArrayList<String> goalEntitiesCopy = new ArrayList<>(commonGameRequest.getGoalEntities());
+        for(int i=0;i<2;i++){
+            controller=getCommonGameController(commonGameRequest,clients[i]);
+            earnedMoney+=controller.getMoney();
+            for(Item item: controller.getWareHouse().getItems())
+            {
+                if(goalEntitiesCopy.contains(item.getName()))
+                    goalEntitiesCopy.remove(item.getName());
+            }
+            for(Entity entity: controller.getMap().getEntities())
+            {
+                if(goalEntitiesCopy.contains(entity.getName()))
+                    goalEntitiesCopy.remove(entity.getName());
+            }
+            if(clients[0].equals(clients[1])){
+                break;
+            }
+        }
+        if(earnedMoney<commonGameRequest.getGoalMoney() || goalEntitiesCopy.size()!=0){
+            return ;
+        }
+        winCommonGame(commonGameRequest,clients[0]);
+        winCommonGame(commonGameRequest,clients[1]);
+    }
+
+    private void winCommonGame(CommonGameRequest commonGameRequest,Client client) {
+        Formatter formatter=formatters.get(client.getAddress().getPort());
+        Scanner scanner=scanners.get(client.getAddress().getPort());
+        formatter.format("winCommonGame\n");
+        formatter.format(yaGson.toJson(commonGameRequest)+"\n");
+        formatter.flush();
+    }
+
+    private Controller getCommonGameController(CommonGameRequest commonGameRequest,Client client) {
+        Formatter formatter=formatters.get(client.getAddress().getPort());
+        Scanner scanner=scanners.get(client.getAddress().getPort());
+        formatter.format("getCommonGameController\n");
+        formatter.format(yaGson.toJson(commonGameRequest)+"\n");
+        formatter.flush();
+        return yaGson.fromJson(scanner.nextLine(), Controller.class);
+    }
+
+    private boolean commonGameRequest(Client firstClient,Client secondClient) {
+        CommonGameRequest commonGameRequest=getRandomCommonGameRequest(firstClient,secondClient);
+        getRandomCommonGameRequest(firstClient, secondClient);
+        if(sendGameRequest(commonGameRequest,secondClient)){
+            if(!firstClient.equals(secondClient))sendGameRequest(commonGameRequest,firstClient);
+            return  true;
+        }
+        return false;
+    }
+    private boolean sendGameRequest(CommonGameRequest commonGameRequest,Client client){
+        Formatter formatter=formatters.get(client.getAddress().getPort());
+        Scanner scanner=scanners.get(client.getAddress().getPort());
+        formatter.format("commonGameRequest\n");
+        formatter.format(yaGson.toJson(commonGameRequest)+"\n");
+        formatter.flush();
+        if(scanner.nextLine().equals("accepted")){
+            return true;
+        }
+        return false;
+    }
+
+    private CommonGameRequest getRandomCommonGameRequest(Client firstClient, Client secondClient) {
+        CommonGameRequest commonGameRequest;
+        ArrayList<Item> items=new ArrayList<>();
+        items.add(Constant.getItemByType("egg"));
+        items.add(Constant.getItemByType("flour"));
+        items.add(Constant.getItemByType("cake"));
+        items.add(Constant.getItemByType("flourycake"));
+        items.add(Constant.getItemByType("wool"));
+        items.add(Constant.getItemByType("sewing"));
+        items.add(Constant.getItemByType("adornment"));
+        items.add(Constant.getItemByType("fabric"));
+        items.add(Constant.getItemByType("milk"));
+
+        Random random=new Random(LocalDateTime.now().getNano());
+        int initialMoney=(random.nextInt()%50+50)%50;
+        initialMoney*=1000;
+        initialMoney+=1000;
+        ArrayList<String> goalEntities=new ArrayList<>();
+
+        for(int i=0;i<4;i++){
+            int count=(random.nextInt()%5+ 5)%5;
+            count++;
+            count*=2;
+            int sz=items.size();
+            int ind=(random.nextInt()%sz+sz)%sz;
+            for(int j=0;j<count;j++){
+                goalEntities.add(items.get(ind).getName());
+            }
+        }
+        return new CommonGameRequest(firstClient,secondClient,initialMoney,0,goalEntities);
     }
 
     private void updateMarketItems()

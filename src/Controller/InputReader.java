@@ -5,6 +5,7 @@ import Model.Entity.Item;
 import Network.Client.Client;
 
 import Network.Server.Server;
+import View.Scene.GameScene;
 import View.Scene.MultiPlayerScene.ChatroomScene;
 import View.Scene.UsernameGetterScene;
 import YaGson.*;
@@ -12,8 +13,7 @@ import Model.WorkShop;
 import com.gilecode.yagson.YaGson;
 import com.gilecode.yagson.YaGsonBuilder;
 import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Node;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -157,7 +157,7 @@ public class InputReader extends Application
 
     }
 
-    private static WorkShop getWorkShop(String s) throws FileNotFoundException {
+    public static WorkShop getWorkShop(String s) throws FileNotFoundException {
         return yaGson.fromJson(new FileReader("./ResourcesRoot/WorkShops/"+s+".json"), WorkShop.class);
     }
 
@@ -222,29 +222,36 @@ public class InputReader extends Application
         }
 
     }
-
-
-    public static void loadLevel(int levelIndex) throws FileNotFoundException
-    {
-        indexOfLevel = levelIndex;
-        currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Levels/level" + indexOfLevel + ".json")),
-                Controller.class);
+    public static void runAController(Controller controller,boolean force){
+        setCurrentController(controller);
+        GameScene.init();
+        if(force){
+            InputReader.setScene(GameScene.getScene());
+        }else{
+            Platform.runLater(() -> InputReader.setScene(GameScene.getScene()));
+        }
+    }
+    public static void setCurrentController(Controller controller){
+        currentController=controller;
         if(InputReader.getClient()!=null) {
             InputReader.getClient().setMoney(currentController.getMoney());
             if (InputReader.getClient().isOnline()) InputReader.getClient().updateClient();
         }
     }
 
+    public static void loadLevel(int levelIndex) throws FileNotFoundException
+    {
+        indexOfLevel = levelIndex;
+        setCurrentController(yaGson.fromJson(new FileReader(("./ResourcesRoot/Levels/level" + indexOfLevel + ".json")),
+                Controller.class));
+    }
+
 
     public static void loadSave(int levelIndex) throws FileNotFoundException
     {
         indexOfLevel = levelIndex;
-        currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/save" + indexOfLevel + ".json")),
-                Controller.class);
-        if(InputReader.getClient()!=null) {
-            InputReader.getClient().setMoney(currentController.getMoney());
-            if (InputReader.getClient().isOnline()) InputReader.getClient().updateClient();
-        }
+        setCurrentController(yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/save" + indexOfLevel + ".json")),
+                Controller.class));
     }
 
 
