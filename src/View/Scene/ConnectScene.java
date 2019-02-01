@@ -55,13 +55,7 @@ public class ConnectScene
 
     private static void initHost()
     {
-        InetAddress inetAddress=null;
-        try {
-            inetAddress = InetAddress. getLocalHost();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        Address address = new Address(8060, inetAddress. getHostAddress());
+        Address address = new Address(8060,InputReader.getIp());
 
         FancyLabel portLabel=new FancyLabel("Port: "+address.getPort(),30,250,100);
         BlueButton hostButton=new BlueButton("Host",45,200,450,100,false);

@@ -22,7 +22,9 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Formatter;
 
 import Constant.Constant;
@@ -42,9 +44,8 @@ public class InputReader extends Application
 
     public static void main(String[] args) throws StartBusyTransporter, IOException
     {
-        InetAddress inetAddress = InetAddress. getLocalHost();
-        System.out.println("IP Address:- " + inetAddress. getHostAddress());
-        System.out.println("Host Name:- " + inetAddress. getHostName());
+        System.out.println(getIp());
+        System.out.println();
         startSound();
         createAllLevels();
         launch(args);
@@ -64,6 +65,314 @@ public class InputReader extends Application
         System.out.println("ok sounds");
     }
 
+
+
+    public static WorkShop getWorkShop(String s) throws FileNotFoundException {
+        return yaGson.fromJson(new FileReader("./ResourcesRoot/WorkShops/"+s+".json"), WorkShop.class);
+    }
+
+    static void createLevel(int indexOfLevel, Controller controller){
+        try {
+            OutputStream outputStream = new FileOutputStream(("./ResourcesRoot/Levels/level" + indexOfLevel + ".json"));
+            Formatter formatter = new Formatter(outputStream);
+            formatter.format(yaGson.toJson(controller));
+            formatter.flush();
+            formatter.close();
+            outputStream.close();
+
+            System.out.println("level " + indexOfLevel + " Created!");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter, StartEmptyTransporter
+    {
+        currentController.startHelicopter();
+    }
+
+    public static void clearHelicopter()
+    {
+        currentController.clearHelicopter();
+    }
+
+    public static void addItemToHelicopter(Item item) throws NoTransporterSpaceException
+    {
+        currentController.addItemToHelicopter(item);
+    }
+
+    public static void clearTruck()
+    {
+        currentController.clearTruck();
+    }
+
+    public static void startTruck() throws StartBusyTransporter, StartEmptyTransporter
+    {
+        currentController.startTruck();
+    }
+
+    public static void save()
+    {
+        try
+        {
+            System.out.println("to Save....");
+            OutputStream outputStream = new FileOutputStream(("./ResourcesRoot/Save/save" + indexOfLevel + ".json"));
+            Formatter formatter = new Formatter(outputStream);
+            formatter.format(yaGson.toJson(currentController));
+            formatter.flush();
+            formatter.close();
+            outputStream.close();
+            System.out.println("saved!");
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+    public static void runAController(Controller controller,boolean force){
+        setCurrentController(controller);
+        GameScene.init();
+        if(force){
+            InputReader.setScene(GameScene.getScene());
+        }else{
+            Platform.runLater(() -> InputReader.setScene(GameScene.getScene()));
+        }
+    }
+    public static void setCurrentController(Controller controller){
+        currentController=controller;
+        if(InputReader.getClient()!=null) {
+            InputReader.getClient().setMoney(currentController.getMoney());
+            if (InputReader.getClient().isOnline()) InputReader.getClient().updateClient();
+        }
+    }
+
+    public static void loadLevel(int levelIndex) throws FileNotFoundException
+    {
+        indexOfLevel = levelIndex;
+        setCurrentController(yaGson.fromJson(new FileReader(("./ResourcesRoot/Levels/level" + indexOfLevel + ".json")),
+                Controller.class));
+    }
+
+
+    public static void loadSave(int levelIndex) throws FileNotFoundException
+    {
+        indexOfLevel = levelIndex;
+        setCurrentController(yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/save" + indexOfLevel + ".json")),
+                Controller.class));
+    }
+
+
+    public static void buy(String type)
+    {
+        try
+        {
+            currentController.addAnimal(type);
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } catch (NotEnoughMoneyException e)
+        {
+            System.out.println(Constant.NOT_ENOUGH_MONEY_MESSAGE);
+        }
+    }
+
+    public static void pickup(int x, int y)
+    {
+        try
+        {
+            currentController.pickup(x, y);
+        } catch (CellDoesNotExistException e)
+        {
+            System.out.println(Constant.CELL_DOES_NOT_EXIST_MESSAGE);
+        }
+    }
+
+    public static void cage(int x, int y)
+    {
+        try
+        {
+            currentController.cage(x, y);
+        } catch (CellDoesNotExistException e)
+        {
+            System.out.println(Constant.CELL_DOES_NOT_EXIST_MESSAGE);
+        }
+    }
+
+    public static void plant(int x, int y)
+    {
+        try
+        {
+            currentController.plant(x, y);
+        } catch (NoWaterException e)
+        {
+            System.out.println(Constant.NOT_ENOUGH_WATER_MESSAGE);
+        } catch (CellDoesNotExistException e)
+        {
+            System.out.println(Constant.CELL_DOES_NOT_EXIST_MESSAGE);
+        }
+
+    }
+
+    public static void fillWell()
+    {
+        try
+        {
+            currentController.fillWell();
+        } catch (NotEnoughMoneyException e)
+        {
+            System.out.println(Constant.NOT_ENOUGH_MONEY_MESSAGE);
+        }
+    }
+
+    public static void startWorkshop(int index)
+    {
+        try
+        {
+            currentController.startAWorkShop(index);
+        } catch (WorkshopDoesntExistException e)
+        {
+            System.out.println(Constant.WORKSHOP_DOESNT_EXIST_MESSAGE);
+        } catch (StartBusyProducerException e)
+        {
+            System.out.println(Constant.START_BUSY_WORKSPACE_MESSAGE);
+        } catch (WorkShopNotUsedException e)
+        {
+            System.out.println(Constant.WORK_SHOP_NOT_USED_EXCEPTION_MESSAGE);
+        } catch (NotEnoughItemException e)
+        {
+            System.out.println(Constant.NOT_ENOUGH_ITEM_MESSAGE);
+        }
+    }
+
+    public static void upgrade(String type)
+    {
+        try
+        {
+            currentController.upgrade(type);
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } catch (CantUpgradeException e)
+        {
+            System.out.println(Constant.CANT_UPGRADE_MESSAGE);
+        } catch (NotEnoughMoneyException e)
+        {
+            System.out.println(Constant.NOT_ENOUGH_MONEY_MESSAGE);
+        }
+    }
+
+    public static void nextTurn(int id)
+    {
+        for (int i = 0; i < id; i++)
+        {
+            try
+            {
+                currentController.nextTurn();
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void addItemToTruck(Item item) throws NoTransporterSpaceException, NoSuchItemInWarehouseException
+    {
+        currentController.addItemToTruck(item);
+    }
+
+
+    public static Controller getCurrentController()
+    {
+        return currentController;
+    }
+
+    public static void setServer(Server server)
+    {
+        InputReader.server=server;
+    }
+
+    public static Scene getScene() {
+        return primaryStage.getScene();
+    }
+
+    @Override
+    public void start(Stage primaryStage)
+    {
+        primaryStage.setTitle("FarmFrenzy");
+        InputReader.primaryStage = primaryStage;
+        primaryStage.setResizable(false);
+        primaryStage.setX(300);
+        primaryStage.setY(100);
+        primaryStage.setOnCloseRequest(event -> {
+            if(client!=null && client.isOnline()){
+                client.disconnect();
+                System.exit(0);
+            }
+            Media media=new Media(new File("Textures/Sound/khodahafez.wav").toURI().toString());
+            MediaPlayer mediaPlayer=new MediaPlayer(media);
+            mediaPlayer.play();
+            mediaPlayer.setOnEndOfMedia(() -> {
+                InputReader.primaryStage.close();
+                System.exit(0);
+            });
+            event.consume();
+        });
+        primaryStage.show();
+
+        ChatroomScene.CHATROOM_SCENE.init();
+        UsernameGetterScene.init();
+        setScene(UsernameGetterScene.getScene());
+    }
+
+    public static void setScene(Scene scene)
+    {
+        primaryStage.setScene(scene);
+    }
+
+    public static Client getClient() {
+        return client;
+    }
+
+
+    public static void setClient(Client client) {
+
+        InputReader.client = client;
+    }
+
+    public static boolean isServer()
+    {
+        return server!=null;
+    }
+
+    public static Server getServer(){return server;}
+
+    public static String getIp() {
+        try {
+//            System.out.println("Your Host addr: " + InetAddress.getLocalHost().getHostAddress());  // often returns "127.0.0.1"
+            Enumeration<NetworkInterface> n = NetworkInterface.getNetworkInterfaces();
+            for (; n.hasMoreElements();)
+            {
+                NetworkInterface e = n.nextElement();
+
+                Enumeration<InetAddress> a = e.getInetAddresses();
+                for (; a.hasMoreElements();)
+                {
+                    InetAddress addr = a.nextElement();
+                    String address = addr.getHostAddress();
+                    if (address.startsWith("192.168.1")) {
+                        return address;
+                    }
+//                    System.out.println("  " + addr.getHostAddress());
+                }
+            }
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (Exception e) {
+            return "Exception";
+        }
+    }
     private static void createAllLevels() {
         createLevel1();
         createLevel2();
@@ -98,7 +407,6 @@ public class InputReader extends Application
             e.printStackTrace();
         }
     }
-
     private static void createLevel2() {
         try {
             ArrayList<String> goalEntities = new ArrayList<>();
@@ -123,7 +431,6 @@ public class InputReader extends Application
             e.printStackTrace();
         }
     }
-
     private static void createLevel3() {
         try {
             ArrayList<String> goalEntities = new ArrayList<>();
@@ -460,287 +767,5 @@ public class InputReader extends Application
             e.printStackTrace();
         }
     }
-
-    public static WorkShop getWorkShop(String s) throws FileNotFoundException {
-        return yaGson.fromJson(new FileReader("./ResourcesRoot/WorkShops/"+s+".json"), WorkShop.class);
-    }
-
-    static void createLevel(int indexOfLevel, Controller controller){
-        try {
-            OutputStream outputStream = new FileOutputStream(("./ResourcesRoot/Levels/level" + indexOfLevel + ".json"));
-            Formatter formatter = new Formatter(outputStream);
-            formatter.format(yaGson.toJson(controller));
-            formatter.flush();
-            formatter.close();
-            outputStream.close();
-
-            System.out.println("level " + indexOfLevel + " Created!");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public static void startHelicopter() throws NotEnoughMoneyException, StartBusyTransporter, StartEmptyTransporter
-    {
-        currentController.startHelicopter();
-    }
-
-    public static void clearHelicopter()
-    {
-        currentController.clearHelicopter();
-    }
-
-    public static void addItemToHelicopter(Item item) throws NoTransporterSpaceException
-    {
-        currentController.addItemToHelicopter(item);
-    }
-
-    public static void clearTruck()
-    {
-        currentController.clearTruck();
-    }
-
-    public static void startTruck() throws StartBusyTransporter, StartEmptyTransporter
-    {
-        currentController.startTruck();
-    }
-
-    public static void save()
-    {
-        try
-        {
-            System.out.println("to Save....");
-            OutputStream outputStream = new FileOutputStream(("./ResourcesRoot/Save/save" + indexOfLevel + ".json"));
-            Formatter formatter = new Formatter(outputStream);
-            formatter.format(yaGson.toJson(currentController));
-            formatter.flush();
-            formatter.close();
-            outputStream.close();
-            System.out.println("saved!");
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-    }
-    public static void runAController(Controller controller,boolean force){
-        setCurrentController(controller);
-        GameScene.init();
-        if(force){
-            InputReader.setScene(GameScene.getScene());
-        }else{
-            Platform.runLater(() -> InputReader.setScene(GameScene.getScene()));
-        }
-    }
-    public static void setCurrentController(Controller controller){
-        currentController=controller;
-        if(InputReader.getClient()!=null) {
-            InputReader.getClient().setMoney(currentController.getMoney());
-            if (InputReader.getClient().isOnline()) InputReader.getClient().updateClient();
-        }
-    }
-
-    public static void loadLevel(int levelIndex) throws FileNotFoundException
-    {
-        indexOfLevel = levelIndex;
-        setCurrentController(yaGson.fromJson(new FileReader(("./ResourcesRoot/Levels/level" + indexOfLevel + ".json")),
-                Controller.class));
-    }
-
-
-    public static void loadSave(int levelIndex) throws FileNotFoundException
-    {
-        indexOfLevel = levelIndex;
-        setCurrentController(yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/save" + indexOfLevel + ".json")),
-                Controller.class));
-    }
-
-
-    public static void buy(String type)
-    {
-        try
-        {
-            currentController.addAnimal(type);
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        } catch (NotEnoughMoneyException e)
-        {
-            System.out.println(Constant.NOT_ENOUGH_MONEY_MESSAGE);
-        }
-    }
-
-    public static void pickup(int x, int y)
-    {
-        try
-        {
-            currentController.pickup(x, y);
-        } catch (CellDoesNotExistException e)
-        {
-            System.out.println(Constant.CELL_DOES_NOT_EXIST_MESSAGE);
-        }
-    }
-
-    public static void cage(int x, int y)
-    {
-        try
-        {
-            currentController.cage(x, y);
-        } catch (CellDoesNotExistException e)
-        {
-            System.out.println(Constant.CELL_DOES_NOT_EXIST_MESSAGE);
-        }
-    }
-
-    public static void plant(int x, int y)
-    {
-        try
-        {
-            currentController.plant(x, y);
-        } catch (NoWaterException e)
-        {
-            System.out.println(Constant.NOT_ENOUGH_WATER_MESSAGE);
-        } catch (CellDoesNotExistException e)
-        {
-            System.out.println(Constant.CELL_DOES_NOT_EXIST_MESSAGE);
-        }
-
-    }
-
-    public static void fillWell()
-    {
-        try
-        {
-            currentController.fillWell();
-        } catch (NotEnoughMoneyException e)
-        {
-            System.out.println(Constant.NOT_ENOUGH_MONEY_MESSAGE);
-        }
-    }
-
-    public static void startWorkshop(int index)
-    {
-        try
-        {
-            currentController.startAWorkShop(index);
-        } catch (WorkshopDoesntExistException e)
-        {
-            System.out.println(Constant.WORKSHOP_DOESNT_EXIST_MESSAGE);
-        } catch (StartBusyProducerException e)
-        {
-            System.out.println(Constant.START_BUSY_WORKSPACE_MESSAGE);
-        } catch (WorkShopNotUsedException e)
-        {
-            System.out.println(Constant.WORK_SHOP_NOT_USED_EXCEPTION_MESSAGE);
-        } catch (NotEnoughItemException e)
-        {
-            System.out.println(Constant.NOT_ENOUGH_ITEM_MESSAGE);
-        }
-    }
-
-    public static void upgrade(String type)
-    {
-        try
-        {
-            currentController.upgrade(type);
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        } catch (CantUpgradeException e)
-        {
-            System.out.println(Constant.CANT_UPGRADE_MESSAGE);
-        } catch (NotEnoughMoneyException e)
-        {
-            System.out.println(Constant.NOT_ENOUGH_MONEY_MESSAGE);
-        }
-    }
-
-    public static void nextTurn(int id)
-    {
-        for (int i = 0; i < id; i++)
-        {
-            try
-            {
-                currentController.nextTurn();
-            } catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void addItemToTruck(Item item) throws NoTransporterSpaceException, NoSuchItemInWarehouseException
-    {
-        currentController.addItemToTruck(item);
-    }
-
-
-    public static Controller getCurrentController()
-    {
-        return currentController;
-    }
-
-    public static void setServer(Server server)
-    {
-        InputReader.server=server;
-    }
-
-    public static Scene getScene() {
-        return primaryStage.getScene();
-    }
-
-    @Override
-    public void start(Stage primaryStage)
-    {
-        primaryStage.setTitle("FarmFrenzy");
-        InputReader.primaryStage = primaryStage;
-        primaryStage.setResizable(false);
-        primaryStage.setX(300);
-        primaryStage.setY(100);
-        primaryStage.setOnCloseRequest(event -> {
-            if(client!=null && client.isOnline()){
-                client.disconnect();
-                System.exit(0);
-            }
-            Media media=new Media(new File("Textures/Sound/khodahafez.wav").toURI().toString());
-            MediaPlayer mediaPlayer=new MediaPlayer(media);
-            mediaPlayer.play();
-            mediaPlayer.setOnEndOfMedia(() -> {
-                InputReader.primaryStage.close();
-                System.exit(0);
-            });
-            event.consume();
-        });
-        primaryStage.show();
-
-        ChatroomScene.CHATROOM_SCENE.init();
-        UsernameGetterScene.init();
-        setScene(UsernameGetterScene.getScene());
-    }
-
-    public static void setScene(Scene scene)
-    {
-        primaryStage.setScene(scene);
-    }
-
-    public static Client getClient() {
-        return client;
-    }
-
-
-    public static void setClient(Client client) {
-
-        InputReader.client = client;
-    }
-
-    public static boolean isServer()
-    {
-        return server!=null;
-    }
-
-    public static Server getServer(){return server;}
 
 }

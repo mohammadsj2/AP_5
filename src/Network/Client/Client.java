@@ -53,13 +53,8 @@ public class Client {
     private CommonGameRequest commonGameRequest = null;
 
     public Client(String name, int imageIndex) {
-        InetAddress inetAddress=null;
-        try {
-            inetAddress = InetAddress. getLocalHost();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        address = new Address(1231, inetAddress. getHostAddress());
+
+        address = new Address(1231, InputReader.getIp());
         this.name = name;
         level = 0;
         this.imageIndex = imageIndex;
