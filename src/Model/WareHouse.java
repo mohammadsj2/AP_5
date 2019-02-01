@@ -2,14 +2,10 @@ package Model;
 
 import Constant.Constant;
 import Controller.InputReader;
-import Model.Entity.Item;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import Exception.CantUpgradeException;
 import Exception.NoSuchItemInWarehouseException;
 import Exception.NoWarehouseSpaceException;
+import Model.Entity.Item;
 import View.ProgressBar.ProgressBar;
 import View.Scene.GameScene;
 import View.Scene.MenuScene;
@@ -17,6 +13,10 @@ import View.Scene.TruckScene;
 import javafx.animation.Animation;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class WareHouse implements Upgradable,Viewable{
     private ArrayList<Item> items=new ArrayList<>();
@@ -80,6 +80,7 @@ public class WareHouse implements Upgradable,Viewable{
     public void addItem(Item item) throws NoWarehouseSpaceException {
         if(spaceTaken()+item.getVolume()>capacity)
             throw new NoWarehouseSpaceException();
+        item.moveToWareHouse();
         item.setInWareHouse(true);
         items.add(item);
         refreshView();
