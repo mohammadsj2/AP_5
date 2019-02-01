@@ -8,6 +8,7 @@ import Network.Relationship;
 import View.Label.FancyLabel;
 import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import Exception.*;
@@ -39,6 +40,9 @@ public class ProfileScene extends MultiPlayerScene{
 
     public void setRelationship(Relationship relationship, boolean force) {
         removeAllNodesWithForce(force, toRemove, root.getChildren());
+        FancyLabel commonGamesLabel=new FancyLabel("Common games: "+Integer.toString(relationship.getNumberOfCommonGame()),23,320,170);
+        addNodeWithForce(force,commonGamesLabel.getNode());
+
         Image image=null;
         int x=320,y=230;
         int setWidth=75,setHeight=75;
