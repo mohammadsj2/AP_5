@@ -7,10 +7,8 @@ import Exception.NoWaterException;
 import View.ProgressBar.BlueProgressBar;
 import View.Scene.GameScene;
 import javafx.animation.Animation;
-import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,7 +29,7 @@ public class Well implements Upgradable, Loadable, Viewable {
         progressBar.setPercentage((double)waterRemaining/(double)getMaxWater());
         try {
             Image image = new Image(new FileInputStream("./Textures/Service/Well/0" + (new Integer(getLevel() + 1)).toString() + ".png"));
-            changeImageView(image, 1, 4, 4, 450, 125);
+            changeImageViewOnce(image, 1, 4, 4, 450, 125);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -54,6 +52,7 @@ public class Well implements Upgradable, Loadable, Viewable {
         getImageView().setOnMouseClicked(event ->
         {
             if(InputReader.getCurrentController().isGameFinished())return;
+
             InputReader.fillWell();
         });
         progressBar=new BlueProgressBar(520,115);
@@ -78,8 +77,18 @@ public class Well implements Upgradable, Loadable, Viewable {
 
     public void fill()
     {
+        int tmp = waterRemaining;
         waterRemaining=maxWater;
         refreshView();
+        if (tmp != maxWater) {
+            Image image = null;
+            try {
+                image = new Image(new FileInputStream("./Textures/Service/Well/0" + (new Integer(getLevel() + 1)).toString() + ".png"));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            changeImageViewOnce(image, 16, 4, 4, 450, 125);
+        }
     }
     public void liftWater() throws NoWaterException
     {
