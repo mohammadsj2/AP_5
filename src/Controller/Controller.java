@@ -221,7 +221,7 @@ public class Controller
         }
         if (truck.isTransportationEnds())
         {
-            increaseMoney(truck.getValue());
+            if(truck.getValue()!=0)increaseMoney(truck.getValue());
             truck.endTransportation();
             truck.clear();
         }
