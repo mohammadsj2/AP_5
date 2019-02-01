@@ -77,9 +77,13 @@ public class WareHouse implements Upgradable,Viewable{
         return imageView;
     }
 
-    public void addItem(Item item) throws NoWarehouseSpaceException {
+    public void addItem(Item item) throws NoWarehouseSpaceException
+    {
         if(spaceTaken()+item.getVolume()>capacity)
-            throw new NoWarehouseSpaceException();
+        {
+           throw new NoWarehouseSpaceException();
+        }
+
         item.moveToWareHouse();
         item.setInWareHouse(true);
         items.add(item);
