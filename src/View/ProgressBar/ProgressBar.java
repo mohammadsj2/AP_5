@@ -19,6 +19,7 @@ public class ProgressBar {
     double percentage=1;
     ImageView progressView=new ImageView(),fillView=new ImageView();
     Property<Double> percentageProperty;
+
     public ProgressBar(double x, double y){
         pane.getChildren().addAll(progressView,fillView);
         pane.setLayoutX(x);
@@ -28,7 +29,6 @@ public class ProgressBar {
         percentageProperty=new Property<Double>() {
             @Override
             public void bind(ObservableValue<? extends Double> observable) {
-                System.out.println("bind123");
             }
 
             @Override
@@ -38,29 +38,24 @@ public class ProgressBar {
 
             @Override
             public boolean isBound() {
-                System.out.println("isBou");
                 return false;
             }
 
             @Override
             public void bindBidirectional(Property<Double> other) {
-                System.out.println("bindBid");
             }
 
             @Override
             public void unbindBidirectional(Property<Double> other) {
-                System.out.println("unbindB..");
             }
 
             @Override
             public Object getBean() {
-                System.out.println("getBean");
                 return null;
             }
 
             @Override
             public String getName() {
-                System.out.println("getname");
                 return null;
             }
 
@@ -71,7 +66,6 @@ public class ProgressBar {
 
             @Override
             public void removeListener(ChangeListener<? super Double> listener) {
-                System.out.println("removeListener2");
             }
 
             @Override
@@ -81,12 +75,10 @@ public class ProgressBar {
 
             @Override
             public void addListener(InvalidationListener listener) {
-                System.out.println("addListener");
             }
 
             @Override
             public void removeListener(InvalidationListener listener) {
-                System.out.println("removeListener");
             }
 
             @Override
@@ -137,8 +129,8 @@ public class ProgressBar {
         refresh();
     }
     public void setXY(double x,double y){
-       progressView.setX(x);
-       progressView.setY(y);
+       pane.setLayoutX(x);
+       pane.setLayoutY(y);
        refresh();
     }
 

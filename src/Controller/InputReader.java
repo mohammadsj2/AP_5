@@ -394,7 +394,14 @@ public class InputReader extends Application
                 client.disconnect();
                 System.exit(0);
             }
-            System.exit(0);
+            Media media=new Media(new File("Textures/Sound/khodahafez.wav").toURI().toString());
+            MediaPlayer mediaPlayer=new MediaPlayer(media);
+            mediaPlayer.play();
+            mediaPlayer.setOnEndOfMedia(() -> {
+                InputReader.primaryStage.close();
+                System.exit(0);
+            });
+            event.consume();
         });
         primaryStage.show();
 
