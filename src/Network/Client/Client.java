@@ -178,6 +178,20 @@ public class Client
                                         new TypeToken<ArrayList<Item>>(){}.getType()));
                                 HelicopterScene.setItems(items);
                                 break;
+                            case "askWatch":
+                                input=scanner.nextLine();
+                                int currentWatchPort=new Integer(input);
+                                //Build serverSocket
+                                ServerSocket serverSocket1=new ServerSocket(currentWatchPort);
+                                formatter.format("Succeed\n");
+                                formatter.flush();
+                                Socket socket1=serverSocket1.accept();
+
+
+                                break;
+                            case "stopWatch":
+
+                                break;
                         }
                     }
                 } catch (IOException e)
@@ -188,6 +202,24 @@ public class Client
             }
         };
         new Thread(task).start();
+    }
+
+
+    public void askWatch(Client client)
+    {
+        formatter.format("askWatch\n");
+        formatter.format(yaGson.toJson(client,Client.class)+"\n");
+        formatter.flush();
+        int currentWatchPort=new Integer(scanner.nextLine());
+        //Build Socket
+
+    }
+
+    public void stopWatch(Client client)
+    {
+        formatter.format("stopWatch\n");
+        formatter.format(yaGson.toJson(client,Client.class)+"\n");
+        formatter.flush();
     }
 
 
@@ -411,4 +443,5 @@ public class Client
         formatter.flush();
         return new Integer(scanner.nextLine());
     }
+
 }

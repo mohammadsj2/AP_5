@@ -29,7 +29,7 @@ public class Server
     private Chatroom globalChatroom;
     private ArrayList<ArrayList<Chatroom>> privateChatrooms = new ArrayList<>();
     private ArrayList<ArrayList<Relationship>> relationShips=new ArrayList<>();
-    private int currentPort;
+    private int currentPort,currentWatchPort;
     private YaGson yaGson = new YaGsonBuilder().serializeSpecialFloatingPointValues().setExclusionStrategies(new YaGsonExclusionStrategyForServer()).create();;
     private HashMap<Item,Integer> shopItems;
     private HashMap<Item,Integer> buyCosts, sellCosts;
@@ -41,6 +41,7 @@ public class Server
         System.out.println("I'm server...");
         this.address = address;
         currentPort = address.getPort() + 1;
+        currentWatchPort=7070;
         globalChatroom = new Chatroom();
         Task task = new Task<Void>()
         {
@@ -330,6 +331,21 @@ public class Server
                                 formatter.format(String.valueOf(sellCosts.get(item))+"\n");
                                 formatter.flush();
                                 break;
+                            case "askWatch":
+                                input=scanner.nextLine();
+                                Client client1=yaGson.fromJson(input,Client.class);
+                                currentWatchPort++;
+                                askWatch(client1);
+                                formatter.format(String.valueOf(currentWatchPort)+"\n");
+                                formatter.flush();
+                                scanner.nextLine();
+                                watchSocketBuilt(client1);
+                                break;
+                            case "stopWatch":
+                                input=scanner.nextLine();
+                                Client client2=yaGson.fromJson(input,Client.class);
+                                stopWatch(client2);
+                                break;
                         }
                     }
                 } catch (IOException e)
@@ -340,6 +356,30 @@ public class Server
             }
         };
         new Thread(task).start();
+    }
+
+    private void stopWatch(Client client)
+    {
+        Formatter formatter=formatters.get(client.getAddress().getPort());
+        formatter.format("stopWatch\n");
+        formatter.flush();
+    }
+
+    private void watchSocketBuilt(Client client)
+    {
+        Formatter formatter=formatters.get(client.getAddress().getPort());
+        formatter.format("socketBuilt\n");
+        formatter.flush();
+    }
+
+    private void askWatch(Client client)
+    {
+        Formatter formatter=formatters.get(client.getAddress().getPort());
+        Scanner scanner=scanners.get(client.getAddress().getPort());
+        formatter.format("askWatch\n");
+        formatter.format(String.valueOf(currentWatchPort)+"\n");
+        formatter.flush();
+        scanner.nextLine();// serverSocket Built
     }
 
     private void updateMarketItems()

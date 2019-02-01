@@ -89,6 +89,22 @@ public class ProfileScene extends MultiPlayerScene{
             e.printStackTrace();
         }
 
+        try {
+            image=new Image(new FileInputStream("Textures/UI/Icons/Watch.png"));
+            ImageView watchImageView=new ImageView(image);
+            watchImageView.relocate(x+250,y+355);
+            watchImageView.setFitHeight(setHeight);
+            watchImageView.setFitWidth(setWidth);
+            watchImageView.setOnMouseClicked(event -> {
+                InputReader.getClient().askWatch(client);
+            });
+            addNodeWithForce(force, watchImageView);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+
     }
 
     private void addNodeWithForce(boolean force, Node node) {
