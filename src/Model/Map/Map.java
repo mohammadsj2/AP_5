@@ -213,7 +213,9 @@ public class Map
         GameScene.deleteNode(entity.getImageView());
         entity.getImageView().setVisible(true);
     }
-    public void destroyItem(Cell cell, Item item) {
+
+    public void destroyItem(Cell cell, Item item)
+    {
         item.moveToWareHouse();
         /*
         cell.destroyEntity(item);
@@ -233,11 +235,15 @@ public class Map
         */
 
     }
-    public void destroyItem(int x, int y, Item item) throws CellDoesNotExistException {
+
+    public void destroyItem(int x, int y, Item item) throws CellDoesNotExistException
+    {
         destroyItem(this.getCell(x, y), item);
     }
-    public void addEntity(Cell cell, Entity entity){
-        GameScene.setImageViewPositionOnMap(entity.getImageView(),cell.getPositionX(),cell.getPositionY());
+
+    public void addEntity(Cell cell, Entity entity)
+    {
+        GameScene.setImageViewPositionOnMap(entity.getImageView(), cell.getPositionX(), cell.getPositionY());
         GameScene.addNode(entity.getImageView());
         cell.addEntity(entity);
     }
@@ -307,30 +313,36 @@ public class Map
             cagedWildImageView.setOnMouseClicked(event ->
             {
                 Item item = Constant.getItemByType(finalItemName);
+                item.setCell(wild.getCell());
                 item.initView();
+
                 try
                 {
                     InputReader.getCurrentController().getWareHouse().addItem(item);
                     GameScene.deleteNode(finalCagedWildImageView);
                     GameScene.deleteNode(finalCageImageView);
+                    GameScene.addNode(item.getImageView());
                 } catch (NoWarehouseSpaceException e)
                 {
-                    e.printStackTrace();
+                    System.out.println(Constant.NOT_ENOUGH_SPACE_MESSAGE);
                 }
 
             });
             cageImageView.setOnMouseClicked(event ->
             {
                 Item item = Constant.getItemByType(finalItemName);
+                item.setCell(wild.getCell());
                 item.initView();
+
                 try
                 {
                     InputReader.getCurrentController().getWareHouse().addItem(item);
                     GameScene.deleteNode(finalCagedWildImageView);
                     GameScene.deleteNode(finalCageImageView);
+                    GameScene.addNode(item.getImageView());
                 } catch (NoWarehouseSpaceException e)
                 {
-                    e.printStackTrace();
+                    System.out.println(Constant.NOT_ENOUGH_SPACE_MESSAGE);
                 }
             });
             new AnimationTimer()
@@ -343,7 +355,7 @@ public class Map
                 {
                     if (lastTime == 0)
                         lastTime = now;
-                    if(now-lastTime>10000000000l)
+                    if (now - lastTime > 10000000000l)
                     {
                         GameScene.deleteNode(finalCagedWildImageView);
                         GameScene.deleteNode(finalCageImageView);
