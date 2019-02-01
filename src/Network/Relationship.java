@@ -6,6 +6,7 @@ public class Relationship {
     Client firstClient,secondClient;
     boolean firstClientAccepted,secondClientAccepted;
     String requestMesage="";
+    int numberOfCommonGame=0;
 
     public Relationship(Client firstClient, Client secondClient) {
         this.firstClient = firstClient;
@@ -18,6 +19,17 @@ public class Relationship {
         if(secondClient.equals(client)){
             secondClientAccepted=true;
         }
+    }
+
+    public void setNumberOfCommonGame(int numberOfCommonGame) {
+        this.numberOfCommonGame = numberOfCommonGame;
+    }
+    public void plusOneNumberOfCommonGame(){
+        numberOfCommonGame++;
+    }
+
+    public int getNumberOfCommonGame() {
+        return numberOfCommonGame;
     }
 
     public void setRequestMesage(String requestMesage) {

@@ -16,7 +16,6 @@ import com.gilecode.yagson.YaGsonBuilder;
 import com.gilecode.yagson.com.google.gson.reflect.TypeToken;
 import javafx.concurrent.Task;
 
-import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -408,11 +407,14 @@ public class Server
         return yaGson.fromJson(scanner.nextLine(), Controller.class);
     }
 
-    private boolean commonGameRequest(Client firstClient,Client secondClient) {
+    private boolean commonGameRequest(Client firstClient,Client secondClient) throws ClientDoesNotExist {
         CommonGameRequest commonGameRequest=getRandomCommonGameRequest(firstClient,secondClient);
         getRandomCommonGameRequest(firstClient, secondClient);
         if(sendGameRequest(commonGameRequest,secondClient)){
             if(!firstClient.equals(secondClient))sendGameRequest(commonGameRequest,firstClient);
+            Relationship relationship=relationShips.get(getClientId(firstClient)).get(getClientId(secondClient));
+            relationship.plusOneNumberOfCommonGame();
+            updateRelationship(relationship);
             return  true;
         }
         return false;
@@ -501,7 +503,6 @@ public class Server
         System.out.println("Client "+client.getName()+" disconnected!");
     }
     private void updateRelationship(Relationship relationShip) throws ClientDoesNotExist {
-        System.out.println("this ");
         Client[] clients={relationShip.getFirstClient(),relationShip.getSecondClient()};
         int id[]={getClientId(clients[0]),getClientId(clients[1])};
         for(int i=0;i<2;i++){
