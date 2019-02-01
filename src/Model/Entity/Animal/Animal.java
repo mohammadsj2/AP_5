@@ -201,7 +201,7 @@ public abstract class Animal extends Entity implements Upgradable, Loadable {
         walkAnimation(startCell,targetCell);
     }
 
-    private void walkAnimation(Cell startCell,Cell targetCell) {
+    protected void walkAnimation(Cell startCell,Cell targetCell) {
         ImageView imageView=getImageView();
         KeyValue xKeyValue,yKeyValue;
         imageView.setX(GameScene.modifiedX(startCell.getPositionX()));

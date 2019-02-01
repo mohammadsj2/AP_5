@@ -117,7 +117,7 @@ public class ProgressBar {
     public void refresh(){
         Image image=getFillImage();
         double y=image.getHeight()*(1.0-percentage);
-        if(y==image.getHeight()){
+        if(y>=image.getHeight()-EPSILON){
             y= image.getHeight()-EPSILON;
         }
         fillView.setX(progressView.getX());

@@ -1,6 +1,7 @@
 package Model.Entity.Animal.Pet;
 
 import Constant.Constant;
+import Controller.Controller;
 import Controller.InputReader;
 import Exception.CellDoesNotExistException;
 import Exception.StartBusyProducerException;
@@ -9,9 +10,13 @@ import Model.Entity.Item;
 import Model.Map.Cell;
 import Model.Map.Map;
 import Model.Producer;
+import View.ProgressBar.HealthProgressBar;
 import View.Scene.GameScene;
 import View.SpriteAnimation;
 import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,11 +28,22 @@ public abstract class Pet extends Animal implements Producer {
     private int health;
     private int lastProductTurn=0;
     private int timeDead = 0;
+    private HealthProgressBar healthProgressBar;
+
     protected Pet(Cell cell) {
         super(cell);
-        this.health=Constant.INIT_HEALTH;
+        setHealth(Constant.INIT_HEALTH);
         this.lastProductTurn=InputReader.getCurrentController().getTurn();
     }
+
+    @Override
+    public void initView() {
+        super.initView();
+        healthProgressBar=new HealthProgressBar(GameScene.modifiedX(getCell().getPositionX()),GameScene.modifiedY(getCell().getPositionY()));
+        GameScene.addNode(healthProgressBar.getNode());
+    }
+
+
     public void changeImageView(Image image, int count, int rows, int columns, double x, double y, boolean definite) {
         ImageView imageView = getImageView();
 
@@ -94,6 +110,7 @@ public abstract class Pet extends Animal implements Producer {
 
     public void setHealth(int health) {
         this.health = health;
+        healthProgressBar.setPercentage((double)health/(double) Constant.PET_MAX_HEALTH);
     }
 
     public boolean isHungry() {
@@ -128,6 +145,25 @@ public abstract class Pet extends Animal implements Producer {
             super.walk();
         }
     }
+
+    @Override
+    protected void walkAnimation(Cell startCell, Cell targetCell) {
+        super.walkAnimation(startCell, targetCell);
+        healthProgressBar.getNode().setLayoutX(GameScene.modifiedX(startCell.getPositionX())+13);
+        healthProgressBar.getNode().setLayoutY(GameScene.modifiedY(startCell.getPositionY())-15);
+
+        KeyValue xKeyValue,yKeyValue;
+        int targetX=(int)GameScene.modifiedX(targetCell.getPositionX())+13;
+        int targetY=(int)GameScene.modifiedY(targetCell.getPositionY())-15;
+        xKeyValue = new KeyValue(healthProgressBar.getNode().layoutXProperty(),targetX);
+        yKeyValue = new KeyValue(healthProgressBar.getNode().layoutYProperty(),targetY);
+
+        KeyFrame keyFrame=new KeyFrame(Duration.seconds((double)Constant.NEXT_TURN_DURATION/1e9),xKeyValue,yKeyValue);
+        Timeline timeline=new Timeline(keyFrame);
+        timeline.setCycleCount(1);
+        timeline.play();
+    }
+
     public void eatGrass() {
         Map map=InputReader.getCurrentController().getMap();
         map.destroyGrass(getCell());
@@ -149,5 +185,11 @@ public abstract class Pet extends Animal implements Producer {
         }else{
             return Constant.HUNGRY_PET_SPEED;
         }
+    }
+
+    @Override
+    public void destroy() throws CellDoesNotExistException {
+        super.destroy();
+        GameScene.deleteNode(healthProgressBar.getNode());
     }
 }

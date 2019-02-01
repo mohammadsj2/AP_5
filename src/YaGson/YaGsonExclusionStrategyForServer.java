@@ -1,6 +1,7 @@
 package YaGson;
 
 import View.ProgressBar.BlueProgressBar;
+import View.ProgressBar.HealthProgressBar;
 import View.ProgressBar.ProgressBar;
 import com.gilecode.yagson.YaGson;
 import com.gilecode.yagson.com.google.gson.ExclusionStrategy;
@@ -24,7 +25,8 @@ public class YaGsonExclusionStrategyForServer implements ExclusionStrategy {
                 fieldAttributes.getDeclaredClass()== Animation.class ||
                 fieldAttributes.getDeclaredClass()== ProgressBar.class ||
                 fieldAttributes.getDeclaredClass()== BlueProgressBar.class ||
-                fieldAttributes.getDeclaredClass()== Label.class);
+                fieldAttributes.getDeclaredClass()== Label.class ||
+                fieldAttributes.getDeclaredClass()== HealthProgressBar.class);
     }
 
     @Override
