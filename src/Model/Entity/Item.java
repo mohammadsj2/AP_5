@@ -2,13 +2,14 @@ package Model.Entity;
 
 import Constant.Constant;
 import Controller.InputReader;
-import Model.Map.Cell;
 import Network.Client.Client;
 import View.Scene.GameScene;
-import javafx.event.EventHandler;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -89,7 +90,22 @@ public class Item extends Entity
         }
 
     }
-
+    public void moveToWareHouse() {
+        getCell().destroyEntity(this);
+        javafx.scene.image.ImageView curImageView = this.getImageView();
+        double duration = 0.3;
+        KeyValue keyValueX = new KeyValue(curImageView.xProperty(), 400);
+        KeyValue keyValueY = new KeyValue(curImageView.yProperty(), 610);
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(duration)
+                , keyValueX, keyValueY);
+        Timeline timeline = new Timeline(keyFrame);
+        timeline.play();
+        timeline.setOnFinished(event ->
+        {
+            curImageView.setVisible(false);
+            GameScene.deleteNode(curImageView);
+        });
+    }
 
     public void setCreatingTurn(int creatingTurn)
     {

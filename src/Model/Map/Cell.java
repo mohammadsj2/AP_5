@@ -85,7 +85,7 @@ public class Cell implements Viewable {
         return positionY;
     }
 
-    void destroyEntity(Entity entity){
+    public void destroyEntity(Entity entity){
         entities.remove(entity);
     }
     void addEntity(Entity entity){

@@ -21,12 +21,6 @@ import Model.Well;
 import Model.WorkShop;
 import View.Scene.GameScene;
 import com.gilecode.yagson.YaGson;
-import Exception.WinningMessage;
-import Exception.NoTransporterSpaceException;
-import Exception.NoSuchItemInWarehouseException;
-import Exception.NoWarehouseSpaceException;
-import Exception.NotEnoughItemException;
-import com.gilecode.yagson.com.google.gson.annotations.Expose;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -120,6 +114,7 @@ public class Controller
     {
         wareHouse.addItem(item);
         item.setInWareHouse(true);
+        /*
         try
         {
             if (item.getCell() != null)
@@ -130,6 +125,7 @@ public class Controller
         {
             e.printStackTrace();
         }
+        */
     }
 
     void plant(int x, int y) throws NoWaterException, CellDoesNotExistException
@@ -401,7 +397,7 @@ public class Controller
             try
             {
                 wareHouse.addItem(item);
-                map.destroyEntity(x, y, item);
+            //    map.destroyItem(x, y, item);
             } catch (NoWarehouseSpaceException ignored)
             {
 
