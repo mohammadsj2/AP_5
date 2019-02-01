@@ -1,11 +1,11 @@
 package Model.Map;
 
 import Constant.Constant;
+import Exception.CellDoesNotExistException;
 import Model.Entity.Animal.Animal;
 import Model.Entity.Animal.Wild.Wild;
 import Model.Entity.Entity;
 import Model.Entity.Item;
-import Exception.CellDoesNotExistException;
 import View.Scene.GameScene;
 import com.gilecode.yagson.YaGson;
 
@@ -155,6 +155,29 @@ public class Map {
         entity.getImageView().setVisible(false);
         GameScene.deleteNode(entity.getImageView());
         entity.getImageView().setVisible(true);
+    }
+    public void destroyItem(Cell cell, Item item) {
+        item.moveToWareHouse();
+        /*
+        cell.destroyEntity(item);
+        javafx.scene.image.ImageView curImageView = item.getImageView();
+        double duration = 700;
+        KeyValue keyValueX = new KeyValue(curImageView.xProperty(), 430);
+        KeyValue keyValueY = new KeyValue(curImageView.yProperty(), 610);
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.1)
+                , keyValueX, keyValueY);
+        Timeline timeline = new Timeline(keyFrame);
+        timeline.play();
+        timeline.setOnFinished(event ->
+        {
+            curImageView.setVisible(false);
+            GameScene.deleteNode(curImageView);
+        });
+        */
+
+    }
+    public void destroyItem(int x, int y, Item item) throws CellDoesNotExistException {
+        destroyItem(this.getCell(x, y), item);
     }
     public void addEntity(Cell cell, Entity entity){
         GameScene.setImageViewPositionOnMap(entity.getImageView(),cell.getPositionX(),cell.getPositionY());
