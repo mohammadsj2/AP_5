@@ -91,6 +91,8 @@ public class Item extends Entity
 
     }
     public void moveToWareHouse() {
+        System.out.println("HIR");
+        System.out.println(this.getImageView());
         getCell().destroyEntity(this);
         javafx.scene.image.ImageView curImageView = this.getImageView();
         double duration = 0.3;
