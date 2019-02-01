@@ -59,7 +59,7 @@ public class CustomizeScene extends MultiPlayerScene
         for(Item item:items)
         {
             ImageView imageView=item.getImageView();
-            imageView.relocate(100,y);
+            imageView.relocate(100,y-7);
             root.getChildren().add(imageView);
             TextField buyCostField=new TextField();
             buyCostField.addEventFilter(KeyEvent.KEY_TYPED , numeric_Validation(5));
@@ -116,23 +116,20 @@ public class CustomizeScene extends MultiPlayerScene
 
     }
 
-    public EventHandler<KeyEvent> numeric_Validation(final Integer max_Lengh) {
-        return new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent e) {
-                TextField txt_TextField = (TextField) e.getSource();
-                if (txt_TextField.getText().length() >= max_Lengh) {
+    private EventHandler<KeyEvent> numeric_Validation(final Integer max_Lengh) {
+        return e -> {
+            TextField txt_TextField = (TextField) e.getSource();
+            if (txt_TextField.getText().length() >= max_Lengh) {
+                e.consume();
+            }
+            if(e.getCharacter().matches("[0-9.]")){
+                if(txt_TextField.getText().contains(".") && e.getCharacter().matches("[.]")){
+                    e.consume();
+                }else if(txt_TextField.getText().length() == 0 && e.getCharacter().matches("[.]")){
                     e.consume();
                 }
-                if(e.getCharacter().matches("[0-9.]")){
-                    if(txt_TextField.getText().contains(".") && e.getCharacter().matches("[.]")){
-                        e.consume();
-                    }else if(txt_TextField.getText().length() == 0 && e.getCharacter().matches("[.]")){
-                        e.consume();
-                    }
-                }else{
-                    e.consume();
-                }
+            }else{
+                e.consume();
             }
         };
     }

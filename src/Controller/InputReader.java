@@ -116,7 +116,7 @@ public class InputReader extends Application
     private static void createLevel3() {
         try {
             ArrayList<String> goalEntities = new ArrayList<>();
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 16; i++) {
                 goalEntities.add("flourycake");
             }
             WorkShop workShop = getWorkShop("EggPowderPlant");
@@ -140,7 +140,7 @@ public class InputReader extends Application
             helicopterItems.add(Constant.getItemByType("sewing"));
             helicopterItems.add(Constant.getItemByType("fabric"));
             helicopterItems.add(Constant.getItemByType("adornment"));
-            Controller controller = new Controller(3,35000, goalEntities, helicopterItems);
+            Controller controller = new Controller(3,30000, goalEntities, helicopterItems);
             controller.addWorkshop(workShop);
             controller.addWorkshop(workShop2);
             controller.addWorkshop(workShop3);
@@ -394,7 +394,14 @@ public class InputReader extends Application
                 client.disconnect();
                 System.exit(0);
             }
-
+            Media media=new Media(new File("Textures/Sound/khodahafez.wav").toURI().toString());
+            MediaPlayer mediaPlayer=new MediaPlayer(media);
+            mediaPlayer.play();
+            mediaPlayer.setOnEndOfMedia(() -> {
+                InputReader.primaryStage.close();
+                System.exit(0);
+            });
+            event.consume();
         });
         primaryStage.show();
 
