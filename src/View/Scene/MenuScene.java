@@ -9,7 +9,10 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -84,8 +87,13 @@ public class MenuScene
                 ,((double)Constant.GAME_SCENE_WIDTH-width)/2,300,false);
         exitButton.getNode().setOnMouseClicked(event ->
         {
-            InputReader.primaryStage.close();
-            System.exit(0);
+            Media media=new Media(new File("Textures/Sound/khodahafez.wav").toURI().toString());
+            MediaPlayer mediaPlayer=new MediaPlayer(media);
+            mediaPlayer.play();
+            mediaPlayer.setOnEndOfMedia(() -> {
+                InputReader.primaryStage.close();
+                System.exit(0);
+            });
         });
         addNode(exitButton.getNode());
 
@@ -132,10 +140,10 @@ public class MenuScene
             GameScene.clear();
             if(InputReader.getClient().isOnline())
             {
+                InputReader.getClient().setCommonGameRequest(null);
                 MultiPlayerScene.MULTI_PLAYER_SCENE.init();
                 InputReader.setScene(MultiPlayerScene.MULTI_PLAYER_SCENE.getScene());
-            }
-            else
+            } else
             {
                 MenuScene.init(false);
                 InputReader.setScene(MenuScene.getScene());

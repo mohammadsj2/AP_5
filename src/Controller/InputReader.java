@@ -5,6 +5,7 @@ import Model.Entity.Item;
 import Network.Client.Client;
 
 import Network.Server.Server;
+import View.Scene.GameScene;
 import View.Scene.MultiPlayerScene.ChatroomScene;
 import View.Scene.UsernameGetterScene;
 import YaGson.*;
@@ -12,8 +13,7 @@ import Model.WorkShop;
 import com.gilecode.yagson.YaGson;
 import com.gilecode.yagson.YaGsonBuilder;
 import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Node;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -116,7 +116,7 @@ public class InputReader extends Application
     private static void createLevel3() {
         try {
             ArrayList<String> goalEntities = new ArrayList<>();
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 16; i++) {
                 goalEntities.add("flourycake");
             }
             WorkShop workShop = getWorkShop("EggPowderPlant");
@@ -140,7 +140,7 @@ public class InputReader extends Application
             helicopterItems.add(Constant.getItemByType("sewing"));
             helicopterItems.add(Constant.getItemByType("fabric"));
             helicopterItems.add(Constant.getItemByType("adornment"));
-            Controller controller = new Controller(3,35000, goalEntities, helicopterItems);
+            Controller controller = new Controller(3,30000, goalEntities, helicopterItems);
             controller.addWorkshop(workShop);
             controller.addWorkshop(workShop2);
             controller.addWorkshop(workShop3);
@@ -157,7 +157,7 @@ public class InputReader extends Application
 
     }
 
-    private static WorkShop getWorkShop(String s) throws FileNotFoundException {
+    public static WorkShop getWorkShop(String s) throws FileNotFoundException {
         return yaGson.fromJson(new FileReader("./ResourcesRoot/WorkShops/"+s+".json"), WorkShop.class);
     }
 
@@ -222,29 +222,36 @@ public class InputReader extends Application
         }
 
     }
-
-
-    public static void loadLevel(int levelIndex) throws FileNotFoundException
-    {
-        indexOfLevel = levelIndex;
-        currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Levels/level" + indexOfLevel + ".json")),
-                Controller.class);
+    public static void runAController(Controller controller,boolean force){
+        setCurrentController(controller);
+        GameScene.init();
+        if(force){
+            InputReader.setScene(GameScene.getScene());
+        }else{
+            Platform.runLater(() -> InputReader.setScene(GameScene.getScene()));
+        }
+    }
+    public static void setCurrentController(Controller controller){
+        currentController=controller;
         if(InputReader.getClient()!=null) {
             InputReader.getClient().setMoney(currentController.getMoney());
             if (InputReader.getClient().isOnline()) InputReader.getClient().updateClient();
         }
     }
 
+    public static void loadLevel(int levelIndex) throws FileNotFoundException
+    {
+        indexOfLevel = levelIndex;
+        setCurrentController(yaGson.fromJson(new FileReader(("./ResourcesRoot/Levels/level" + indexOfLevel + ".json")),
+                Controller.class));
+    }
+
 
     public static void loadSave(int levelIndex) throws FileNotFoundException
     {
         indexOfLevel = levelIndex;
-        currentController = yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/save" + indexOfLevel + ".json")),
-                Controller.class);
-        if(InputReader.getClient()!=null) {
-            InputReader.getClient().setMoney(currentController.getMoney());
-            if (InputReader.getClient().isOnline()) InputReader.getClient().updateClient();
-        }
+        setCurrentController(yaGson.fromJson(new FileReader(("./ResourcesRoot/Save/save" + indexOfLevel + ".json")),
+                Controller.class));
     }
 
 
@@ -392,8 +399,16 @@ public class InputReader extends Application
         primaryStage.setOnCloseRequest(event -> {
             if(client!=null && client.isOnline()){
                 client.disconnect();
+                System.exit(0);
             }
-            System.exit(0);
+            Media media=new Media(new File("Textures/Sound/khodahafez.wav").toURI().toString());
+            MediaPlayer mediaPlayer=new MediaPlayer(media);
+            mediaPlayer.play();
+            mediaPlayer.setOnEndOfMedia(() -> {
+                InputReader.primaryStage.close();
+                System.exit(0);
+            });
+            event.consume();
         });
         primaryStage.show();
 
@@ -416,5 +431,12 @@ public class InputReader extends Application
 
         InputReader.client = client;
     }
+
+    public static boolean isServer()
+    {
+        return server!=null;
+    }
+
+    public static Server getServer(){return server;}
 
 }

@@ -105,7 +105,7 @@ public class Constant {
     public static final int PET_MAX_HEALTH = 100;
     public static final int MAX_NUMBER_OF_USERNAME_CHARS = 10;
     public static final int SERVER_BEAR_COST = 300;
-    public static final int HUNGRY_PET_SPEED = 35;
+    public static final int HUNGRY_PET_SPEED = 25;
 
 
     public static Item getItemByType(String type){

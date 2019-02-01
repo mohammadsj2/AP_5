@@ -3,6 +3,7 @@ package Model.Entity;
 import Constant.Constant;
 import Controller.InputReader;
 import Model.Map.Cell;
+import Network.Client.Client;
 import View.Scene.GameScene;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
@@ -118,12 +119,14 @@ public class Item extends Entity
 
     public int getBuyCost()
     {
-        return buyCost;
+        Client client=InputReader.getClient();
+        return (client==null || !client.isOnline())?buyCost:InputReader.getClient().getBuyCost(this);
     }
 
     public int getSellCost()
     {
-        return sellCost;
+        Client client=InputReader.getClient();
+        return (client==null || !client.isOnline())?sellCost:InputReader.getClient().getSellCost(this);
     }
 
     public int getVolume()
@@ -157,5 +160,15 @@ public class Item extends Entity
         //Only for map items
         super.initLoad();
         refreshView();
+    }
+
+    public Integer getDefaultBuyCost()
+    {
+        return buyCost;
+    }
+
+    public Integer getDefaultSellCost()
+    {
+        return sellCost;
     }
 }

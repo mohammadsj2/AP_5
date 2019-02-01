@@ -27,7 +27,10 @@ import Exception.NoSuchItemInWarehouseException;
 import Exception.NoWarehouseSpaceException;
 import Exception.NotEnoughItemException;
 import com.gilecode.yagson.com.google.gson.annotations.Expose;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,6 +49,7 @@ public class Controller
     private int catLevel = 1;
     private boolean isGameFinished=false;
     private int levelNumber=-1;
+    private boolean onlineLevelChecker=false;
 
     Controller(int goalMoney, ArrayList<String> goalEntities, ArrayList<Item> helicopterItems)
     {
@@ -56,6 +60,13 @@ public class Controller
         helicopter = new Helicopter(helicopterItems);
         truck = new Truck();
         wareHouse = new WareHouse();
+    }
+    public Controller(int initialMoney,int goalMoney, ArrayList<String> goalEntities)
+    {
+        //For Online 2player games only
+        this(goalMoney,goalEntities,new ArrayList<>());
+        onlineLevelChecker=true;
+        money=initialMoney;
     }
     Controller(int levelNumber,int goalMoney, ArrayList<String> goalEntities, ArrayList<Item> helicopterItems)
     {
@@ -233,15 +244,25 @@ public class Controller
                 }
             }
         }
-        if (level.checkLevel())
+        if (!onlineLevelChecker && level.checkLevel())
         {
-            InputReader.getClient().setMoney(0);
-            if(levelNumber!=-1){
-                InputReader.getClient().setLevel(levelNumber);
-            }
-            if(InputReader.getClient().isOnline())InputReader.getClient().updateClient();
-            GameScene.setWinningMessage();
+            win();
         }
+        if(onlineLevelChecker){
+            InputReader.getClient().checkLevel();
+        }
+    }
+
+    public void win() {
+        InputReader.getClient().setMoney(0);
+        if(levelNumber!=-1){
+            InputReader.getClient().setLevel(levelNumber);
+        }
+        if(InputReader.getClient().isOnline())InputReader.getClient().updateClient();
+        GameScene.setWinningMessage();
+        Media media=new Media(new File("Textures/Sound/WinSound.wav").toURI().toString());
+        MediaPlayer mediaPlayer=new MediaPlayer(media);
+        mediaPlayer.play();
     }
 
 
