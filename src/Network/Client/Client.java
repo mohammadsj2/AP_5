@@ -451,14 +451,18 @@ public class Client {
         formatter.format("getBuyCost\n");
         formatter.format(yaGson.toJson(item, Item.class) + "\n");
         formatter.flush();
-        return new Integer(scanner.nextLine());
+        String input=scanner.nextLine();
+        Integer integer = new Integer(input);
+        return integer;
     }
 
     public int getSellCost(Item item) {
         formatter.format("getSellCost\n");
         formatter.format(yaGson.toJson(item, Item.class) + "\n");
         formatter.flush();
-        return new Integer(scanner.nextLine());
+        String input=scanner.nextLine();
+        Integer integer = new Integer(input);
+        return integer;
     }
 
     public boolean commonGameRequest(Client client) {

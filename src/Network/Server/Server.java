@@ -165,7 +165,7 @@ public class Server
 
                     while (connected)
                     {
-                        System.out.println("listen to client\n");
+                        System.out.println("listen to client on port: "+(port+1));
                         String inputCommand = scanner.nextLine();
                         String input;
                         System.out.println(inputCommand);
@@ -380,6 +380,7 @@ public class Server
                 {
                     e.printStackTrace();
                 }
+                System.out.println("********************** WARNIIIIING *************************");
                 return null;
             }
         };
