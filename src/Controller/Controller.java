@@ -245,7 +245,7 @@ public class Controller
         {
             win();
         }
-        if(onlineLevelChecker){
+        if(onlineLevelChecker && getTurn()%10==0){
             InputReader.getClient().checkLevel();
         }
     }
