@@ -278,6 +278,9 @@ public class Server
                                 System.out.println(itemsToAdd.size());
                                 for(Item item:itemsToAdd)
                                 {
+                                    if(item.getName().equals("cagedlion") || item.getName().equals("cagedbrownbear")){
+                                        continue;
+                                    }
                                     if(!shopItems.containsKey(item))
                                     {
                                         shopItems.put(item,1);
