@@ -19,6 +19,7 @@ import Model.Upgradable;
 import Model.WareHouse;
 import Model.Well;
 import Model.WorkShop;
+import Network.Client.Client;
 import View.Scene.GameScene;
 import com.gilecode.yagson.YaGson;
 import javafx.scene.media.Media;
@@ -245,8 +246,9 @@ public class Controller
         {
             win();
         }
-        if(onlineLevelChecker && getTurn()%10==0){
-            InputReader.getClient().checkLevel();
+        Client client=InputReader.getClient();
+        if(onlineLevelChecker && client!=null && getTurn()%15==((client.getName().hashCode()%15+15)%15)){
+            client.checkLevel();
         }
     }
 
