@@ -165,7 +165,7 @@ public class Server
 
                     while (connected)
                     {
-                        System.out.println("listen to client\n");
+                        System.out.println("listen to client on port: "+(port+1));
                         String inputCommand = scanner.nextLine();
                         String input;
                         System.out.println(inputCommand);
@@ -278,6 +278,9 @@ public class Server
                                 System.out.println(itemsToAdd.size());
                                 for(Item item:itemsToAdd)
                                 {
+                                    if(item.getName().equals("cagedlion") || item.getName().equals("cagedbrownbear")){
+                                        continue;
+                                    }
                                     if(!shopItems.containsKey(item))
                                     {
                                         shopItems.put(item,1);
@@ -332,7 +335,13 @@ public class Server
                             case "getSellCost":
                                 input=scanner.nextLine();
                                 item=yaGson.fromJson(input,Item.class);
-                                formatter.format(String.valueOf(sellCosts.get(item))+"\n");
+                                if(item.getName().equals("cagedlion")) {
+                                    formatter.format("150\n");
+                                }else if(item.getName().equals("cagedbrownbear")){
+                                      formatter.format("100\n");
+                                }else{
+                                    formatter.format(String.valueOf(sellCosts.get(item))+"\n");
+                                }
                                 formatter.flush();
                                 break;
                             case "askWatch":
@@ -371,6 +380,7 @@ public class Server
                 {
                     e.printStackTrace();
                 }
+                System.out.println("********************** WARNIIIIING *************************");
                 return null;
             }
         };

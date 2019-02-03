@@ -19,6 +19,7 @@ import Model.Upgradable;
 import Model.WareHouse;
 import Model.Well;
 import Model.WorkShop;
+import Network.Client.Client;
 import View.Scene.GameScene;
 import com.gilecode.yagson.YaGson;
 import javafx.scene.media.Media;
@@ -185,6 +186,7 @@ public class Controller
         {
             try
             {
+                item.moveToWorkshopFromWareHouse(index);
                 wareHouse.eraseItem(item);
             } catch (NoSuchItemInWarehouseException e)
             {
@@ -232,7 +234,7 @@ public class Controller
             {
                 try
                 {
-                    distributeItems(workShop.getOutputItemsByUsedLevel());
+                    distributeItems(workShop.getOutputItemsByUsedLevel(), workShop.getLocation());
                     workShop.endProduction();
                 } catch (WorkShopNotUsedException e)
                 {
@@ -244,8 +246,9 @@ public class Controller
         {
             win();
         }
-        if(onlineLevelChecker){
-            InputReader.getClient().checkLevel();
+        Client client=InputReader.getClient();
+        if(onlineLevelChecker && client!=null && getTurn()%15==((client.getName().hashCode()%15+15)%15)){
+            client.checkLevel();
         }
     }
 
@@ -279,6 +282,20 @@ public class Controller
             Cell randomCell = map.getRandomCell();
             item.setCell(randomCell);
             getMap().addEntity(randomCell, item);
+        }
+    }
+    private void distributeItems(ArrayList<Item> items, int location)
+    {
+        for (Item item : items)
+        {
+            Cell randomCell = map.getRandomCell();
+
+        //    Timeline timeline = item.moveToCellFromWorkshop(location, randomCell);
+
+            item.setCell(randomCell);
+            getMap().addEntity(randomCell, item);
+
+
         }
     }
 

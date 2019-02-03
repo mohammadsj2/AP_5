@@ -90,22 +90,64 @@ public class Item extends Entity
         }
 
     }
-    public void moveToWareHouse() {
-        System.out.println("HIR");
-        System.out.println(this.getImageView());
-        getCell().destroyEntity(this);
+
+    public Timeline moveTo(double x, double y) {
+
+       
+
         javafx.scene.image.ImageView curImageView = this.getImageView();
         double duration = 0.3;
-        KeyValue keyValueX = new KeyValue(curImageView.xProperty(), 400);
-        KeyValue keyValueY = new KeyValue(curImageView.yProperty(), 610);
+        KeyValue keyValueX = new KeyValue(curImageView.xProperty(), x);
+        KeyValue keyValueY = new KeyValue(curImageView.yProperty(), y);
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(duration)
                 , keyValueX, keyValueY);
         Timeline timeline = new Timeline(keyFrame);
-        timeline.play();
+        timeline.playFromStart();
+        return timeline;
+    }
+    public void moveToWorkshopFromWareHouse(int location) {
+        GameScene.addNode(this.getImageView());
+        this.getImageView().setVisible(true);
+        getImageView().relocate(400, 610);
+
+
+
+        Timeline timeline = moveTo(Constant.WORKSHOPS_POSITION_X[location] - 400, Constant.WORKSHOPS_POSITION_Y[location] - 610);
         timeline.setOnFinished(event ->
         {
-            curImageView.setVisible(false);
-            GameScene.deleteNode(curImageView);
+            this.getImageView().setVisible(false);
+            GameScene.deleteNode(this.getImageView());
+        });
+
+    }
+    /*public Timeline moveToCellFromWorkshop(int location, Cell curCell) {
+        GameScene.addNode(this.getImageView());
+        getImageView().relocate(Constant.WORKSHOPS_POSITION_X[location], Constant.WORKSHOPS_POSITION_Y[location]);
+        this.getImageView().setVisible(true);
+
+
+        Timeline timeline = moveTo(GameScene.modifiedX(curCell.getPositionX()) - Constant.WORKSHOPS_POSITION_X[location], GameScene.modifiedY(curCell.getPositionY()) - Constant.WORKSHOPS_POSITION_Y[location]);
+        timeline.setOnFinished(event ->
+        {
+            this.cell = curCell;
+            getMap().addEntityExistingImageView(curCell, this);
+
+
+        //    getImageView().setX(GameScene.modifiedX(getCell().getPositionX()));
+          //  getImageView().setY(GameScene.modifiedY(getCell().getPositionY()));
+
+        });
+        return timeline;
+    } */
+    public void moveToWareHouse() {
+        if(getCell()==null)return;
+        getCell().destroyEntity(this);
+        Timeline timeline = moveTo(400, 610);
+        timeline.setOnFinished(event ->
+        {
+            this.getImageView().setVisible(false);
+            GameScene.deleteNode(this.getImageView());
+
         });
     }
 
