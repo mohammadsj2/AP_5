@@ -44,10 +44,11 @@ public class InputReader extends Application
 
     public static void main(String[] args) throws StartBusyTransporter, IOException
     {
+        createAllLevels();
         System.out.println(getIp());
         System.out.println();
         startSound();
-        createAllLevels();
+
         launch(args);
     }
 
@@ -57,7 +58,7 @@ public class InputReader extends Application
 
     private static void startSound() {
 
-        Media media = new Media(new File("Textures/Sound/hero.mp3").toURI().toString());
+        Media media = new Media(new File("Textures/Sound/sound2.mp3").toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         mediaPlayer.play();
