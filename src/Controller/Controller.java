@@ -246,6 +246,7 @@ public class Controller
         {
             win();
         }
+
         Client client=InputReader.getClient();
         if(onlineLevelChecker && client!=null && getTurn()%15==((client.getName().hashCode()%15+15)%15)){
             client.checkLevel();
