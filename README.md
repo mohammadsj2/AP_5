@@ -1,5 +1,5 @@
 # AP_5
-SeyedMohammad SeyedJavadi
+Seyed Mohammad Seyed Javadi
 Mehrdad Saberi
 Arash Mahmoudian Bidgoli 
 
